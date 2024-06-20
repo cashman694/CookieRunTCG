@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1d169841c1cffa429370eef4d75b4f5, type: 3}
+  m_Name: ItemSO
+  m_EditorClassIdentifier: 
+  items:
+  - name: "\uACE0\uBE14\uB9B0\uB9DB \uCFE0\uD0A4"
+    attack: 1
+    health: 2
+    level: 1
+    sprite: {fileID: -7207582503714167683, guid: 3047f8dbcb27e5d4cb8137d4a3f38864, type: 3}
+  - name: "\uAD6C\uBBF8\uD638\uB9DB \uCFE0\uD0A4"
+    attack: 3
+    health: 3
+    level: 3
+    sprite: {fileID: 8716316477644190374, guid: d72fed791b326ae43ac3f018437a55ef, type: 3}
+  - name: "\uB2E4\uD06C\uCD08\uCF54 \uCFE0\uD0A4"
+    attack: 3
+    health: 4
+    level: 2
+    sprite: {fileID: -6738920317349612211, guid: ed571eb2cbba9834398ae7ab18b35819, type: 3}
+  - name: "\uB77C\uC77C\uB77D\uB9DB \uCFE0\uD0A4"
+    attack: 1
+    health: 2
+    level: 1
+    sprite: {fileID: 3772877566976308276, guid: 7659e1498802b674fb84c10812a781f9, type: 3}
+  - name: "\uB864\uCF00\uC774\uD06C\uB9DB \uCFE0\uD0A4"
+    attack: 1
+    health: 2
+    level: 2
+    sprite: {fileID: 2055205788962790563, guid: 1164af0ae128d244eb7a7b953c250b95, type: 3}
+  - name: "\uB9C8\uB77C\uB9DB \uCFE0\uD0A4"
+    attack: 3
+    health: 2
+    level: 2
+    sprite: {fileID: 8943434496926926419, guid: af2c20b56657af64482240ba90382e2a, type: 3}
+  - name: "\uBA54\uB860\uBE75\uB9DB \uCFE0\uD0A4"
+    attack: 2
+    health: 4
+    level: 1
+    sprite: {fileID: 1018912311283811988, guid: 2fbe1bc635119bc4aa5f7c76bfe6ab5e, type: 3}
+  - name: "\uC11D\uB958\uB9DB \uCFE0\uD0A4"
+    attack: 2
+    health: 5
+    level: 2
+    sprite: {fileID: 6107127438221165034, guid: 2438d64391c8d2f40994e083c1d1e65d, type: 3}
+  - name: "\uC544\uD3EC\uAC00\uD1A0\uB9DB \uCFE0\uD0A4"
+    attack: 1
+    health: 3
+    level: 1
+    sprite: {fileID: -8569671935496670347, guid: a961772955b11cc4baf1dbcd64304798, type: 3}
