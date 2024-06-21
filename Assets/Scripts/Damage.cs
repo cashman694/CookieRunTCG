@@ -33,4 +33,4 @@ public class Damage : MonoBehaviour
             .Append(transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InOutBack))
             .OnComplete(() => Destroy(gameObject));
     }
-        }
+}

@@ -51,7 +51,7 @@ public class Entity : MonoBehaviour
     {
         attack = item.attack;
         health = item.health;
-        level= item.level;
+        level = item.level;
         this.item = item;
         entity.sprite = this.item.sprite;
     }
@@ -73,13 +73,13 @@ public class Entity : MonoBehaviour
     }
     public bool Damaged(int damage)
     {
-        health-=damage;
+        health -= damage;
         if (health <= 0)
         {
             isDie = true;
             return true;
         }
-        return false;   
+        return false;
     }
     public void MoveTransform(Vector3 pos, bool useDotween, float dotweenTime = 0)
     {
@@ -97,7 +97,7 @@ public class Entity : MonoBehaviour
     private void OnMouseExit()
     {
         EnlargeEntity(false);
-        
+
     }
 
     private void EnlargeEntity(bool isEnlarge)

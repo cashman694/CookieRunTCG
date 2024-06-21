@@ -10,20 +10,20 @@ public class TurnManager : MonoBehaviour
     public static TurnManager Inst { get; private set; }
     void Awake() => Inst = this;
     [Header("Develop")]
-    [SerializeField] [Tooltip("½ÃÀÛ ÅÏ ¸ðµå¸¦ Á¤ÇÕ´Ï´Ù")] ETurnMode eTurnMode;
-    [SerializeField] [Tooltip("Ä«µå ¹èºÐÀÌ ¸Å¿ì »¡¶óÁý´Ï´Ù")] bool fastMode;
-    [SerializeField] [Tooltip("½ÃÀÛ Ä«µå °³¼ö¸¦ Á¤ÇÕ´Ï´Ù")] int startCardCount;
+    [SerializeField][Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½Õ´Ï´ï¿½")] ETurnMode eTurnMode;
+    [SerializeField][Tooltip("Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½")] bool fastMode;
+    [SerializeField][Tooltip("ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Õ´Ï´ï¿½")] int startCardCount;
     [Header("Properties")]
     public bool isLoading;
     public bool myTurn;
-    enum ETurnMode { Random, My, Other}
+    enum ETurnMode { Random, My, Other }
     WaitForSeconds delay05 = new WaitForSeconds(0.5f);
     WaitForSeconds delay07 = new WaitForSeconds(0.7f);
     public static Action<bool> OnAddCard;
     public static event Action<bool> OnTurnStarted;
     void GameSetup()
     {
-        if(fastMode)
+        if (fastMode)
             delay05 = new WaitForSeconds(0.05f);
         switch (eTurnMode)
         {
@@ -31,7 +31,7 @@ public class TurnManager : MonoBehaviour
                 myTurn = Random.Range(0, 2) == 0;
                 break;
             case ETurnMode.My:
-                myTurn=true;
+                myTurn = true;
                 break;
             case ETurnMode.Other:
                 myTurn = false;
@@ -40,14 +40,14 @@ public class TurnManager : MonoBehaviour
     }
     public IEnumerator StartGameCo()
     {
-        GameSetup();    
-        for (int i = 0; i< startCardCount;i++)
+        GameSetup();
+        for (int i = 0; i < startCardCount; i++)
         {
             yield return delay05;
             OnAddCard?.Invoke(false);
             yield return delay05;
             OnAddCard?.Invoke(true);
-            
+
         }
         StartCoroutine(StartTurnCo());
     }
@@ -55,17 +55,17 @@ public class TurnManager : MonoBehaviour
     {
         isLoading = true;
         if (myTurn)
-            GameManager.Inst.Notification("³ªÀÇ ÅÏ");
-        isLoading= true;
-        yield return delay07;   
+            GameManager.Inst.Notification("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½");
+        isLoading = true;
+        yield return delay07;
         OnAddCard?.Invoke(myTurn);
         yield return delay07;
-        isLoading=false;
+        isLoading = false;
         OnTurnStarted?.Invoke(myTurn);
     }
     public void EndTurn()
     {
-        myTurn= !myTurn;
-        StartCoroutine(StartTurnCo() );
+        myTurn = !myTurn;
+        StartCoroutine(StartTurnCo());
     }
 }

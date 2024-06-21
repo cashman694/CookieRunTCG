@@ -10,11 +10,11 @@ public class ResultPanel : MonoBehaviour
 {
     [SerializeField] TMP_Text resultTMP;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    
-    public void  Show(string message)
+
+    public void Show(string message)
     {
-    resultTMP.text = message;
-    transform.DOScale(Vector3.one,0.5f).SetEase(Ease.InOutQuad);
+        resultTMP.text = message;
+        transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.InOutQuad);
     }
     public void Restart()
     {
@@ -24,11 +24,11 @@ public class ResultPanel : MonoBehaviour
     [ContextMenu("ScaleOne")]
     void ScaleOne() => transform.localScale = Vector3.one;
     [ContextMenu("ScaleZero")]
-    public void ScaleZero()=>transform.localScale = Vector3.zero;
+    public void ScaleZero() => transform.localScale = Vector3.zero;
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

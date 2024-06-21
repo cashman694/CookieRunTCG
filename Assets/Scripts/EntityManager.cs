@@ -46,7 +46,7 @@ public class EntityManager : MonoBehaviour
         ShowTargetPicker(ExistTargetPickEntity);
     }
 
-   
+
 
     IEnumerator AICo()
     {
@@ -57,13 +57,13 @@ public class EntityManager : MonoBehaviour
         {
             int rand = Random.Range(i, attackers.Count);
             Entity temp = attackers[i];
-            attackers[i]=attackers[rand];
-            attackers[rand]=temp;
+            attackers[i] = attackers[rand];
+            attackers[rand] = temp;
         }
         foreach (var attacker in attackers)
         {
             var defenders = new List<Entity>(myEntities);
-            int rand=Random.Range(0, defenders.Count);
+            int rand = Random.Range(0, defenders.Count);
             Attack(attacker, defenders[rand]);
             if (TurnManager.Inst.isLoading)
                 yield break;
@@ -77,7 +77,7 @@ public class EntityManager : MonoBehaviour
         var targetEntities = isMine ? myEntities : otherEntities;
         for (int i = 0; i < targetEntities.Count; i++)
         {
-            float targetX = (targetEntities.Count - 1) * -9.2f + i * 17.8f-13.3f;
+            float targetX = (targetEntities.Count - 1) * -9.2f + i * 17.8f - 13.3f;
             var targetEntity = targetEntities[i];
             targetEntity.originPos = new Vector3(targetX, targetY, 0);
             targetEntity.MoveTransform(targetEntity.originPos, true, 0.5f);
@@ -87,21 +87,22 @@ public class EntityManager : MonoBehaviour
     }
     public void InsertMyEmptyEntity(float xPos)
     {
-        if (IsFullMyEntities) 
+        if (IsFullMyEntities)
             return;
-        if (!ExistMyEmptyEntity) 
+        if (!ExistMyEmptyEntity)
             myEntities.Add(myEmptyEntity);
-        Vector3 emptyEntityPos= myEmptyEntity.transform.position;
-        emptyEntityPos.x = xPos;    
+        Vector3 emptyEntityPos = myEmptyEntity.transform.position;
+        emptyEntityPos.x = xPos;
         myEmptyEntity.transform.position = emptyEntityPos;
         int _emptyEntityIndex = MyEmptyEntityIndex;
-        myEntities.Sort(((entity1, entity2)=>entity1.transform.position.x.CompareTo(entity2.transform.position.x)));
+        myEntities.Sort(((entity1, entity2) => entity1.transform.position.x.CompareTo(entity2.transform.position.x)));
         if (MyEmptyEntityIndex != _emptyEntityIndex)
             EntityAlignment(true);
     }
     public void RemoveMyEmptyEntity()
     {
-        if (!ExistMyEmptyEntity) return;
+        if (!ExistMyEmptyEntity)
+            return;
         myEntities.RemoveAt(MyEmptyEntityIndex);
         EntityAlignment(true);
     }
@@ -118,12 +119,12 @@ public class EntityManager : MonoBehaviour
                 return false;
         }
         var entityObject = Instantiate(entityPrefab, spawnPos, Utils.QI);
-        var entity=entityObject.GetComponent<Entity>();
+        var entity = entityObject.GetComponent<Entity>();
         if (isMine)
             myEntities[MyEmptyEntityIndex] = entity;
         else
             otherEntities.Insert(Random.Range(0, otherEntities.Count), entity);
-        entity.isMine=isMine;
+        entity.isMine = isMine;
         entity.Setup(item);
         EntityAlignment(isMine);
         return true;
@@ -136,10 +137,10 @@ public class EntityManager : MonoBehaviour
     }
     public void EntityMouseUp()
     {
-        if (!CanMouseInput) 
+        if (!CanMouseInput)
             return;
         if (selectEntity && targetPickEntity && selectEntity.attackable)
-            Attack(selectEntity,targetPickEntity);
+            Attack(selectEntity, targetPickEntity);
         selectEntity = null;
         targetPickEntity = null;
     }
@@ -150,11 +151,11 @@ public class EntityManager : MonoBehaviour
         bool existTarget = false;
         foreach (var hit in Physics2D.RaycastAll(Utils.MousePos, Vector3.forward))
         {
-            Entity entity=hit.collider?.GetComponent<Entity>();
+            Entity entity = hit.collider?.GetComponent<Entity>();
             if (entity != null && !entity.isMine && selectEntity.attackable)
             {
-                targetPickEntity=entity;
-                existTarget=true;
+                targetPickEntity = entity;
+                existTarget = true;
                 break;
             }
         }
@@ -169,13 +170,13 @@ public class EntityManager : MonoBehaviour
             .Append(attacker.transform.DOMove(defender.originPos, 0.4f)).SetEase(Ease.InSine)
             .AppendCallback(() =>
             {
-                
+
                 defender.Damaged(attacker.attack);
-                
-                SpawnDamage(attacker.attack,defender.transform);
+
+                SpawnDamage(attacker.attack, defender.transform);
             })
             .Append(attacker.transform.DOMove(attacker.originPos, 0.4f)).SetEase(Ease.OutSine)
-            .OnComplete(() => AttackCallback(attacker,defender));
+            .OnComplete(() => AttackCallback(attacker, defender));
     }
     void AttackCallback(params Entity[] entities)
     {
@@ -223,28 +224,28 @@ public class EntityManager : MonoBehaviour
     {
         float baseY = -8.0564f;
         float baseX = -37.5912f;
-        float zPosition = leftSideIndex; // µÚ¿¡ Á×Àº Ä«µå´Â ´õ ÀÛÀº z°ªÀ» °¡Áü
-        entity.transform.position = new Vector3(baseX-(leftSideIndex*0.3f), baseY + (leftSideIndex * 3), zPosition);
+        float zPosition = leftSideIndex; // ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ zï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        entity.transform.position = new Vector3(baseX - (leftSideIndex * 0.3f), baseY + (leftSideIndex * 3), zPosition);
         entity.transform.localScale = new Vector3(0.75f, 0.75f, 0);
-        
-        entity.GetComponent<Order>().SetOriginOrder(-leftSideIndex*10);
+
+        entity.GetComponent<Order>().SetOriginOrder(-leftSideIndex * 10);
         leftSideIndex--;
     }
 
     void PlaceEntityOnRightSide(GameObject entity)
     {
         float baseY = 18.9066f;
-        float zPosition = rightSideIndex; // µÚ¿¡ Á×Àº Ä«µå´Â ´õ ÀÛÀº z°ªÀ» °¡Áü
+        float zPosition = rightSideIndex; // ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ zï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         entity.transform.position = new Vector3(10.8862f, baseY + (rightSideIndex * 3), zPosition);
         entity.transform.localScale = new Vector3(0.75f, 0.75f, 0);
-        
+
         entity.GetComponent<Order>().SetOriginOrder(-leftSideIndex * 10);
         rightSideIndex--;
     }
 
     void MyBreakAreaLevel(Entity entity)
     {
-        MyBreakArea=MyBreakArea+entity.level;
+        MyBreakArea = MyBreakArea + entity.level;
         print(MyBreakArea);
     }
     void OtherBreakAreaLevel(Entity entity)
@@ -266,7 +267,7 @@ public class EntityManager : MonoBehaviour
     {
         TargetPicker.SetActive(isShow);
         if (ExistTargetPickEntity)
-            TargetPicker.transform.position=targetPickEntity.transform.position;
+            TargetPicker.transform.position = targetPickEntity.transform.position;
     }
     void SpawnDamage(int damage, Transform tr)
     {
