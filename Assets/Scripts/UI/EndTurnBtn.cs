@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class EndTurnBtn : MonoBehaviour
 {
-    [SerializeField] Sprite active;
-    [SerializeField] Sprite inactive;
-    [SerializeField] Text btnText;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] private Sprite active;
+    [SerializeField] private Sprite inactive;
+    [SerializeField] private Text btnText;
+
     void Start()
     {
         Setup(false);
@@ -22,5 +19,4 @@ public class EndTurnBtn : MonoBehaviour
         GetComponent<Button>().interactable = isActive;
         btnText.color = isActive ? new Color32(255, 195, 90, 255) : new Color32(55, 55, 55, 255);
     }
-    // Update is called once per frame
 }

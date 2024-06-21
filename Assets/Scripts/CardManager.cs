@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -7,37 +6,67 @@ using System;
 
 public class CardManager : MonoBehaviour
 {
+    private enum ECardState
+    {
+        Nothing,
+        CanMouseOVer,
+        CanMouseDrag
+    }
+
+    [SerializeField] private ItemSO itemSO;
+    [SerializeField] private GameObject cardPrefab;
+    [SerializeField] private List<Card> myCards;
+    [SerializeField] private List<Card> otherCards;
+    [SerializeField] private Transform cardSpawnPoint;
+    [SerializeField] private Transform otherCardSpawnPoint;
+    [SerializeField] private Transform myCardLeft;
+    [SerializeField] private Transform myCardRight;
+    [SerializeField] private Transform otherCardLeft;
+    [SerializeField] private Transform otherCardRight;
+    [SerializeField] private ECardState eCardState;
+
+    private List<Item> itemBuffer;
+    private Card selectCard;
+    private bool isMyCardDrag;
+    private bool onMyCardArea;
+    private int myPutCount;
+
     public static CardManager Inst { get; private set; }
-    void Awake() => Inst = this;
-    [SerializeField] ItemSO itemSO;
-    [SerializeField] GameObject cardPrefab;
-    [SerializeField] List<Card> myCards;
-    [SerializeField] List<Card> otherCards;
-    [SerializeField] Transform cardSpawnPoint;
-    [SerializeField] Transform otherCardSpawnPoint;
-    [SerializeField] Transform myCardLeft;
-    [SerializeField] Transform myCardRight;
-    [SerializeField] Transform otherCardLeft;
-    [SerializeField] Transform otherCardRight;
-    [SerializeField] ECardState eCardState;
-    List<Item> itemBuffer;
-    Card selectCard;
-    bool isMyCardDrag;
-    bool onMyCardArea;
-    enum ECardState { Nothing, CanMouseOVer, CanMouseDrag }
-    int myPutCount;
+
+    void Awake()
+    {
+        Inst = this;
+    }
+
+    void Start()
+    {
+        SetupItemBuffer();
+        TurnManager.OnAddCard += AddCard;
+        TurnManager.OnTurnStarted += OnTurnStarted;
+    }
+
+    void OnDestroy()
+    {
+        TurnManager.OnAddCard -= AddCard;
+        TurnManager.OnTurnStarted -= OnTurnStarted;
+    }
+
     public Item PopItem()
     {
         if (itemBuffer.Count == 0)
+        {
             SetupItemBuffer();
+        }
 
         Item item = itemBuffer[0];
         itemBuffer.RemoveAt(0);
         return item;
     }
+
     void SetupItemBuffer()
     {
         itemBuffer = new List<Item>(100);
+
         for (int i = 0; i < itemSO.items.Length; i++)
         {
             Item item = itemSO.items[i];
@@ -53,34 +82,23 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        SetupItemBuffer();
-        TurnManager.OnAddCard += AddCard;
-        TurnManager.OnTurnStarted += OnTurnStarted;
-    }
-    void OnDestroy()
-    {
-        TurnManager.OnAddCard -= AddCard;
-        TurnManager.OnTurnStarted -= OnTurnStarted;
-    }
-
     void OnTurnStarted(bool myTurn)
     {
         if (myTurn)
             myPutCount = 0;
     }
-    void Update()
+    private void Update()
     {
         if (isMyCardDrag)
+        {
             CardDrag();
+        }
+
         DetectCardArea();
         SetECardState();
     }
 
-
-
-    void AddCard(bool isMine)
+    private void AddCard(bool isMine)
     {
         var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, Utils.QI);
         var card = cardObject.GetComponent<Card>();
@@ -89,7 +107,8 @@ public class CardManager : MonoBehaviour
         SetOriginOrder(isMine);
         CardAlignment(isMine);
     }
-    void SetOriginOrder(bool isMine)
+
+    private void SetOriginOrder(bool isMine)
     {
         int count = isMine ? myCards.Count : otherCards.Count;
         for (int i = 0; i < count; i++)
@@ -98,7 +117,8 @@ public class CardManager : MonoBehaviour
             targetCard?.GetComponent<Order>().SetOriginOrder(i);
         }
     }
-    void CardAlignment(bool isMine)
+
+    private void CardAlignment(bool isMine)
     {
         List<PRS> originCardPRSs = new List<PRS>();
         if (isMine)
@@ -114,7 +134,8 @@ public class CardManager : MonoBehaviour
             targetCard.MoveTransform(targetCard.originPRS, true, 0.7f);
         }
     }
-    List<PRS> RoundAlignment(Transform leftTr, Transform rightTr, int objCount, float height, Vector3 scale)
+
+    private List<PRS> RoundAlignment(Transform leftTr, Transform rightTr, int objCount, float height, Vector3 scale)
     {
         float[] objLerps = new float[objCount];
         List<PRS> results = new List<PRS>(objCount);
@@ -158,12 +179,19 @@ public class CardManager : MonoBehaviour
     public bool TryPutCard(bool isMine)
     {
         if (isMine && myPutCount >= 1)
+        {
             return false;
+        }
+
         if (!isMine && otherCards.Count <= 0)
+        {
             return false;
+        }
+
         Card card = isMine ? selectCard : otherCards[Random.Range(0, otherCards.Count)];
         var spawnPos = isMine ? Utils.MousePos : otherCardSpawnPoint.position;
         var targetCards = isMine ? myCards : otherCards;
+
         if (EntityManager.Inst.SpawnEntity(isMine, card.item, spawnPos))
         {
             targetCards.Remove(card);
@@ -183,25 +211,28 @@ public class CardManager : MonoBehaviour
             CardAlignment(isMine);
             return false;
         }
-
     }
 
     #region MyCard
+
     public void CardMouseOver(Card card)
     {
         selectCard = card;
         EnlargeCard(true, card);
     }
+
     public void CardMouseExit(Card card)
     {
         EnlargeCard(false, card);
     }
+
     public void CardMouseDown()
     {
         if (eCardState != ECardState.CanMouseDrag)
             return;
         isMyCardDrag = true;
     }
+
     public void CardMouseUp()
     {
         isMyCardDrag = false;
@@ -212,10 +243,12 @@ public class CardManager : MonoBehaviour
         else
             TryPutCard(true);
     }
-    void CardDrag()
+    private void CardDrag()
     {
         if (selectCard == null)
+        {
             return;
+        }
 
         if (!onMyCardArea)
         {
@@ -224,14 +257,14 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    void DetectCardArea()
+    private void DetectCardArea()
     {
         RaycastHit2D[] hits = Physics2D.RaycastAll(Utils.MousePos, Vector3.forward);
         int layer = LayerMask.NameToLayer("MyCardArea");
         onMyCardArea = Array.Exists(hits, x => x.collider.gameObject.layer == layer);
     }
 
-    void EnlargeCard(bool isEnlarge, Card card)
+    private void EnlargeCard(bool isEnlarge, Card card)
     {
         if (isEnlarge)
         {
@@ -239,10 +272,13 @@ public class CardManager : MonoBehaviour
             card.MoveTransform(new PRS(enlargePos, Utils.QI, Vector3.one * 2.5f), false);
         }
         else
+        {
             card.MoveTransform(card.originPRS, false);
+        }
+
         card.GetComponent<Order>().SetMostFrontOrder(isEnlarge);
     }
-    void SetECardState()
+    private void SetECardState()
     {
         if (TurnManager.Inst.isLoading)
             eCardState = ECardState.Nothing;
@@ -251,5 +287,6 @@ public class CardManager : MonoBehaviour
         else if (TurnManager.Inst.myTurn && myPutCount == 0)
             eCardState = ECardState.CanMouseDrag;
     }
+
     #endregion
 }

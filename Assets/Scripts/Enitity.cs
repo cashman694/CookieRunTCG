@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using DG.Tweening;
 
 public class Entity : MonoBehaviour
 {
     [SerializeField] public Item item;
     [SerializeField] private SpriteRenderer entity;
-    [SerializeField] GameObject sleepParticle;
+    [SerializeField] private GameObject sleepParticle;
+
     public int attack;
     public int health;
     public int level;
@@ -18,7 +16,17 @@ public class Entity : MonoBehaviour
     public bool attackable;
     public Vector3 originPos;
     private Vector3 originalScale;
-    int liveCount;
+    private int liveCount;
+
+    private void Awake()
+    {
+        if (entity == null)
+        {
+            entity = GetComponent<SpriteRenderer>();
+        }
+
+        originalScale = transform.localScale; // Save the original scale
+    }
 
     void Start()
     {
@@ -30,21 +38,20 @@ public class Entity : MonoBehaviour
     {
         TurnManager.OnTurnStarted -= OnTurnStarted;
     }
+
     void OnTurnStarted(bool myTurn)
     {
         if (isBossOrEmpty)
-            return;
-        if (isMine == myTurn)
-            liveCount++;
-        sleepParticle.SetActive(liveCount < 1);
-    }
-    private void Awake()
-    {
-        if (entity == null)
         {
-            entity = GetComponent<SpriteRenderer>();
+            return;
         }
-        originalScale = transform.localScale; // Save the original scale
+
+        if (isMine == myTurn)
+        {
+            liveCount++;
+        }
+
+        sleepParticle.SetActive(liveCount < 1);
     }
 
     public void Setup(Item item)
@@ -55,22 +62,31 @@ public class Entity : MonoBehaviour
         this.item = item;
         entity.sprite = this.item.sprite;
     }
+
     void OnMouseDown()
     {
         if (isMine)
+        {
             EntityManager.Inst.EntityMouseDown(this);
+        }
     }
+
     void OnMouseUp()
     {
         if (isMine)
+        {
             EntityManager.Inst.EntityMouseUp();
+        }
     }
+
     void OnMouseDrag()
     {
         if (isMine)
+        {
             EntityManager.Inst.EntityMouseDrag();
-
+        }
     }
+
     public bool Damaged(int damage)
     {
         health -= damage;
@@ -81,12 +97,17 @@ public class Entity : MonoBehaviour
         }
         return false;
     }
+
     public void MoveTransform(Vector3 pos, bool useDotween, float dotweenTime = 0)
     {
         if (useDotween)
+        {
             transform.DOMove(pos, dotweenTime);
+        }
         else
+        {
             transform.position = pos;
+        }
     }
 
     private void OnMouseEnter()
@@ -97,7 +118,6 @@ public class Entity : MonoBehaviour
     private void OnMouseExit()
     {
         EnlargeEntity(false);
-
     }
 
     private void EnlargeEntity(bool isEnlarge)
