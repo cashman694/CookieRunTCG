@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+    "com.gemserk.selectionhistory": "https://github.com/acoppes/unity-history-window.git#1.5.5",
+    "com.neuecc.unirx": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
     "com.unity.collab-proxy": "2.3.1",
     "com.unity.device-simulator.devices": "1.0.0",
     "com.unity.feature.2d": "2.0.0",
@@ -11,6 +14,7 @@
     "com.unity.timeline": "1.8.6",
     "com.unity.ugui": "2.0.0",
     "com.unity.visualscripting": "1.9.4",
+    "jp.hadashikick.vcontainer": "https://github.com/hadashiA/VContainer.git?path=VContainer/Assets/VContainer#1.15.4",
     "com.unity.modules.accessibility": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
