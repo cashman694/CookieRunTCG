@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Order : MonoBehaviour
 {
-    [SerializeField] Renderer[] backRenderers;
-    [SerializeField] Renderer[] middleRenderers;
-    [SerializeField] string sortingLayerName;
-    int originOrder;
+    [SerializeField] private Renderer[] backRenderers;
+    [SerializeField] private Renderer[] middleRenderers;
+    [SerializeField] private string sortingLayerName;
 
+    private int originOrder;
 
     public void SetOriginOrder(int originOrder)
     {

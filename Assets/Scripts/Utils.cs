@@ -27,8 +27,8 @@ public class Utils
         get
         {
             Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 100; // MyCardArea의 z값에 맞춤
+            mousePos.z = 100; // MyCardArea
             return Camera.main.ScreenToWorldPoint(mousePos);
         }
     }
-    }
+}
