@@ -1,9 +1,9 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using UnityEngine;
 
-// Ä¡Æ®, UI, ·©Å·, °ÔÀÓ¿À¹ö
+// ì¹˜íŠ¸, UI, ëž­í‚¹, ê²Œìž„ì˜¤ë²„
 public class GameManager : MonoBehaviour
 {
     public static GameManager Inst { get; private set; }
@@ -47,6 +47,6 @@ public class GameManager : MonoBehaviour
         TurnManager.Inst.isLoading = true;
         endTurnBtn.SetActive(false);
         yield return delay2;
-        resultPanel.Show(isMyWin?"½Â¸®":"ÆÐ¹è");
+        resultPanel.Show(isMyWin?"ìŠ¹ë¦¬":"íŒ¨ë°°");
     }
 }

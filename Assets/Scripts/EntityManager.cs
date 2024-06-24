@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -223,7 +223,7 @@ public class EntityManager : MonoBehaviour
     {
         float baseY = -8.0564f;
         float baseX = -37.5912f;
-        float zPosition = leftSideIndex; // µÚ¿¡ Á×Àº Ä«µå´Â ´õ ÀÛÀº z°ªÀ» °¡Áü
+        float zPosition = leftSideIndex; // ë’¤ì— ì£½ì€ ì¹´ë“œëŠ” ë” ì‘ì€ zê°’ì„ ê°€ì§
         entity.transform.position = new Vector3(baseX-(leftSideIndex*0.3f), baseY + (leftSideIndex * 3), zPosition);
         entity.transform.localScale = new Vector3(0.75f, 0.75f, 0);
         
@@ -234,7 +234,7 @@ public class EntityManager : MonoBehaviour
     void PlaceEntityOnRightSide(GameObject entity)
     {
         float baseY = 18.9066f;
-        float zPosition = rightSideIndex; // µÚ¿¡ Á×Àº Ä«µå´Â ´õ ÀÛÀº z°ªÀ» °¡Áü
+        float zPosition = rightSideIndex; // ë’¤ì— ì£½ì€ ì¹´ë“œëŠ” ë” ì‘ì€ zê°’ì„ ê°€ì§
         entity.transform.position = new Vector3(10.8862f, baseY + (rightSideIndex * 3), zPosition);
         entity.transform.localScale = new Vector3(0.75f, 0.75f, 0);
         

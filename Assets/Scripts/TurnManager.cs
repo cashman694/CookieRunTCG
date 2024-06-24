@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -10,9 +10,9 @@ public class TurnManager : MonoBehaviour
     public static TurnManager Inst { get; private set; }
     void Awake() => Inst = this;
     [Header("Develop")]
-    [SerializeField] [Tooltip("½ÃÀÛ ÅÏ ¸ğµå¸¦ Á¤ÇÕ´Ï´Ù")] ETurnMode eTurnMode;
-    [SerializeField] [Tooltip("Ä«µå ¹èºĞÀÌ ¸Å¿ì »¡¶óÁı´Ï´Ù")] bool fastMode;
-    [SerializeField] [Tooltip("½ÃÀÛ Ä«µå °³¼ö¸¦ Á¤ÇÕ´Ï´Ù")] int startCardCount;
+    [SerializeField] [Tooltip("ì‹œì‘ í„´ ëª¨ë“œë¥¼ ì •í•©ë‹ˆë‹¤")] ETurnMode eTurnMode;
+    [SerializeField] [Tooltip("ì¹´ë“œ ë°°ë¶„ì´ ë§¤ìš° ë¹¨ë¼ì§‘ë‹ˆë‹¤")] bool fastMode;
+    [SerializeField] [Tooltip("ì‹œì‘ ì¹´ë“œ ê°œìˆ˜ë¥¼ ì •í•©ë‹ˆë‹¤")] int startCardCount;
     [Header("Properties")]
     public bool isLoading;
     public bool myTurn;
@@ -55,7 +55,7 @@ public class TurnManager : MonoBehaviour
     {
         isLoading = true;
         if (myTurn)
-            GameManager.Inst.Notification("³ªÀÇ ÅÏ");
+            GameManager.Inst.Notification("ë‚˜ì˜ í„´");
         isLoading= true;
         yield return delay07;   
         OnAddCard?.Invoke(myTurn);

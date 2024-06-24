@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,7 +27,7 @@ public class Utils
         get
         {
             Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 100; // MyCardAreaÀÇ z°ª¿¡ ¸ÂÃã
+            mousePos.z = 100; // MyCardAreaì˜ zê°’ì— ë§ì¶¤
             return Camera.main.ScreenToWorldPoint(mousePos);
         }
     }
