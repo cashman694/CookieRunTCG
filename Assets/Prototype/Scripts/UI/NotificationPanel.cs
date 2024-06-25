@@ -4,27 +4,30 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 
-public class NotificationPanel : MonoBehaviour
+namespace Prototype
 {
-    [SerializeField] private TMP_Text notificationTMP;
-
-    private void Start()
+    public class NotificationPanel : MonoBehaviour
     {
-        ScaleZero();
-    }
+        [SerializeField] private TMP_Text notificationTMP;
 
-    [ContextMenu("ScaleOne")]
-    void ScaleOne() => transform.localScale = Vector3.one;
+        private void Start()
+        {
+            ScaleZero();
+        }
 
-    [ContextMenu("ScaleZero")]
-    public void ScaleZero() => transform.localScale = Vector3.zero;
+        [ContextMenu("ScaleOne")]
+        void ScaleOne() => transform.localScale = Vector3.one;
 
-    public void Show(string message)
-    {
-        notificationTMP.text = message;
-        Sequence sequence = DOTween.Sequence()
-            .Append(transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InOutQuad))
-            .AppendInterval(0.9f)
-            .Append(transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
+        [ContextMenu("ScaleZero")]
+        public void ScaleZero() => transform.localScale = Vector3.zero;
+
+        public void Show(string message)
+        {
+            notificationTMP.text = message;
+            Sequence sequence = DOTween.Sequence()
+                .Append(transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InOutQuad))
+                .AppendInterval(0.9f)
+                .Append(transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
+        }
     }
 }

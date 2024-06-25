@@ -1,22 +1,25 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EndTurnBtn : MonoBehaviour
+namespace Prototype
 {
-    [SerializeField] private Sprite active;
-    [SerializeField] private Sprite inactive;
-    [SerializeField] private Text btnText;
-
-    void Start()
+    public class EndTurnBtn : MonoBehaviour
     {
-        Setup(false);
-        TurnManager.OnTurnStarted += Setup;
-    }
+        [SerializeField] private Sprite active;
+        [SerializeField] private Sprite inactive;
+        [SerializeField] private Text btnText;
 
-    public void Setup(bool isActive)
-    {
-        GetComponent<Image>().sprite = isActive ? active : inactive;
-        GetComponent<Button>().interactable = isActive;
-        btnText.color = isActive ? new Color32(255, 195, 90, 255) : new Color32(55, 55, 55, 255);
+        void Start()
+        {
+            Setup(false);
+            TurnManager.OnTurnStarted += Setup;
+        }
+
+        public void Setup(bool isActive)
+        {
+            GetComponent<Image>().sprite = isActive ? active : inactive;
+            GetComponent<Button>().interactable = isActive;
+            btnText.color = isActive ? new Color32(255, 195, 90, 255) : new Color32(55, 55, 55, 255);
+        }
     }
 }

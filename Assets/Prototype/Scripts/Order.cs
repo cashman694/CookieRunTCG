@@ -2,39 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Order : MonoBehaviour
+namespace Prototype
 {
-    [SerializeField] private Renderer[] backRenderers;
-    [SerializeField] private Renderer[] middleRenderers;
-    [SerializeField] private string sortingLayerName;
-
-    private int originOrder;
-
-    public void SetOriginOrder(int originOrder)
+    public class Order : MonoBehaviour
     {
-        this.originOrder = originOrder;
-        SetOrder(originOrder);
-    }
+        [SerializeField] private Renderer[] backRenderers;
+        [SerializeField] private Renderer[] middleRenderers;
+        [SerializeField] private string sortingLayerName;
 
-    public void SetMostFrontOrder(bool isMostFront)
-    {
-        SetOrder(isMostFront ? 100 : originOrder);
-    }
+        private int originOrder;
 
-    public void SetOrder(int order)
-    {
-        int mulOrder = order * 10;
-
-        foreach (var renderer in backRenderers)
+        public void SetOriginOrder(int originOrder)
         {
-            renderer.sortingLayerName = sortingLayerName;
-            renderer.sortingOrder = mulOrder;
+            this.originOrder = originOrder;
+            SetOrder(originOrder);
         }
 
-        foreach (var renderer in middleRenderers)
+        public void SetMostFrontOrder(bool isMostFront)
         {
-            renderer.sortingLayerName = sortingLayerName;
-            renderer.sortingOrder = mulOrder + 1;
+            SetOrder(isMostFront ? 100 : originOrder);
+        }
+
+        public void SetOrder(int order)
+        {
+            int mulOrder = order * 10;
+
+            foreach (var renderer in backRenderers)
+            {
+                renderer.sortingLayerName = sortingLayerName;
+                renderer.sortingOrder = mulOrder;
+            }
+
+            foreach (var renderer in middleRenderers)
+            {
+                renderer.sortingLayerName = sortingLayerName;
+                renderer.sortingOrder = mulOrder + 1;
+            }
         }
     }
 }

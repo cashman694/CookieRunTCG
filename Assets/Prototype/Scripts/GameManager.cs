@@ -1,70 +1,73 @@
 using System.Collections;
 using UnityEngine;
 
-// 치트, UI, 랭킹, 게임오버
-public class GameManager : MonoBehaviour
+namespace Prototype
 {
-    [SerializeField] private NotificationPanel notificationPanel;
-    [SerializeField] private ResultPanel resultPanel;
-    [SerializeField] private GameObject endTurnBtn;
-
-    private WaitForSeconds delay2 = new WaitForSeconds(2);
-
-    public static GameManager Inst { get; private set; }
-
-    void Awake()
+    // 치트, UI, 랭킹, 게임오버
+    public class GameManager : MonoBehaviour
     {
-        Inst = this;
-    }
+        [SerializeField] private NotificationPanel notificationPanel;
+        [SerializeField] private ResultPanel resultPanel;
+        [SerializeField] private GameObject endTurnBtn;
 
-    void Start()
-    {
-        StartGame();
-    }
+        private WaitForSeconds delay2 = new WaitForSeconds(2);
 
-    private void Update()
-    {
+        public static GameManager Inst { get; private set; }
+
+        void Awake()
+        {
+            Inst = this;
+        }
+
+        void Start()
+        {
+            StartGame();
+        }
+
+        private void Update()
+        {
 #if UNITY_EDITOR
         InputCheatKey();
 #endif
-    }
-
-    private void InputCheatKey()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            TurnManager.OnAddCard?.Invoke(true);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+
+        private void InputCheatKey()
         {
-            TurnManager.OnAddCard?.Invoke(false);
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                TurnManager.OnAddCard?.Invoke(true);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                TurnManager.OnAddCard?.Invoke(false);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                TurnManager.Inst.EndTurn();
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                CardManager.Inst.TryPutCard(false);
+            }
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+
+        public void StartGame()
         {
-            TurnManager.Inst.EndTurn();
+            StartCoroutine(TurnManager.Inst.StartGameCo());
         }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
+
+        public void Notification(string message)
         {
-            CardManager.Inst.TryPutCard(false);
+            notificationPanel.Show(message);
         }
-    }
 
-    public void StartGame()
-    {
-        StartCoroutine(TurnManager.Inst.StartGameCo());
-    }
+        public IEnumerator GameOver(bool isMyWin)
+        {
+            TurnManager.Inst.isLoading = true;
+            endTurnBtn.SetActive(false);
+            yield return delay2;
 
-    public void Notification(string message)
-    {
-        notificationPanel.Show(message);
-    }
-
-    public IEnumerator GameOver(bool isMyWin)
-    {
-        TurnManager.Inst.isLoading = true;
-        endTurnBtn.SetActive(false);
-        yield return delay2;
-
-        resultPanel.Show(isMyWin ? "승리" : "패배");
+            resultPanel.Show(isMyWin ? "승리" : "패배");
+        }
     }
 }
