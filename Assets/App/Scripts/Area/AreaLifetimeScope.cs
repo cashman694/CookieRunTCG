@@ -2,7 +2,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace Area
+namespace App.Area
 {
     public sealed class AreaLifetimeScope : LifetimeScope
     {

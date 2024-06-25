@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: Area.AreaLifetimeScope
+    TypeName: App.Area.AreaLifetimeScope
   autoRun: 1
   autoInjectGameObjects: []
   _PlayerHandDataStore: {fileID: 1746428958}

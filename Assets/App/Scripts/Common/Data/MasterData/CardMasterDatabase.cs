@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Common.Data.MasterData
+namespace App.Common.Data.MasterData
 {
     [CreateAssetMenu(menuName = "App/MasterData/CardMasterDatabase")]
     public sealed class CardMasterDatabase : ScriptableObject

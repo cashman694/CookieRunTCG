@@ -1,10 +1,10 @@
-using Battle.Data;
-using Common.Data.MasterData;
+using App.Battle.Data;
+using App.Common.Data.MasterData;
 using System;
 using System.Collections.Generic;
 using UniRx;
 
-namespace Battle.Interfaces.DataStores
+namespace App.Battle.Interfaces.DataStores
 {
     public interface IPlayerHandDataStore
     {

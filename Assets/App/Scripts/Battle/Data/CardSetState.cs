@@ -1,4 +1,4 @@
-namespace Battle.Data
+namespace App.Battle.Data
 {
     public enum CardSetState
     {

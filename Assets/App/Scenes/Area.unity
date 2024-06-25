@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: Common.CommonLifetimeScope
+    TypeName: App.Common.CommonLifetimeScope
   autoRun: 1
   autoInjectGameObjects: []
 --- !u!1660057539 &9223372036854775807

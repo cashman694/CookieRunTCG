@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Common.Data.MasterData
+namespace App.Common.Data.MasterData
 {
     [CreateAssetMenu(menuName = "App/MasterData/CardMasterData")]
     public sealed class CardMasterData : ScriptableObject

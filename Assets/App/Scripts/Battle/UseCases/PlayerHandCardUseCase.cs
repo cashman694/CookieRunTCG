@@ -1,15 +1,15 @@
-using Battle.Interfaces.DataStores;
-using Battle.Interfaces.Presenters;
-using Common.Data.MasterData;
+using App.Battle.Interfaces.DataStores;
+using App.Battle.Interfaces.Presenters;
+using App.Common.Data.MasterData;
 using VContainer;
 using VContainer.Unity;
 using UniRx;
 using System;
 using Cysharp.Threading.Tasks;
 using System.Linq;
-using Battle.Data;
+using App.Battle.Data;
 
-namespace Battle.UseCases
+namespace App.Battle.UseCases
 {
     public sealed class PlayerHandCardUseCase : IInitializable, IDisposable
     {

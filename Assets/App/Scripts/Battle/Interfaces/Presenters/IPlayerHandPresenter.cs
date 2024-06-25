@@ -1,7 +1,7 @@
-using Battle.Data;
+using App.Battle.Data;
 using System.Collections.Generic;
 
-namespace Battle.Interfaces.Presenters
+namespace App.Battle.Interfaces.Presenters
 {
     public interface IPlayerHandPresenter
     {

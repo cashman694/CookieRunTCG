@@ -1,12 +1,12 @@
-using Battle.Data;
-using Battle.Interfaces.DataStores;
-using Common.Data.MasterData;
+using App.Battle.Data;
+using App.Battle.Interfaces.DataStores;
+using App.Common.Data.MasterData;
 using System;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
-namespace Battle.DataStores
+namespace App.Battle.DataStores
 {
     public sealed class PlayerHandDataStore : MonoBehaviour, IPlayerHandDataStore
     {

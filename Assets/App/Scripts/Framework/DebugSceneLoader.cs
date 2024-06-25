@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Framework
+namespace App.Framework
 {
     public class DebugSceneLoader : MonoBehaviour
     {

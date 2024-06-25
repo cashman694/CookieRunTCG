@@ -1,4 +1,4 @@
-namespace Common.Data
+namespace App.Common.Data
 {
     public enum RareLevel
     {

@@ -1,11 +1,11 @@
-using Battle.DataStores;
-using Battle.Presenters;
-using Battle.UseCases;
+using App.Battle.DataStores;
+using App.Battle.Presenters;
+using App.Battle.UseCases;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace Battle
+namespace App.Battle
 {
     public sealed class BattleLifetimeScope : LifetimeScope
     {

@@ -1,9 +1,9 @@
-using Common.Data.MasterData;
+using App.Common.Data.MasterData;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace Common
+namespace App.Common
 {
     public sealed class CommonLifetimeScope : LifetimeScope
     {

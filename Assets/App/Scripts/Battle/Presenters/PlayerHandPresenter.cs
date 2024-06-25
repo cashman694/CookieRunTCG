@@ -1,9 +1,9 @@
-using Battle.Data;
-using Battle.Interfaces.Presenters;
+using App.Battle.Data;
+using App.Battle.Interfaces.Presenters;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Battle.Presenters
+namespace App.Battle.Presenters
 {
     public class PlayerHandPresenter : MonoBehaviour, IPlayerHandPresenter
     {
