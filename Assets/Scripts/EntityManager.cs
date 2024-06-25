@@ -303,7 +303,7 @@ public class EntityManager : MonoBehaviour
         float baseY = 18.9066f;
         float zPosition = rightSideIndex; // 뒤에 죽은 카드는 더 작은 z값을 가짐
 
-        entity.transform.position = new Vector3(10.8862f, baseY + (rightSideIndex * 3), zPosition);
+        entity.transform.position = new Vector3(9.8862f, baseY + (rightSideIndex * 3), zPosition);
         entity.transform.localScale = new Vector3(0.75f, 0.75f, 0);
 
         entity.GetComponent<Order>().SetOriginOrder(-leftSideIndex * 10);
