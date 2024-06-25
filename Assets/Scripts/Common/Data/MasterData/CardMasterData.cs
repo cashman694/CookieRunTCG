@@ -6,6 +6,7 @@ namespace Common.Data.MasterData
     public sealed class CardMasterData : ScriptableObject
     {
         public string Id;
+        public string name;
         public CardLevel CardLevel;
         public CostType CostType;
         public int Hp;
