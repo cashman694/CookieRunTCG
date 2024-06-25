@@ -47,8 +47,8 @@ namespace Battle.UseCases
                 })
                 .AddTo(_Disposables);
 
-            _CardMasterDatabase.TryGetById("CookieCardMaster1", out var cookieCard1);
-            _CardMasterDatabase.TryGetById("CookieCardMaster2", out var cookieCard2);
+            _CardMasterDatabase.TryGetById("ST1-001", out var cookieCard1);
+            _CardMasterDatabase.TryGetById("P-001", out var cookieCard2);
 
             _PlayerHandDataStore.AddCard(cookieCard1);
             _PlayerHandDataStore.AddCard(cookieCard2);

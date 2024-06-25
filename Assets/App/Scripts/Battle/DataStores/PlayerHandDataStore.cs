@@ -18,6 +18,11 @@ namespace Battle.DataStores
 
         public void AddCard(CardMasterData cardMasterData)
         {
+            if (cardMasterData == null)
+            {
+                return;
+            }
+
             var newCard = new CardData(cardMasterData);
             _Cards.Add(newCard);
         }

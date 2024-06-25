@@ -163,9 +163,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ScenePaths:
-  - Assets/Scenes/Common.unity
-  - Assets/Scenes/Area.unity
-  - Assets/Scenes/Battle.unity
+  - Assets/App/Scenes/Common.unity
+  - Assets/App/Scenes/Area.unity
+  - Assets/App/Scenes/Battle.unity
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
