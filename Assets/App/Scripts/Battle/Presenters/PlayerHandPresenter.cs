@@ -9,12 +9,12 @@ namespace Battle.Presenters
     {
         public void AddCard(CardData card)
         {
-            print("CardData added: " + card.Hp);
+            print($"[{card.Id}]<{card.Name}> added on hand");
         }
 
         public void RemoveCard(CardData card)
         {
-            print("CardData removed: " + card.Hp);
+            print($"[{card.Id}]<{card.Name}> removed on hand");
         }
     }
 }

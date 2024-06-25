@@ -7,10 +7,12 @@ namespace Battle.Data
         public CardData(CardMasterData cardMasterData)
         {
             Id = cardMasterData.Id;
+            Name = cardMasterData.Name;
             Hp = cardMasterData.Hp;
         }
 
         public string Id { get; }
+        public string Name { get; }
         public int Hp { get; }
 
         public CardSetState CardSetState;
