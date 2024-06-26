@@ -9,5 +9,6 @@ namespace Common.Data
         UR,     // UltraRare
         SEC,    //  SecretRare
         SSR,    // SecretSuperRare
+        P,      // Promotion
     }
 }
