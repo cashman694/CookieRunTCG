@@ -4,16 +4,19 @@ namespace App.Battle.Data
 {
     public sealed class CardData
     {
-        public CardData(CardMasterData cardMasterData)
+        public CardData(string id, CardMasterData cardMasterData)
         {
-            Id = cardMasterData.Id;
+            Id = id;
+            CardNumber = cardMasterData.CardNumber;
             Name = cardMasterData.Name;
-            Hp = cardMasterData.Hp;
+            MaxHp = cardMasterData.Hp;
         }
 
         public string Id { get; }
+        public string CardNumber { get; }
         public string Name { get; }
-        public int Hp { get; }
+        public int MaxHp { get; }
+        public int Hp;
 
         public CardSetState CardSetState;
     }

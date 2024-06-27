@@ -168,6 +168,7 @@ MonoBehaviour:
   autoInjectGameObjects: []
   _PlayerHandDataStore: {fileID: 1746428958}
   _PlayerHandPresenter: {fileID: 1761343338}
+  _CardViewPrefab: {fileID: 7606624276356573912, guid: 5c944adf037e840f19143c209e9cee5d, type: 3}
 --- !u!1 &1746428956
 GameObject:
   m_ObjectHideFlags: 0
@@ -256,6 +257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 349ace6de91854d0c892ad14bc3b3deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _CardView: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

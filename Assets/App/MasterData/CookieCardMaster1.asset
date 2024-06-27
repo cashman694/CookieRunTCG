@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6042434bfb0d74a5bbbff800bbdc7656, type: 3}
   m_Name: CookieCardMaster1
   m_EditorClassIdentifier: 
-  Id: ST1-001
+  CardNumber: ST1-001
   Name: "\uC6A9\uAC10\uD55C \uCFE0\uD0A4"
   CardLevel: 0
   CostType: 1

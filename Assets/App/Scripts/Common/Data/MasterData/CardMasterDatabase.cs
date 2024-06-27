@@ -8,9 +8,15 @@ namespace App.Common.Data.MasterData
     {
         public CardMasterData[] Cards;
 
-        public bool TryGetById(string id, out CardMasterData cardMasterData)
+        /// <summary>
+        /// 카드 넘버로 조회. 없으면 false, cardMasterData는 null 
+        /// </summary>
+        /// <param name="cardNumber"></param>
+        /// <param name="cardMasterData"></param>
+        /// <returns></returns>
+        public bool TryGetByCardNumber(string cardNumber, out CardMasterData cardMasterData)
         {
-            cardMasterData = Cards.FirstOrDefault(x => x.Id == id);
+            cardMasterData = Cards.FirstOrDefault(x => x.CardNumber == cardNumber);
             return cardMasterData != null;
         }
     }
