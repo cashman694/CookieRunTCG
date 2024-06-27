@@ -5,11 +5,15 @@ using System;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
+using VContainer;
 
 namespace App.Battle.DataStores
 {
     public sealed class PlayerHandDataStore : MonoBehaviour, IPlayerHandDataStore
     {
+        // FIXME: 임시 카드ID생성
+        public static int CURRENT_CARD_ID { get; private set; }
+
         private ReactiveCollection<CardData> _Cards = new();
         public IEnumerable<CardData> Cards => _Cards;
 
@@ -20,10 +24,12 @@ namespace App.Battle.DataStores
         {
             if (cardMasterData == null)
             {
+                Debug.LogError("CardMasterdata is null");
                 return;
             }
 
-            var newCard = new CardData(cardMasterData);
+            var cardId = CURRENT_CARD_ID++.ToString();
+            var newCard = new CardData(cardId, cardMasterData);
             _Cards.Add(newCard);
         }
 

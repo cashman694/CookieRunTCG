@@ -5,7 +5,7 @@ namespace App.Common.Data.MasterData
     [CreateAssetMenu(menuName = "App/MasterData/CardMasterData")]
     public sealed class CardMasterData : ScriptableObject
     {
-        public string Id;
+        public string CardNumber;
         public string Name;
         public CardLevel CardLevel;
         public CostType CostType;
