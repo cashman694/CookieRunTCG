@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6042434bfb0d74a5bbbff800bbdc7656, type: 3}
-  m_Name: CookieCardMaster2
+  m_Name: CookieCardMaster12
   m_EditorClassIdentifier: 
-  CardNumber: ST1-002
-  Name: "\uB2CC\uC790\uB9DB \uCFE0\uD0A4"
-  CardLevel: 1
-  CostType: 1
-  Hp: 2
+  CardNumber: ST1-012
+  Name: "\uC880\uBE44\uB9DB\uCFE0\uD0A4"
+  CardLevel: 0
+  CostType: 0
+  Hp: 3
   RareLevel: 0

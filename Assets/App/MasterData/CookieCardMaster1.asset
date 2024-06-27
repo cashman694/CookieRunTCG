@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: CookieCardMaster1
   m_EditorClassIdentifier: 
   CardNumber: ST1-001
-  Name: "\uC6A9\uAC10\uD55C \uCFE0\uD0A4"
-  CardLevel: 0
+  Name: "\uACF5\uC8FC\uB9DB\uCFE0\uD0A4"
+  CardLevel: 1
   CostType: 1
   Hp: 2
-  RareLevel: 7
+  RareLevel: 0
