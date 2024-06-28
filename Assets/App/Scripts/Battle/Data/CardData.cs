@@ -17,6 +17,7 @@ namespace App.Battle.Data
         public string Name { get; }
         public int MaxHp { get; }
         public int Hp;
+        public int Level { get; }
 
         public CardSetState CardSetState;
     }

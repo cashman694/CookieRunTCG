@@ -10,18 +10,19 @@ namespace App.Battle.Views
         [SerializeField] TMP_Text _CardNameTMP;
         [SerializeField] TMP_Text _HPTMP;
         [SerializeField] TMP_Text _CardNumberTMP;
-        public void Init(string id, string name, int level, int MaxHp) => throw new System.NotImplementedException();
+        [SerializeField] TMP_Text _LevelTMP;
+
+        public void Setup(string ID, string Name, int Level, int MaxHp) 
+        {
+            _CardNameTMP.text = Name;
+            _HPTMP.text ="HP"+ MaxHp.ToString();
+            _CardNumberTMP.text = ID.ToString();
+            _LevelTMP.text = Level.ToString();
+        }
 
         public void UpdateHp(int hp) => throw new System.NotImplementedException();
 
-        public CardMasterData CardMasterData;
-        public void Setup(CardMasterData cardMasterData)
-        {
-            this.CardMasterData = cardMasterData;
-            _CardNameTMP.text= cardMasterData.Name;
-            _HPTMP.text = cardMasterData.Hp.ToString();
-            _CardNumberTMP.text = cardMasterData.CardNumber.ToString();
-        }
+       
         public void Unspawn()
         {
             Destroy(gameObject);

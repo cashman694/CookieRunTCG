@@ -33,8 +33,8 @@ namespace App.Battle.Presenters
             var cardView = _CardViewFactory.Invoke(transform);
             _CardViews.Add(card.Id, cardView);
 
-            // TODO: CardView 초기화
-            // cardView.Init(card.Id, card.Name, card.Level, card.MaxHp);
+            
+            cardView.Setup(card.Id, card.Name, card.Level, card.MaxHp);
         }
 
         public void RemoveCard(CardData card)
