@@ -1,4 +1,5 @@
 using App.Battle.Interfaces.Views;
+using App.Common.Data;
 using App.Common.Data.MasterData;
 using TMPro;
 using UnityEngine;
@@ -12,17 +13,16 @@ namespace App.Battle.Views
         [SerializeField] TMP_Text _CardNumberTMP;
         [SerializeField] TMP_Text _LevelTMP;
 
-        public void Setup(string ID, string Name, int Level, int MaxHp) 
+        public void Setup(string id, string name, CardLevel cardLevel, int maxHp) 
         {
-            _CardNameTMP.text = Name;
-            _HPTMP.text ="HP"+ MaxHp.ToString();
-            _CardNumberTMP.text = ID.ToString();
-            _LevelTMP.text = Level.ToString();
+            _CardNameTMP.text = name;
+            _HPTMP.text ="HP"+ maxHp.ToString();
+            _CardNumberTMP.text = id.ToString();
+            _LevelTMP.text = cardLevel.ToString();
         }
 
         public void UpdateHp(int hp) => throw new System.NotImplementedException();
 
-       
         public void Unspawn()
         {
             Destroy(gameObject);

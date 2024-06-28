@@ -34,7 +34,7 @@ namespace App.Battle.Presenters
             _CardViews.Add(card.Id, cardView);
 
             
-            cardView.Setup(card.Id, card.Name, card.Level, card.MaxHp);
+            cardView.Setup(card.Id, card.Name, card.CardLevel, card.MaxHp);
         }
 
         public void RemoveCard(CardData card)
