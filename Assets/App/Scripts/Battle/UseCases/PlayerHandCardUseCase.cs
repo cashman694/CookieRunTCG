@@ -47,22 +47,12 @@ namespace App.Battle.UseCases
                 })
                 .AddTo(_Disposables);
 
-            // DEBUG: 테스트 코드, 패에 카드를 2장 추가하고, 일정시간후 마지막에 추가한 1장 제거 
+            // DEBUG: 테스트 코드, 패에 카드를 2장 추가
             _CardMasterDatabase.TryGetByCardNumber("ST1-001", out var cookieCard1);
-            _CardMasterDatabase.TryGetByCardNumber("P-001", out var cookieCard2);
+            _CardMasterDatabase.TryGetByCardNumber("ST1-002", out var cookieCard2);
 
             _PlayerHandDataStore.AddCard(cookieCard1);
             _PlayerHandDataStore.AddCard(cookieCard2);
-
-            var lastCard = _PlayerHandDataStore.Cards.LastOrDefault();
-            RemoveCardAsync(lastCard).Forget();
-        }
-
-        // DEBUG: 테스트 코드, 3초후 패에서 지정카드를 삭제
-        private async UniTask RemoveCardAsync(BattleCardData cardData)
-        {
-            await UniTask.WaitForSeconds(3f);
-            _PlayerHandDataStore.RemoveCard(cardData);
         }
 
         public void Dispose()
