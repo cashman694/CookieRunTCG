@@ -26,18 +26,18 @@ namespace App.Battle.Presenters
         }
 
 
-        public void AddCard(CardData card)
+        public void AddCard(BattleCardData card)
         {
             print($"[{card.CardNumber}]<{card.Name}> added on player hand");
 
             var cardView = _CardViewFactory.Invoke(transform);
             _CardViews.Add(card.Id, cardView);
 
-            
+
             cardView.Setup(card.CardNumber, card.Name, card.CardLevel, card.MaxHp);
         }
 
-        public void RemoveCard(CardData card)
+        public void RemoveCard(BattleCardData card)
         {
             print($"[{card.CardNumber}]<{card.Name}> removed on player hand");
 

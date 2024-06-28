@@ -14,11 +14,11 @@ namespace App.Battle.DataStores
         // FIXME: 임시 카드ID생성
         public static int CURRENT_CARD_ID { get; private set; }
 
-        private ReactiveCollection<CardData> _Cards = new();
-        public IEnumerable<CardData> Cards => _Cards;
+        private ReactiveCollection<BattleCardData> _Cards = new();
+        public IEnumerable<BattleCardData> Cards => _Cards;
 
-        public IObservable<CardData> OnCardAdded() => _Cards.ObserveAdd().Select(x => x.Value);
-        public IObservable<CardData> OnCardRemoved() => _Cards.ObserveRemove().Select(x => x.Value);
+        public IObservable<BattleCardData> OnCardAdded() => _Cards.ObserveAdd().Select(x => x.Value);
+        public IObservable<BattleCardData> OnCardRemoved() => _Cards.ObserveRemove().Select(x => x.Value);
 
         public void AddCard(CardMasterData cardMasterData)
         {
@@ -29,11 +29,11 @@ namespace App.Battle.DataStores
             }
 
             var cardId = CURRENT_CARD_ID++.ToString();
-            var newCard = new CardData(cardId, cardMasterData);
+            var newCard = new BattleCardData(cardId, cardMasterData);
             _Cards.Add(newCard);
         }
 
-        public void RemoveCard(CardData cardData)
+        public void RemoveCard(BattleCardData cardData)
         {
             if (!_Cards.Contains(cardData))
             {

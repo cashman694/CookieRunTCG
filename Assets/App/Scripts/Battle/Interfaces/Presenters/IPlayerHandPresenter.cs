@@ -5,7 +5,7 @@ namespace App.Battle.Interfaces.Presenters
 {
     public interface IPlayerHandPresenter
     {
-        void AddCard(CardData card);
-        void RemoveCard(CardData card);
+        void AddCard(BattleCardData card);
+        void RemoveCard(BattleCardData card);
     }
 }

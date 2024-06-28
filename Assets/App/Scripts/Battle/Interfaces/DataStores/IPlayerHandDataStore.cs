@@ -8,11 +8,12 @@ namespace App.Battle.Interfaces.DataStores
 {
     public interface IPlayerHandDataStore
     {
-        IEnumerable<CardData> Cards { get; }
-        IObservable<CardData> OnCardAdded();
-        IObservable<CardData> OnCardRemoved();
+        IEnumerable<BattleCardData> Cards { get; }
+
+        IObservable<BattleCardData> OnCardAdded();
+        IObservable<BattleCardData> OnCardRemoved();
 
         void AddCard(CardMasterData cardMasterData);
-        void RemoveCard(CardData cardData);
+        void RemoveCard(BattleCardData cardData);
     }
 }

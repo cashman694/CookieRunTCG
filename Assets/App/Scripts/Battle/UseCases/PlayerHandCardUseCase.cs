@@ -59,7 +59,7 @@ namespace App.Battle.UseCases
         }
 
         // DEBUG: 테스트 코드, 3초후 패에서 지정카드를 삭제
-        private async UniTask RemoveCardAsync(CardData cardData)
+        private async UniTask RemoveCardAsync(BattleCardData cardData)
         {
             await UniTask.WaitForSeconds(3f);
             _PlayerHandDataStore.RemoveCard(cardData);

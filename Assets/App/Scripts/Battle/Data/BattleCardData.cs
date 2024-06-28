@@ -3,15 +3,15 @@ using App.Common.Data.MasterData;
 
 namespace App.Battle.Data
 {
-    public sealed class CardData
+    public sealed class BattleCardData
     {
-        public CardData(string id, CardMasterData cardMasterData)
+        public BattleCardData(string id, CardMasterData cardMasterData)
         {
             Id = id;
             CardNumber = cardMasterData.CardNumber;
             Name = cardMasterData.Name;
             MaxHp = cardMasterData.Hp;
-            CardLevel=cardMasterData.CardLevel;
+            CardLevel = cardMasterData.CardLevel;
         }
 
         public string Id { get; }
