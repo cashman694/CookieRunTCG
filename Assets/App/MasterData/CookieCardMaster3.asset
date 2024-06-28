@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6042434bfb0d74a5bbbff800bbdc7656, type: 3}
+  m_Name: CookieCardMaster3
+  m_EditorClassIdentifier: 
+  CardNumber: ST1-003
+  Name: "\uB2E4\uC774\uB178\uC0AC\uC6CC \uCFE0\uD0A4"
+  CardLevel: 1
+  CostType: 0
+  Hp: 1
+  RareLevel: 1

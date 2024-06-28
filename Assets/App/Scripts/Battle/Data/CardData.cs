@@ -1,3 +1,4 @@
+using App.Common.Data;
 using App.Common.Data.MasterData;
 
 namespace App.Battle.Data
@@ -10,6 +11,7 @@ namespace App.Battle.Data
             CardNumber = cardMasterData.CardNumber;
             Name = cardMasterData.Name;
             MaxHp = cardMasterData.Hp;
+            CardLevel=cardMasterData.CardLevel;
         }
 
         public string Id { get; }
@@ -17,6 +19,7 @@ namespace App.Battle.Data
         public string Name { get; }
         public int MaxHp { get; }
         public int Hp;
+        public CardLevel CardLevel { get; }
 
         public CardSetState CardSetState;
     }

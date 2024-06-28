@@ -1,8 +1,10 @@
+using App.Common.Data;
+
 namespace App.Battle.Interfaces.Views
 {
     public interface ICardView
     {
-        void Init(string id, string name, int level, int MaxHp);
+        void Setup(string iD, string name, CardLevel cardLevel, int maxHp);
         void UpdateHp(int hp);
         void Unspawn();
     }
