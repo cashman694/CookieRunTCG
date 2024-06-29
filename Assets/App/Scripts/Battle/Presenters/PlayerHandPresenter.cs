@@ -1,7 +1,6 @@
 using App.Battle.Data;
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
-using App.Battle.Views;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

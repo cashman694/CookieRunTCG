@@ -1,5 +1,4 @@
 using App.Battle.Data;
-using System.Collections.Generic;
 
 namespace App.Battle.Interfaces.Presenters
 {

@@ -3,6 +3,7 @@ using App.Common.Data.MasterData;
 
 namespace App.Battle.Data
 {
+    [System.Serializable]
     public sealed class BattleCardData
     {
         public BattleCardData(string id, CardMasterData cardMasterData)
@@ -22,5 +23,10 @@ namespace App.Battle.Data
         public CardLevel CardLevel { get; }
 
         public CardSetState CardSetState;
+
+        public override string ToString()
+        {
+            return $"({Id})[{CardNumber}]<{Name}>";
+        }
     }
 }
