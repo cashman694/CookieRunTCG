@@ -48,6 +48,18 @@ namespace App.Battle.UseCases
                     _PlayerHandDataStore.AddCard(card);
                 })
                 .AddTo(_Disposables);
+
+            _PlayerDeckPresenter.OnRequestShuffle
+                .Subscribe(x =>
+                {
+                    if (_PlayerDeckDataStore.IsEmpty)
+                    {
+                        return;
+                    }
+
+                    _PlayerDeckDataStore.Shuffle();
+                })
+                .AddTo(_Disposables);
         }
 
         public void Start()

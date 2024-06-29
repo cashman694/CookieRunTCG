@@ -30,11 +30,16 @@ namespace App.Battle.Presenters
             Assert.IsNotNull(_CardViewFactory);
         }
 
-
         [ContextMenu(nameof(TestDrawCard))]
         private void TestDrawCard()
         {
             _OnRequestDrawCard.OnNext(Unit.Default);
+        }
+
+        [ContextMenu(nameof(TestShuffle))]
+        private void TestShuffle()
+        {
+            _OnRequestShuffle.OnNext(Unit.Default);
         }
 
         public void UpdateCards(int cardsCount)

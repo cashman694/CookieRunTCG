@@ -49,6 +49,27 @@ namespace App.Battle.DataStores
             return card;
         }
 
+        public void Shuffle()
+        {
+            System.Random random = new();
+            var count = _MaxCount;
+
+            // Fisher-Yates알고리즘
+            while (count > 1)
+            {
+                count--;
+
+                // 0과 count사이의 랜덤한 정수를 생성
+                var randomNum = random.Next(count + 1);
+
+                var value = _Cards[randomNum];
+                _Cards[randomNum] = _Cards[count];
+                _Cards[count] = value;
+            }
+
+            Debug.Log($"Deck shuffled");
+        }
+
         public void Dispose()
         {
             _Cards.Clear();

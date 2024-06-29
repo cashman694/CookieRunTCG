@@ -162,7 +162,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3b4dc184008f4acba9f89229e7dfab8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _MaxCount: 30
+  _MaxCount: 10
+  _Cards: []
 --- !u!1 &969775061
 GameObject:
   m_ObjectHideFlags: 0
