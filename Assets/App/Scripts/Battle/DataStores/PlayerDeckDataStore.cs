@@ -4,6 +4,7 @@ using App.Common.Data.MasterData;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace App.Battle.DataStores
 {
@@ -47,6 +48,14 @@ namespace App.Battle.DataStores
             Debug.Log($"Remaining deck cards count: {_Cards.Count}");
 
             return card;
+        }
+
+        public void ReturnCard(BattleCardData cardData)
+        {
+            Assert.IsFalse(_Cards.Contains(cardData));
+
+            Debug.Log($"{cardData} returned to deck");
+            _Cards.Add(cardData);
         }
 
         public void Shuffle()

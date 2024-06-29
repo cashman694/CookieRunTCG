@@ -12,6 +12,7 @@ namespace App.Battle.Interfaces.DataStores
 
         void AddCard(CardMasterData cardMasterData);
         BattleCardData RemoveFirstCard();
+        void ReturnCard(BattleCardData cardData);
         void Shuffle();
     }
 }

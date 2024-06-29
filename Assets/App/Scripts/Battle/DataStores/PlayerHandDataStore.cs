@@ -1,6 +1,5 @@
 using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
-using App.Common.Data.MasterData;
 using System;
 using System.Collections.Generic;
 using UniRx;
@@ -11,29 +10,42 @@ namespace App.Battle.DataStores
 {
     public sealed class PlayerHandDataStore : MonoBehaviour, IPlayerHandDataStore
     {
-        private ReactiveCollection<BattleCardData> _Cards = new();
-        public IEnumerable<BattleCardData> Cards => _Cards;
+        private ReactiveDictionary<string, BattleCardData> _Cards = new();
+        public IEnumerable<BattleCardData> Cards => _Cards.Values;
+
+        public bool IsEmpty => _Cards.Values.Count < 1;
 
         public IObservable<BattleCardData> OnCardAdded() => _Cards.ObserveAdd().Select(x => x.Value);
         public IObservable<BattleCardData> OnCardRemoved() => _Cards.ObserveRemove().Select(x => x.Value);
 
         public void AddCard(BattleCardData cardData)
         {
-            Debug.Log($"{cardData} added to hand");
+            _Cards.Add(cardData.Id, cardData);
 
-            _Cards.Add(cardData);
+            Debug.Log($"{cardData} added to hand");
         }
 
-        public void RemoveCard(BattleCardData cardData)
+        public BattleCardData GetCardBy(string cardId)
         {
-            if (!_Cards.Contains(cardData))
+            if (!_Cards.ContainsKey(cardId))
+            {
+                return null;
+            }
+
+            return _Cards[cardId];
+        }
+
+        public void RemoveCardBy(string cardId)
+        {
+            if (!_Cards.ContainsKey(cardId))
             {
                 return;
             }
 
-            Debug.Log($"{cardData} removed from hand");
+            var card = _Cards[cardId];
+            _Cards.Remove(card.Id);
 
-            _Cards.Remove(cardData);
+            Debug.Log($"{card} removed from hand");
         }
     }
 }

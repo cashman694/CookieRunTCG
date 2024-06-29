@@ -12,6 +12,8 @@ namespace App.Battle.UseCases
 {
     public class PlayerDeckUseCase : IInitializable, IStartable, IDisposable
     {
+        private const int INITIAL_DRAW_COUNT = 5;
+
         private readonly CardMasterDatabase _CardMasterDatabase;
         private readonly IPlayerDeckDataStore _PlayerDeckDataStore;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
@@ -35,30 +37,15 @@ namespace App.Battle.UseCases
         public void Initialize()
         {
             _PlayerDeckPresenter.OnRequestDrawCard
-                .Subscribe(x =>
-                {
-                    if (_PlayerDeckDataStore.IsEmpty)
-                    {
-                        return;
-                    }
-
-                    var card = DrawCard();
-                    _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Cards.Count());
-
-                    _PlayerHandDataStore.AddCard(card);
-                })
+                .Subscribe(x => DrawCard())
                 .AddTo(_Disposables);
 
-            _PlayerDeckPresenter.OnRequestShuffle
-                .Subscribe(x =>
-                {
-                    if (_PlayerDeckDataStore.IsEmpty)
-                    {
-                        return;
-                    }
+            _PlayerDeckPresenter.OnRequestInitialDraw
+                .Subscribe(x => InitialDraw())
+                .AddTo(_Disposables);
 
-                    _PlayerDeckDataStore.Shuffle();
-                })
+            _PlayerDeckPresenter.OnRequestMulligan
+                .Subscribe(x => Mulligan())
                 .AddTo(_Disposables);
         }
 
@@ -82,14 +69,70 @@ namespace App.Battle.UseCases
             _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Cards.Count());
         }
 
-        private BattleCardData DrawCard()
+        private void InitialDraw()
+        {
+            if (_PlayerHandDataStore.Cards.Count() > 0)
+            {
+                return;
+            }
+
+            for (var i = 0; i < INITIAL_DRAW_COUNT; i++)
+            {
+                if (_PlayerDeckDataStore.IsEmpty)
+                {
+                    return;
+                }
+
+                DrawCard();
+            }
+        }
+
+        private void DrawCard()
         {
             if (_PlayerDeckDataStore.IsEmpty)
             {
-                return null;
+                return;
             }
 
-            return _PlayerDeckDataStore.RemoveFirstCard();
+            // TODO: 드로우페이즈인지 아닌지 체크하기
+
+            var card = _PlayerDeckDataStore.RemoveFirstCard();
+            _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Cards.Count());
+
+            _PlayerHandDataStore.AddCard(card);
+        }
+
+        private void Mulligan()
+        {
+            if (_PlayerDeckDataStore.IsEmpty)
+            {
+                return;
+            }
+
+            var handCardIds = _PlayerHandDataStore.Cards.Select(x => x.Id).ToList();
+            foreach (var cardId in handCardIds)
+            {
+                var card = _PlayerHandDataStore.GetCardBy(cardId);
+                if (card == null)
+                {
+                    continue;
+                }
+
+                _PlayerHandDataStore.RemoveCardBy(cardId);
+                _PlayerDeckDataStore.ReturnCard(card);
+            }
+
+            _PlayerDeckDataStore.Shuffle();
+
+            for (var i = 0; i < INITIAL_DRAW_COUNT; i++)
+            {
+                if (_PlayerDeckDataStore.IsEmpty)
+                {
+                    return;
+                }
+
+                DrawCard();
+            }
         }
 
         public void Dispose()
