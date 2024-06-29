@@ -26,11 +26,11 @@ namespace App.Battle.Presenters
 
         public void AddCard(BattleCardData card)
         {
-            // FIXME: 카드가 겹치지 않도록 생성된 카드를 오른쪽으로 이동
+            // FIXME: 카드가 겹치지 않도록 생성된 카드를 오른쪽으로 적당히 이동
             foreach (var cardView in _CardViews.Values)
             {
                 var cardViewTransform = ((MonoBehaviour)cardView).transform;
-                cardViewTransform.Translate(Vector3.right);
+                cardViewTransform.Translate(Vector3.right * 5);
             }
 
             var newCardView = _CardViewFactory.Invoke(transform);
