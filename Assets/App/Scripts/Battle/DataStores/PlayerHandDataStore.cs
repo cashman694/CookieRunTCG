@@ -31,6 +31,8 @@ namespace App.Battle.DataStores
                 return;
             }
 
+            Debug.Log($"{cardData} removed from hand");
+
             _Cards.Remove(cardData);
         }
     }

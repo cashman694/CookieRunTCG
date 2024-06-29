@@ -37,8 +37,6 @@ namespace App.Battle.DataStores
 
         public BattleCardData RemoveFirstCard()
         {
-            Debug.Log($"Remaining deck cards count: {_Cards.Count}");
-
             if (_Cards.Count == 0)
             {
                 return null;
@@ -46,6 +44,7 @@ namespace App.Battle.DataStores
 
             var card = _Cards[0];
             _Cards.RemoveAt(0);
+            Debug.Log($"Remaining deck cards count: {_Cards.Count}");
 
             return card;
         }
