@@ -112,13 +112,12 @@ namespace App.Battle.UseCases
             var handCardIds = _PlayerHandDataStore.Cards.Select(x => x.Id).ToList();
             foreach (var cardId in handCardIds)
             {
-                var card = _PlayerHandDataStore.GetCardBy(cardId);
+                var card = _PlayerHandDataStore.RemoveCardBy(cardId);
                 if (card == null)
                 {
                     continue;
                 }
 
-                _PlayerHandDataStore.RemoveCardBy(cardId);
                 _PlayerDeckDataStore.ReturnCard(card);
             }
 

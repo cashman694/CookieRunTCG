@@ -25,27 +25,18 @@ namespace App.Battle.DataStores
             Debug.Log($"{cardData} added to hand");
         }
 
-        public BattleCardData GetCardBy(string cardId)
+        public BattleCardData RemoveCardBy(string cardId)
         {
             if (!_Cards.ContainsKey(cardId))
             {
                 return null;
             }
 
-            return _Cards[cardId];
-        }
-
-        public void RemoveCardBy(string cardId)
-        {
-            if (!_Cards.ContainsKey(cardId))
-            {
-                return;
-            }
-
             var card = _Cards[cardId];
             _Cards.Remove(card.Id);
 
             Debug.Log($"{card} removed from hand");
+            return card;
         }
     }
 }
