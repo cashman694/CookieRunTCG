@@ -1,4 +1,5 @@
 using App.Battle.DataStores;
+using App.Battle.Interfaces.UseCases;
 using App.Battle.Interfaces.Views;
 using App.Battle.Presenters;
 using App.Battle.UseCases;
@@ -40,7 +41,7 @@ namespace App.Battle
                 Lifetime.Scoped);
 
             builder.RegisterEntryPoint<PlayerHandCardUseCase>();
-            builder.RegisterEntryPoint<PlayerDeckUseCase>();
+            builder.RegisterEntryPoint<PlayerDeckUseCase>().As<IPlayerDeckUseCase>();
         }
     }
 }

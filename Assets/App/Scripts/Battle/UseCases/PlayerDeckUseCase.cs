@@ -1,6 +1,6 @@
-using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
 using App.Battle.Interfaces.Presenters;
+using App.Battle.Interfaces.UseCases;
 using App.Common.Data.MasterData;
 using System;
 using System.Linq;
@@ -10,7 +10,7 @@ using VContainer.Unity;
 
 namespace App.Battle.UseCases
 {
-    public class PlayerDeckUseCase : IInitializable, IStartable, IDisposable
+    public class PlayerDeckUseCase : IStartable, IDisposable, IPlayerDeckUseCase
     {
         private const int INITIAL_DRAW_COUNT = 5;
 
@@ -34,21 +34,6 @@ namespace App.Battle.UseCases
             _PlayerDeckPresenter = playerDeckPresenter;
         }
 
-        public void Initialize()
-        {
-            _PlayerDeckPresenter.OnRequestDrawCard
-                .Subscribe(x => DrawCard())
-                .AddTo(_Disposables);
-
-            _PlayerDeckPresenter.OnRequestInitialDraw
-                .Subscribe(x => InitialDraw())
-                .AddTo(_Disposables);
-
-            _PlayerDeckPresenter.OnRequestMulligan
-                .Subscribe(x => Mulligan())
-                .AddTo(_Disposables);
-        }
-
         public void Start()
         {
             GenerateDeck(_PlayerDeckDataStore.MaxCount);
@@ -69,7 +54,7 @@ namespace App.Battle.UseCases
             _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Cards.Count());
         }
 
-        private void InitialDraw()
+        public void InitialDraw()
         {
             if (_PlayerHandDataStore.Cards.Count() > 0)
             {
@@ -87,7 +72,7 @@ namespace App.Battle.UseCases
             }
         }
 
-        private void DrawCard()
+        public void DrawCard()
         {
             if (_PlayerDeckDataStore.IsEmpty)
             {
@@ -102,7 +87,7 @@ namespace App.Battle.UseCases
             _PlayerHandDataStore.AddCard(card);
         }
 
-        private void Mulligan()
+        public void Mulligan()
         {
             if (_PlayerDeckDataStore.IsEmpty)
             {
