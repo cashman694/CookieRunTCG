@@ -1,18 +1,18 @@
 using App.Battle.Data;
-using App.Common.Data.MasterData;
 using System;
 using System.Collections.Generic;
-using UniRx;
 
 namespace App.Battle.Interfaces.DataStores
 {
     public interface IPlayerHandDataStore
     {
-        IEnumerable<CardData> Cards { get; }
-        IObservable<CardData> OnCardAdded();
-        IObservable<CardData> OnCardRemoved();
+        IEnumerable<BattleCardData> Cards { get; }
+        bool IsEmpty { get; }
 
-        void AddCard(CardMasterData cardMasterData);
-        void RemoveCard(CardData cardData);
+        IObservable<BattleCardData> OnCardAdded();
+        IObservable<BattleCardData> OnCardRemoved();
+
+        void AddCard(BattleCardData cardData);
+        BattleCardData RemoveCardBy(string cardId);
     }
 }

@@ -1,6 +1,5 @@
 using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
-using App.Common.Data.MasterData;
 using System;
 using System.Collections.Generic;
 using UniRx;
@@ -11,36 +10,33 @@ namespace App.Battle.DataStores
 {
     public sealed class PlayerHandDataStore : MonoBehaviour, IPlayerHandDataStore
     {
-        // FIXME: 임시 카드ID생성
-        public static int CURRENT_CARD_ID { get; private set; }
+        private ReactiveDictionary<string, BattleCardData> _Cards = new();
+        public IEnumerable<BattleCardData> Cards => _Cards.Values;
 
-        private ReactiveCollection<CardData> _Cards = new();
-        public IEnumerable<CardData> Cards => _Cards;
+        public bool IsEmpty => _Cards.Values.Count < 1;
 
-        public IObservable<CardData> OnCardAdded() => _Cards.ObserveAdd().Select(x => x.Value);
-        public IObservable<CardData> OnCardRemoved() => _Cards.ObserveRemove().Select(x => x.Value);
+        public IObservable<BattleCardData> OnCardAdded() => _Cards.ObserveAdd().Select(x => x.Value);
+        public IObservable<BattleCardData> OnCardRemoved() => _Cards.ObserveRemove().Select(x => x.Value);
 
-        public void AddCard(CardMasterData cardMasterData)
+        public void AddCard(BattleCardData cardData)
         {
-            if (cardMasterData == null)
-            {
-                Debug.LogError("CardMasterdata is null");
-                return;
-            }
+            _Cards.Add(cardData.Id, cardData);
 
-            var cardId = CURRENT_CARD_ID++.ToString();
-            var newCard = new CardData(cardId, cardMasterData);
-            _Cards.Add(newCard);
+            Debug.Log($"{cardData} added to hand");
         }
 
-        public void RemoveCard(CardData cardData)
+        public BattleCardData RemoveCardBy(string cardId)
         {
-            if (!_Cards.Contains(cardData))
+            if (!_Cards.ContainsKey(cardId))
             {
-                return;
+                return null;
             }
 
-            _Cards.Remove(cardData);
+            var card = _Cards[cardId];
+            _Cards.Remove(card.Id);
+
+            Debug.Log($"{card} removed from hand");
+            return card;
         }
     }
 }
