@@ -1,6 +1,6 @@
 namespace App.Common.Data
 {
-    public enum CostType
+    public enum EnergyType
     {
         Mix,
         Red,

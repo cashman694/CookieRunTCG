@@ -20,9 +20,9 @@ namespace App.Battle.Data
         public string Name { get; }
         public int MaxHp { get; }
         public int Hp;
-        public CardLevel CardLevel { get; }
 
-        public CardSetState CardSetState;
+        public CardLevel CardLevel { get; }
+        public CardState CardState;
 
         public override string ToString()
         {

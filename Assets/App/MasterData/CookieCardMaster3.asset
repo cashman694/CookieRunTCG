@@ -15,6 +15,6 @@ MonoBehaviour:
   CardNumber: ST1-003
   Name: "\uB2E4\uC774\uB178\uC0AC\uC6CC \uCFE0\uD0A4"
   CardLevel: 1
-  CostType: 0
+  EnergyType: 0
   Hp: 1
   RareLevel: 1

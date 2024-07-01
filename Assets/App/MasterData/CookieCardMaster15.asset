@@ -15,6 +15,6 @@ MonoBehaviour:
   CardNumber: ST1-015
   Name: "\uD53C\uC2A4\uD0C0\uCE58\uC624\uB9DB \uCFE0\uD0A4"
   CardLevel: 2
-  CostType: 1
+  EnergyType: 1
   Hp: 3
   RareLevel: 1
