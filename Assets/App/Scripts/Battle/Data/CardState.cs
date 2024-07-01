@@ -1,6 +1,6 @@
 namespace App.Battle.Data
 {
-    public enum CardSetState
+    public enum CardState
     {
         Active,
         Rest,
