@@ -11,7 +11,7 @@ namespace App.Catalog.Data
             Name = cardMasterData.Name;
             Hp = cardMasterData.Hp;
             Level = (int)cardMasterData.CardLevel;
-            CostType = cardMasterData.CostType.ToString();
+            CostType = cardMasterData.EnergyType.ToString();
             RareLevel = cardMasterData.RareLevel.ToString();
         }
 

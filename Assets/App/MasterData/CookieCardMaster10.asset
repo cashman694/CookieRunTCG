@@ -15,6 +15,6 @@ MonoBehaviour:
   CardNumber: ST1-010
   Name: "\uC5F0\uAE08\uC220\uC0AC\uB9DB \uCFE0\uD0A4"
   CardLevel: 0
-  CostType: 0
+  EnergyType: 0
   Hp: 1
   RareLevel: 0

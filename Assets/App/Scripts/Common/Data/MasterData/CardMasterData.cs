@@ -8,7 +8,7 @@ namespace App.Common.Data.MasterData
         public string CardNumber;
         public string Name;
         public CardLevel CardLevel;
-        public CostType CostType;
+        public EnergyType EnergyType;
         public int Hp;
         public RareLevel RareLevel;
     }
