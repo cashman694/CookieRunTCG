@@ -1,5 +1,6 @@
 using App.Common.Data;
 using App.Common.Data.MasterData;
+using UnityEngine;
 
 namespace App.Battle.Data
 {
@@ -12,7 +13,8 @@ namespace App.Battle.Data
             CardNumber = cardMasterData.CardNumber;
             Name = cardMasterData.Name;
             MaxHp = cardMasterData.Hp;
-            CardLevel = cardMasterData.CardLevel;
+            Level = cardMasterData.Level;
+            Sprite= cardMasterData.Sprite;
         }
 
         public string Id { get; }
@@ -21,9 +23,10 @@ namespace App.Battle.Data
         public int MaxHp { get; }
         public int Hp;
 
-        public CardLevel CardLevel { get; }
+        public int Level { get; }
         public CardState CardState;
 
+        public Sprite Sprite { get; }
         public override string ToString()
         {
             return $"({Id})[{CardNumber}]<{Name}>";

@@ -39,8 +39,7 @@ namespace App.Catalog.Presenters
                 cardData.Name,
                 cardData.Level,
                 cardData.Hp,
-                cardData.CostType,
-                cardData.RareLevel
+                cardData.Sprite
             );
 
             _CardViews.Add(cardData.CardNumber, cardView);
