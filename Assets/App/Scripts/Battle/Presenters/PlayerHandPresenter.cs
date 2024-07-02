@@ -36,7 +36,7 @@ namespace App.Battle.Presenters
             var newCardView = _CardViewFactory.Invoke(transform);
             _CardViews.Add(card.Id, newCardView);
 
-            newCardView.Setup(card.CardNumber, card.Name, card.CardLevel, card.MaxHp);
+            newCardView.Setup(card.CardNumber, card.Name, card.Level, card.MaxHp, card.Sprite);
         }
 
         public void RemoveCard(BattleCardData card)

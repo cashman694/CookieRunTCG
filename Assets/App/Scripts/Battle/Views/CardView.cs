@@ -3,6 +3,7 @@ using App.Common.Data;
 using App.Common.Data.MasterData;
 using TMPro;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace App.Battle.Views
 {
@@ -12,13 +13,14 @@ namespace App.Battle.Views
         [SerializeField] TMP_Text _HPTMP;
         [SerializeField] TMP_Text _CardNumberTMP;
         [SerializeField] TMP_Text _LevelTMP;
-
-        public void Setup(string cardNumber, string name, CardLevel cardLevel, int maxHp) 
+        [SerializeField] SpriteRenderer Character;
+        public void Setup(string cardNumber, string name, int level, int maxHp, Sprite Sprite) 
         {
             _CardNameTMP.text = name;
             _HPTMP.text ="HP"+ maxHp.ToString();
             _CardNumberTMP.text = cardNumber.ToString();
-            _LevelTMP.text = cardLevel.ToString().Substring(cardLevel.ToString().Length - 1);
+            _LevelTMP.text = level.ToString();
+            Character.sprite = Sprite;
         }
 
         public void UpdateHp(int hp) => throw new System.NotImplementedException();
