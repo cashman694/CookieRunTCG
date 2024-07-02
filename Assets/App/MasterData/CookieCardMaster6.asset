@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6042434bfb0d74a5bbbff800bbdc7656, type: 3}
   m_Name: CookieCardMaster6
   m_EditorClassIdentifier: 
-  CardNumber: ST1-006
-  Name: "\uBA85\uB791\uD55C \uCFE0\uD0A4"
-  Level: 1
-  EnergyType: 0
-  Hp: 4
-  RareType: 0
-  Sprite: {fileID: -1781665282827294649, guid: 7aac6e45d2a22c840a2724cffb8761f5, type: 3}
+  <CardNumber>k__BackingField: ST1-006
+  <Name>k__BackingField: "\uBA85\uB791\uD55C \uCFE0\uD0A4"
+  <Level>k__BackingField: 1
+  <EnergyType>k__BackingField: 0
+  <Hp>k__BackingField: 4
+  <RareType>k__BackingField: 0
+  <Sprite>k__BackingField: {fileID: -1781665282827294649, guid: 7aac6e45d2a22c840a2724cffb8761f5, type: 3}
