@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardNumber: ST1-012
   Name: "\uC880\uBE44\uB9DB \uCFE0\uD0A4"
-  CardLevel: 0
+  Level: 0
   EnergyType: 0
   Hp: 3
   RareLevel: 0
