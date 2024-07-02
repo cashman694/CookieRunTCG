@@ -11,5 +11,6 @@ namespace App.Common.Data.MasterData
         public EnergyType EnergyType;
         public int Hp;
         public RareLevel RareLevel;
+        public Sprite Sprite; 
     }
 }
