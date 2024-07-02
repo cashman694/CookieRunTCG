@@ -1,4 +1,3 @@
-using App.Common.Data;
 using App.Common.Data.MasterData;
 using UnityEngine;
 

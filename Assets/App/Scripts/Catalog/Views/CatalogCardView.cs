@@ -1,11 +1,7 @@
 using App.Catalog.Interfaces.Views;
-using App.Common.Data;
 using UnityEngine;
-
-
-using App.Common.Data.MasterData;
 using TMPro;
-using UnityEngine.TextCore.Text;
+using App.Common.Data.MasterData;
 
 namespace App.Catalog.Views
 {
@@ -16,13 +12,14 @@ namespace App.Catalog.Views
         [SerializeField] TMP_Text _CardNumberTMP;
         [SerializeField] TMP_Text _LevelTMP;
         [SerializeField] SpriteRenderer Character;
-        public void Setup(string cardNumber, string name, int level, int maxHp, Sprite Sprite)
+
+        public void Setup(CardMasterData cardMasterData)
         {
-            _CardNameTMP.text = name;
-            _HPTMP.text = "HP" + maxHp.ToString();
-            _CardNumberTMP.text = cardNumber.ToString();
-            _LevelTMP.text = level.ToString();
-            Character.sprite = Sprite;
+            _CardNameTMP.text = cardMasterData.Name;
+            _HPTMP.text = "HP" + cardMasterData.Hp.ToString();
+            _CardNumberTMP.text = cardMasterData.CardNumber.ToString();
+            _LevelTMP.text = cardMasterData.Level.ToString();
+            Character.sprite = cardMasterData.Sprite;
         }
 
         public void UpdateHp(int hp) => throw new System.NotImplementedException();

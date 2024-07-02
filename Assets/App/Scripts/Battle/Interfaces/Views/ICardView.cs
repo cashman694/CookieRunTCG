@@ -1,14 +1,11 @@
-using App.Common.Data;
-using Unity;
-using System;
-using UnityEngine;
+using App.Common.Data.MasterData;
 
 
 namespace App.Battle.Interfaces.Views
 {
     public interface ICardView
     {
-        void Setup(string cardNumber, string name, int level, int maxHp, Sprite sprite);
+        void Setup(CardMasterData cardMasterData);
         void UpdateHp(int hp);
         void Unspawn();
     }

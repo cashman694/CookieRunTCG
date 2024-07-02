@@ -1,6 +1,7 @@
 using App.Catalog.Data;
 using App.Catalog.Interfaces.Presenters;
 using App.Catalog.Interfaces.Views;
+using App.Common.Data.MasterData;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,22 +28,16 @@ namespace App.Catalog.Presenters
             Assert.IsNotNull(_CardViewFactory);
         }
 
-        public void AddCard(CatalogCardData cardData)
+        public void AddCard(CardMasterData cardMasterData)
         {
-            Debug.Log($"{cardData} Added");
+            Debug.Log($"{cardMasterData.CardNumber} Added");
 
             var parentTransform = _ScrollRect.content;
             var cardView = _CardViewFactory.Invoke(parentTransform);
 
-            cardView.Setup(
-                cardData.CardNumber,
-                cardData.Name,
-                cardData.Level,
-                cardData.Hp,
-                cardData.Sprite
-            );
+            cardView.Setup(cardMasterData);
 
-            _CardViews.Add(cardData.CardNumber, cardView);
+            _CardViews.Add(cardMasterData.CardNumber, cardView);
         }
     }
 }

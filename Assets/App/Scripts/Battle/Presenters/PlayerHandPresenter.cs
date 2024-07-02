@@ -1,6 +1,6 @@
-using App.Battle.Data;
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
+using App.Common.Data.MasterData;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,8 +23,7 @@ namespace App.Battle.Presenters
 
             Assert.IsNotNull(_CardViewFactory);
         }
-
-        public void AddCard(BattleCardData card)
+        public void AddCard(string cardId, CardMasterData cardMasterData)
         {
             // FIXME: 카드가 겹치지 않도록 생성된 카드를 오른쪽으로 적당히 이동
             foreach (var cardView in _CardViews.Values)
@@ -34,22 +33,22 @@ namespace App.Battle.Presenters
             }
 
             var newCardView = _CardViewFactory.Invoke(transform);
-            _CardViews.Add(card.Id, newCardView);
+            _CardViews.Add(cardId, newCardView);
 
-            newCardView.Setup(card.CardNumber, card.Name, card.Level, card.MaxHp, card.Sprite);
+            newCardView.Setup(cardMasterData);
         }
 
-        public void RemoveCard(BattleCardData card)
+        public void RemoveCard(string cardId)
         {
-            if (!_CardViews.ContainsKey(card.Id))
+            if (!_CardViews.ContainsKey(cardId))
             {
                 return;
             }
 
-            var cardView = _CardViews[card.Id];
+            var cardView = _CardViews[cardId];
             cardView.Unspawn();
 
-            _CardViews.Remove(card.Id);
+            _CardViews.Remove(cardId);
         }
     }
 }
