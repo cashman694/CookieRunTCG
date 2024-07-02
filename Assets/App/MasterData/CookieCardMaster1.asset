@@ -17,5 +17,5 @@ MonoBehaviour:
   Level: 1
   EnergyType: 1
   Hp: 2
-  RareLevel: 0
+  RareType: 0
   Sprite: {fileID: -3249518284456822530, guid: feb0621c56904774a8e73b0bee6be911, type: 3}

@@ -14,7 +14,7 @@ namespace App.Battle.Data
             Name = cardMasterData.Name;
             MaxHp = cardMasterData.Hp;
             Level = cardMasterData.Level;
-            Sprite= cardMasterData.Sprite;
+            Sprite = cardMasterData.Sprite;
         }
 
         public string Id { get; }

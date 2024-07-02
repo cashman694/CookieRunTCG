@@ -10,7 +10,7 @@ namespace App.Common.Data.MasterData
         public int Level;
         public EnergyType EnergyType;
         public int Hp;
-        public RareLevel RareLevel;
-        public Sprite Sprite; 
+        public RareType RareType;
+        public Sprite Sprite;
     }
 }
