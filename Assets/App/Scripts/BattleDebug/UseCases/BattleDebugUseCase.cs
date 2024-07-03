@@ -11,16 +11,19 @@ namespace App.BattleDebug.UseCases
     {
         private readonly IBattleDebugPresenter _BattleDebugPresenter;
         private readonly IPlayerDeckUseCase _PlayerDeckUseCase;
+        private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
         private readonly CompositeDisposable _Disposables = new();
 
         [Inject]
         public BattleDebugUseCase(
             IBattleDebugPresenter battleDebugPresenter,
-            IPlayerDeckUseCase playerDeckUseCase
+            IPlayerDeckUseCase playerDeckUseCase,
+            IPlayerBattleAreaUseCase playerBattleAreaUseCase
         )
         {
             _BattleDebugPresenter = battleDebugPresenter;
             _PlayerDeckUseCase = playerDeckUseCase;
+            _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
         }
 
         public void Initialize()
@@ -35,6 +38,10 @@ namespace App.BattleDebug.UseCases
 
             _BattleDebugPresenter.OnRequestMulligan
                 .Subscribe(x => _PlayerDeckUseCase.Mulligan())
+                .AddTo(_Disposables);
+
+            _BattleDebugPresenter.OnRequestSetCookieCard
+                .Subscribe(x => _PlayerBattleAreaUseCase.TestSetCard())
                 .AddTo(_Disposables);
         }
 

@@ -25,17 +25,12 @@ namespace App.Battle.Presenters
         }
         public void AddCard(string cardId, CardMasterData cardMasterData)
         {
-            // FIXME: 카드가 겹치지 않도록 생성된 카드를 오른쪽으로 적당히 이동
-            foreach (var cardView in _CardViews.Values)
-            {
-                var cardViewTransform = ((MonoBehaviour)cardView).transform;
-                cardViewTransform.Translate(Vector3.right * 5);
-            }
-
             var newCardView = _CardViewFactory.Invoke(transform);
             _CardViews.Add(cardId, newCardView);
 
             newCardView.Setup(cardMasterData);
+
+            ArrangeCards();
         }
 
         public void RemoveCard(string cardId)
@@ -49,6 +44,23 @@ namespace App.Battle.Presenters
             cardView.Unspawn();
 
             _CardViews.Remove(cardId);
+
+            ArrangeCards();
+        }
+
+        // FIXME: 카드를 적당히 등간격으로 배치
+        private void ArrangeCards()
+        {
+            var posX = 0f;
+
+            foreach (var cardView in _CardViews.Values)
+            {
+                var cardViewTransform = ((MonoBehaviour)cardView).transform;
+                var position = cardViewTransform.position;
+
+                cardViewTransform.position = new Vector3(posX, position.y, position.z);
+                posX += 5f;
+            }
         }
     }
 }

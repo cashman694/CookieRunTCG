@@ -13,6 +13,7 @@ namespace App.BattleDebug.Presenters
         [SerializeField] private Button _DrawButton;
         [SerializeField] private Button _InitialDrawButton;
         [SerializeField] private Button _MulliganButton;
+        [SerializeField] private Button _SetCookieCardButton;
 
         private readonly Subject<Unit> _OnRequestDrawCard = new();
         public IObservable<Unit> OnRequestDrawCard => _OnRequestDrawCard;
@@ -22,6 +23,9 @@ namespace App.BattleDebug.Presenters
 
         private readonly Subject<Unit> _OnRequestMulligan = new();
         public IObservable<Unit> OnRequestMulligan => _OnRequestMulligan;
+
+        private readonly Subject<Unit> _OnRequestSetCookieCard = new();
+        public IObservable<Unit> OnRequestSetCookieCard => _OnRequestSetCookieCard;
 
         private readonly CompositeDisposable _Disposables = new();
 
@@ -37,6 +41,10 @@ namespace App.BattleDebug.Presenters
 
             _MulliganButton.OnClickAsObservable()
                 .Subscribe(_ => _OnRequestMulligan.OnNext(Unit.Default))
+                .AddTo(_Disposables);
+
+            _SetCookieCardButton.OnClickAsObservable()
+                .Subscribe(_ => _OnRequestSetCookieCard.OnNext(Unit.Default))
                 .AddTo(_Disposables);
         }
 
