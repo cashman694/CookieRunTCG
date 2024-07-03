@@ -30,14 +30,14 @@ namespace App.Battle.UseCases
             _PlayerHandDataStore.OnCardAdded()
                 .Subscribe(x =>
                 {
-                    _PlayerHandPresenter.AddCard(x);
+                    _PlayerHandPresenter.AddCard(x.Id, x.CardMasterData);
                 })
                 .AddTo(_Disposables);
 
             _PlayerHandDataStore.OnCardRemoved()
                 .Subscribe(x =>
                 {
-                    _PlayerHandPresenter.RemoveCard(x);
+                    _PlayerHandPresenter.RemoveCard(x.Id);
                 })
                 .AddTo(_Disposables);
         }

@@ -1,8 +1,6 @@
 using App.Catalog.Interfaces.DataStores;
 using App.Catalog.Interfaces.Presenters;
 using App.Common.Data.MasterData;
-using System;
-using UniRx;
 using VContainer;
 using VContainer.Unity;
 
@@ -30,8 +28,8 @@ namespace App.Catalog.UseCases
         {
             foreach (var masterData in _CardMasterDatabase.Cards)
             {
-                var cardData = _CatalogDataStore.AddCard(masterData);
-                _CatalogPresenter.AddCard(cardData);
+                _CatalogDataStore.AddCard(masterData);
+                _CatalogPresenter.AddCard(masterData);
             }
         }
     }

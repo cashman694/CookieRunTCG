@@ -1,4 +1,3 @@
-using App.Common.Data;
 using App.Common.Data.MasterData;
 using UnityEngine;
 
@@ -13,7 +12,7 @@ namespace App.Catalog.Data
             Hp = cardMasterData.Hp;
             Level = cardMasterData.Level;
             CostType = cardMasterData.EnergyType.ToString();
-            RareLevel = cardMasterData.RareLevel.ToString();
+            RareType = cardMasterData.RareType.ToString();
             Sprite = cardMasterData.Sprite;
         }
 
@@ -22,7 +21,7 @@ namespace App.Catalog.Data
         public int Hp { get; }
         public int Level { get; }
         public string CostType { get; }
-        public string RareLevel { get; }
+        public string RareType { get; }
         public Sprite Sprite { get; }
 
         public override string ToString()

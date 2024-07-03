@@ -1,10 +1,9 @@
-using App.Catalog.Data;
-using System.Collections.Generic;
+using App.Common.Data.MasterData;
 
 namespace App.Catalog.Interfaces.Presenters
 {
     public interface ICatalogPresenter
     {
-        void AddCard(CatalogCardData cardData);
+        void AddCard(CardMasterData cardMasterData);
     }
 }
