@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <CardNumber>k__BackingField: ST1-015
   <Name>k__BackingField: "\uD53C\uC2A4\uD0C0\uCE58\uC624\uB9DB \uCFE0\uD0A4"
-  <Level>k__BackingField: 2
+  <Level>k__BackingField: 3
   <EnergyType>k__BackingField: 1
   <Hp>k__BackingField: 3
   <RareType>k__BackingField: 1
