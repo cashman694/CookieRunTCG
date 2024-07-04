@@ -37,5 +37,11 @@ namespace App.Battle.DataStores
             Debug.Log($"{card} removed from hand");
             return card;
         }
+
+        private void OnDestroy()
+        {
+            _Cards.Clear();
+            _Cards.Dispose();
+        }
     }
 }

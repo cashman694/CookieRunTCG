@@ -74,5 +74,10 @@ namespace App.Battle.Presenters
                 cardView.transform.localPosition = cardlocalPos;
             }
         }
+
+        private void OnDestroy()
+        {
+            _CardViews.Clear();
+        }
     }
 }

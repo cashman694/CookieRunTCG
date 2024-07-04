@@ -1,5 +1,6 @@
 using App.Battle.DataStores;
 using App.Battle.Interfaces.DataStores;
+using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
 using App.Battle.Interfaces.Views;
 using App.Battle.Presenters;
@@ -29,16 +30,16 @@ namespace App.Battle
 
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.RegisterComponent(_PlayerHandDataStore).AsImplementedInterfaces();
-            builder.RegisterComponent(_PlayerHandPresenter).AsImplementedInterfaces();
+            builder.RegisterComponent(_PlayerHandDataStore).As<IPlayerHandDataStore>();
+            builder.RegisterComponent(_PlayerHandPresenter).As<IPlayerHandPresenter>();
             builder.RegisterFactory<Transform, ICardView>(resolver =>
                 {
                     return transform => resolver.Instantiate(_CardViewPrefab, transform);
                 },
                 Lifetime.Scoped);
 
-            builder.RegisterComponent(_PlayerDeckDataStore).AsImplementedInterfaces();
-            builder.RegisterComponent(_PlayerDeckPresenter).AsImplementedInterfaces();
+            builder.RegisterComponent(_PlayerDeckDataStore).As<IPlayerDeckDataStore>();
+            builder.RegisterComponent(_PlayerDeckPresenter).As<IPlayerDeckPresenter>();
             builder.RegisterFactory<Transform, IDeckCardView>(resolver =>
                 {
                     return transform => resolver.Instantiate(_DeckCardViewPrefab, transform);
@@ -46,7 +47,7 @@ namespace App.Battle
                 Lifetime.Scoped);
 
             builder.RegisterComponent(_PlayerBattleAreaDataStore).As<IPlayerBattleAreaDataStore>();
-            builder.RegisterComponent(_PlayerBattleAreaPresenter).AsImplementedInterfaces();
+            builder.RegisterComponent(_PlayerBattleAreaPresenter).As<IPlayerBattleAreaPresenter>();
 
             builder.RegisterEntryPoint<PlayerHandCardUseCase>();
             builder.RegisterEntryPoint<PlayerDeckUseCase>().As<IPlayerDeckUseCase>();
