@@ -1,4 +1,3 @@
-using App.Battle.Data;
 using App.Common.Data.MasterData;
 
 namespace App.Battle.Interfaces.Presenters
@@ -7,5 +6,6 @@ namespace App.Battle.Interfaces.Presenters
     {
         void AddCard(string cardId, CardMasterData cardMasterData);
         void RemoveCard(string cardId);
+        string GetFirstCardId();
     }
 }

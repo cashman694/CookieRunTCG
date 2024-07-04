@@ -5,7 +5,8 @@ namespace App.Battle.Interfaces.Views
 {
     public interface ICardView
     {
-        void Setup(CardMasterData cardMasterData);
+        string CardId { get; }
+        void Setup(string cardId, CardMasterData cardMasterData);
         void UpdateHp(int hp);
         void Unspawn();
     }
