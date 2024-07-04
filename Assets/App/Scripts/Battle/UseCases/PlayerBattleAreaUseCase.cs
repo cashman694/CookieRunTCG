@@ -15,60 +15,49 @@ namespace App.Battle.UseCases
 {
     public class PlayerBattleAreaUseCase : IPlayerBattleAreaUseCase, IInitializable, IDisposable
     {
-        private const int BATTLE_COOKIE_CARD_COUNT = 2;
-
         private readonly CardMasterDatabase _CardMasterDatabase;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
-        private readonly Func<IPlayerBattleAreaDataStore> _PlayerBattleAreaDataStoreFactory;
+        private readonly IPlayerBattleAreaDataStore _PlayerBattleAreaDataStore;
         private readonly IPlayerBattleAreaPresenter _PlayerBattleAreaPresenter;
         private readonly IPlayerHandPresenter _PlayerHandPresenter;
         private readonly CompositeDisposable _Disposables = new();
-        private readonly Dictionary<int, IPlayerBattleAreaDataStore> _PlayerBattleAreaDataStores = new();
 
         [Inject]
         public PlayerBattleAreaUseCase(
             CardMasterDatabase cardMasterDatabase,
             IPlayerHandDataStore playerHandDataStore,
-            Func<IPlayerBattleAreaDataStore> playerBattleAreaDataStoreFactory,
+            IPlayerBattleAreaDataStore playerBattleAreaDataStore,
             IPlayerBattleAreaPresenter playerBattleAreaPresenter,
             IPlayerHandPresenter playerHandPresenter
         )
         {
             _CardMasterDatabase = cardMasterDatabase;
             _PlayerHandDataStore = playerHandDataStore;
-            _PlayerBattleAreaDataStoreFactory = playerBattleAreaDataStoreFactory;
+            _PlayerBattleAreaDataStore = playerBattleAreaDataStore;
             _PlayerBattleAreaPresenter = playerBattleAreaPresenter;
             _PlayerHandPresenter = playerHandPresenter;
         }
 
         public void Initialize()
         {
-            for (var i = 0; i < BATTLE_COOKIE_CARD_COUNT; i++)
-            {
-                var battleAreaDataStore = _PlayerBattleAreaDataStoreFactory.Invoke();
-
-                _PlayerBattleAreaDataStores[i] = battleAreaDataStore;
-                battleAreaDataStore.SetAreaId(i);
-
-                battleAreaDataStore.OnCookieCardSet
-                    .Subscribe(x =>
+            _PlayerBattleAreaDataStore.OnCookieCardSet
+                .Subscribe(x =>
+                {
+                    if (!_CardMasterDatabase.TryGetByCardNumber(x.card.CardNumber, out var cardMaster))
                     {
-                        if (!_CardMasterDatabase.TryGetByCardNumber(x.CardNumber, out var cardMaster))
-                        {
-                            return;
-                        }
+                        return;
+                    }
 
-                        _PlayerBattleAreaPresenter.SetCard(battleAreaDataStore.AreaId, x.Id, cardMaster);
-                    })
-                    .AddTo(_Disposables);
+                    _PlayerBattleAreaPresenter.SetCard(x.index, x.card.Id, cardMaster);
+                })
+                .AddTo(_Disposables);
 
-                battleAreaDataStore.OnCookieCardUnset
-                    .Subscribe(x =>
-                    {
-                        _PlayerBattleAreaPresenter.RemoveCard(battleAreaDataStore.AreaId);
-                    })
-                    .AddTo(_Disposables);
-            }
+            _PlayerBattleAreaDataStore.OnCookieCardUnset
+                .Subscribe(x =>
+                {
+                    _PlayerBattleAreaPresenter.RemoveCard(x.index);
+                })
+                .AddTo(_Disposables);
         }
 
         public void TestSetCard()
@@ -80,37 +69,32 @@ namespace App.Battle.UseCases
 
             var cardId = _PlayerHandPresenter.GetFirstCardId();
 
-            for (var i = 0; i < BATTLE_COOKIE_CARD_COUNT; i++)
+            for (var i = 0; i < _PlayerBattleAreaDataStore.MaxCount; i++)
             {
-                if (_PlayerBattleAreaDataStores[i].CookieCard != null)
+                if (_PlayerBattleAreaDataStore.TryGetCookieCard(i, out _))
                 {
                     continue;
                 }
 
-                SetCard(_PlayerBattleAreaDataStores[i].AreaId, cardId);
+                SetCard(i, cardId);
                 return;
             }
         }
 
-        public void SetCard(int areaId, string cardId)
+        public void SetCard(int areaIndex, string cardId)
         {
             if (_PlayerHandDataStore.IsEmpty)
             {
                 return;
             }
 
-            if (!_PlayerBattleAreaDataStores.TryGetValue(areaId, out var battleAreaDataStore))
-            {
-                return;
-            }
-
-            if (battleAreaDataStore.CookieCard != null)
+            if (_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out _))
             {
                 return;
             }
 
             var cardData = _PlayerHandDataStore.RemoveCardBy(cardId);
-            battleAreaDataStore.SetCookieCard(cardData);
+            _PlayerBattleAreaDataStore.SetCookieCard(areaIndex, cardData);
         }
 
         public void BrakeCard(int areaId)

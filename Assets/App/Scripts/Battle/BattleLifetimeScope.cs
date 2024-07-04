@@ -24,7 +24,7 @@ namespace App.Battle
         [SerializeField] private DeckCardView _DeckCardViewPrefab;
 
         [Header("Player Battle Area")]
-        [SerializeField] private PlayerBattleAreaDataStore _PlayerBattleAreaDataStorePrefab;
+        [SerializeField] private PlayerBattleAreaDataStore _PlayerBattleAreaDataStore;
         [SerializeField] private PlayerBattleAreaPresenter _PlayerBattleAreaPresenter;
 
         protected override void Configure(IContainerBuilder builder)
@@ -45,11 +45,7 @@ namespace App.Battle
                 },
                 Lifetime.Scoped);
 
-            builder.RegisterFactory<IPlayerBattleAreaDataStore>(resolver =>
-                {
-                    return () => resolver.Instantiate(_PlayerBattleAreaDataStorePrefab);
-                },
-                Lifetime.Scoped);
+            builder.RegisterComponent(_PlayerBattleAreaDataStore).As<IPlayerBattleAreaDataStore>();
             builder.RegisterComponent(_PlayerBattleAreaPresenter).AsImplementedInterfaces();
 
             builder.RegisterEntryPoint<PlayerHandCardUseCase>();

@@ -5,18 +5,13 @@ namespace App.Battle.Interfaces.DataStores
 {
     public interface IPlayerBattleAreaDataStore
     {
-        int AreaId { get; }
-        BattleCardData CookieCard { get; }
-        IObservable<BattleCardData> OnCookieCardSet { get; }
-        IObservable<BattleCardData> OnCookieCardUnset { get; }
+        int MaxCount { get; }
+        IObservable<(int index, BattleCardData card)> OnCookieCardSet { get; }
+        IObservable<(int index, BattleCardData card)> OnCookieCardUnset { get; }
 
-        void SetAreaId(int id);
-        void SetCookieCard(BattleCardData battleCardData);
-        void UnsetCookieCard();
-
-        // IEnumerable<BattleCardData> GetHpCards(int index);
-        // void AddHpCard(int index, BattleCardData cardData);
-        // BattleCardData RemoveLastHpCard(int index);
-        // void FlipLastHpCard();
+        bool TryGetCookieCard(int index, out BattleCardData card);
+        bool CanSetCookieCard(int index);
+        void SetCookieCard(int index, BattleCardData battleCardData);
+        void UnsetCookieCard(int index);
     }
 }

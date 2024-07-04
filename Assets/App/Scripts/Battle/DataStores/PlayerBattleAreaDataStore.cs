@@ -8,38 +8,50 @@ namespace App.Battle.DataStores
 {
     public class PlayerBattleAreaDataStore : MonoBehaviour, IPlayerBattleAreaDataStore
     {
-        private int _AreaId;
-        public int AreaId => _AreaId;
+        private const int BATTLE_COOKIE_CARD_COUNT = 2;
+        public int MaxCount => BATTLE_COOKIE_CARD_COUNT;
 
-        private ReactiveProperty<BattleCardData> _CookieCard = new();
-        public BattleCardData CookieCard => _CookieCard.Value;
+        public IObservable<(int index, BattleCardData card)> OnCookieCardSet =>
+            _CookieCards.ObserveAdd().Select(x => (x.Key, x.Value));
 
-        public IObservable<BattleCardData> OnCookieCardSet => _CookieCard.Where(x => x != null);
-        public IObservable<BattleCardData> OnCookieCardUnset => _CookieCard.Where(x => x == null);
+        public IObservable<(int index, BattleCardData card)> OnCookieCardUnset =>
+            _CookieCards.ObserveRemove().Select(x => (x.Key, x.Value));
 
-        public void SetAreaId(int id)
+        private readonly ReactiveDictionary<int, BattleCardData> _CookieCards = new();
+
+        public bool TryGetCookieCard(int index, out BattleCardData card)
         {
-            _AreaId = id;
+            return _CookieCards.TryGetValue(index, out card);
         }
 
-        public void SetCookieCard(BattleCardData cardData)
+        public bool CanSetCookieCard(int index)
         {
-            if (!_CookieCard.HasValue || _CookieCard.Value != null)
+            return !_CookieCards.ContainsKey(index);
+        }
+
+        public void SetCookieCard(int index, BattleCardData battleCardData)
+        {
+            if (_CookieCards.ContainsKey(index))
             {
                 return;
             }
 
-            _CookieCard.Value = cardData;
+            _CookieCards.Add(index, battleCardData);
         }
 
-        public void UnsetCookieCard()
+        public void UnsetCookieCard(int index)
         {
-            _CookieCard.Value = null;
+            if (!_CookieCards.ContainsKey(index))
+            {
+                return;
+            }
+
+            _CookieCards.Remove(index);
         }
 
         private void OnDestroy()
         {
-            _CookieCard.Dispose();
+            _CookieCards.Dispose();
         }
     }
 }
