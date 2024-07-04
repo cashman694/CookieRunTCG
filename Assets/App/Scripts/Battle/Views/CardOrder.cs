@@ -2,50 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardOrder : MonoBehaviour
+namespace App.Battle.Views
 {
-    [SerializeField] Renderer[] backRenderers;
-    [SerializeField] Renderer[] middleRenderers1;
-    [SerializeField] Renderer[] middleRenderers2;
-    [SerializeField] Renderer[] middleRenderers3;
-    [SerializeField] Renderer[] middleRenderers4;
-    [SerializeField] string sortingLayerName;
-    int originOrder;
-
-    public void SetOriginOrder(int originOrder)
+    public class CardOrder : MonoBehaviour
     {
-        this.originOrder = originOrder;
-        SetOrder(originOrder);
-    }
+        [SerializeField] Renderer[] backRenderers;
+        [SerializeField] Renderer[] middleRenderers1;
+        [SerializeField] Renderer[] middleRenderers2;
+        [SerializeField] Renderer[] middleRenderers3;
+        [SerializeField] Renderer[] middleRenderers4;
+        [SerializeField] string sortingLayerName;
+        int originOrder;
 
-    public void SetOrder(int order)
-    {
-        int mulOrder = order * 10;
-        foreach (var renderer in backRenderers)
+        public void SetOriginOrder(int originOrder)
         {
-            renderer.sortingLayerName = sortingLayerName;
-            renderer.sortingOrder = mulOrder;
-        }
-        foreach (var renderer in middleRenderers1)
-        {
-            renderer.sortingLayerName = sortingLayerName;
-            renderer.sortingOrder = mulOrder + 1;
-        }
-        foreach (var renderer in middleRenderers2)
-        {
-            renderer.sortingLayerName = sortingLayerName;
-            renderer.sortingOrder = mulOrder + 2;
-        }
-        foreach (var renderer in middleRenderers3)
-        {
-            renderer.sortingLayerName = sortingLayerName;
-            renderer.sortingOrder = mulOrder + 3;
-        }
-        foreach (var renderer in middleRenderers4)
-        {
-            renderer.sortingLayerName = sortingLayerName;
-            renderer.sortingOrder = mulOrder + 4;
+            this.originOrder = originOrder;
+            SetOrder(originOrder);
         }
 
+        public void SetOrder(int order)
+        {
+            int mulOrder = order * 10;
+            foreach (var renderer in backRenderers)
+            {
+                renderer.sortingLayerName = sortingLayerName;
+                renderer.sortingOrder = mulOrder;
+            }
+            foreach (var renderer in middleRenderers1)
+            {
+                renderer.sortingLayerName = sortingLayerName;
+                renderer.sortingOrder = mulOrder + 1;
+            }
+            foreach (var renderer in middleRenderers2)
+            {
+                renderer.sortingLayerName = sortingLayerName;
+                renderer.sortingOrder = mulOrder + 2;
+            }
+            foreach (var renderer in middleRenderers3)
+            {
+                renderer.sortingLayerName = sortingLayerName;
+                renderer.sortingOrder = mulOrder + 3;
+            }
+            foreach (var renderer in middleRenderers4)
+            {
+                renderer.sortingLayerName = sortingLayerName;
+                renderer.sortingOrder = mulOrder + 4;
+            }
+
+        }
     }
 }
