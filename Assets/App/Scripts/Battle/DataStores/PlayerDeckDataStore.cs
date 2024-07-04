@@ -8,7 +8,7 @@ using UnityEngine.Assertions;
 
 namespace App.Battle.DataStores
 {
-    public sealed class PlayerDeckDataStore : MonoBehaviour, IPlayerDeckDataStore, IDisposable
+    public sealed class PlayerDeckDataStore : MonoBehaviour, IPlayerDeckDataStore
     {
         // FIXME: 임시 카드ID생성
         public static int CURRENT_CARD_ID { get; private set; }
@@ -79,7 +79,7 @@ namespace App.Battle.DataStores
             Debug.Log($"Deck shuffled");
         }
 
-        public void Dispose()
+        private void OnDestroy()
         {
             _Cards.Clear();
         }

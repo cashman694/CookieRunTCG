@@ -13,8 +13,13 @@ namespace App.Battle.Views
         [SerializeField] TMP_Text _LevelTMP;
         [SerializeField] SpriteRenderer Character;
 
-        public void Setup(CardMasterData cardMasterData)
+        private string _CardId;
+        public string CardId => _CardId;
+
+        public void Setup(string cardId, CardMasterData cardMasterData)
         {
+            _CardId = cardId;
+
             _CardNameTMP.text = cardMasterData.Name;
             _HPTMP.text = "HP" + cardMasterData.Hp.ToString();
             _CardNumberTMP.text = cardMasterData.CardNumber;

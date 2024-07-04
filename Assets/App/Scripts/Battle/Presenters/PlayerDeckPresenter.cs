@@ -44,5 +44,10 @@ namespace App.Battle.Presenters
             var deckCard = _CardViewFactory.Invoke(transform);
             _CardViews.Add(deckCard);
         }
+
+        private void OnDestroy()
+        {
+            _CardViews.Clear();
+        }
     }
 }
