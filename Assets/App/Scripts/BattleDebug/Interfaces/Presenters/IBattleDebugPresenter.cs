@@ -9,5 +9,6 @@ namespace App.BattleDebug.Interfaces.Presenters
         IObservable<Unit> OnRequestInitialDraw { get; }
         IObservable<Unit> OnRequestMulligan { get; }
         IObservable<Unit> OnRequestSetCookieCard { get; }
+        IObservable<Unit> OnRequestBrakeCookieCard { get; }
     }
 }

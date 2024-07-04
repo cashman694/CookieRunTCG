@@ -43,6 +43,10 @@ namespace App.BattleDebug.UseCases
             _BattleDebugPresenter.OnRequestSetCookieCard
                 .Subscribe(x => _PlayerBattleAreaUseCase.TestSetCard())
                 .AddTo(_Disposables);
+
+            _BattleDebugPresenter.OnRequestBrakeCookieCard
+                .Subscribe(x => _PlayerBattleAreaUseCase.TestBrakeCard())
+                .AddTo(_Disposables);
         }
 
         public void Dispose()

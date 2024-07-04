@@ -82,6 +82,20 @@ namespace App.Battle.UseCases
             }
         }
 
+        public void TestBrakeCard()
+        {
+            for (var index = 0; index < _PlayerBattleAreaDataStore.MaxCount; index++)
+            {
+                if (!_PlayerBattleAreaDataStore.CanAddCookieCard(index))
+                {
+                    continue;
+                }
+
+                BrakeCard(index);
+                return;
+            }
+        }
+
         public void SetCard(int areaIndex, string cardId)
         {
             if (_PlayerHandDataStore.IsEmpty)
@@ -102,9 +116,15 @@ namespace App.Battle.UseCases
             _PlayerBattleAreaDataStore.AddCookieCard(areaIndex, cardId);
         }
 
-        public void BrakeCard(int areaId)
+        public void BrakeCard(int areaIndex)
         {
+            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var cardId))
+            {
+                return;
+            }
 
+            _PlayerBattleAreaDataStore.RemoveCookieCard(areaIndex);
+            // TODO: move to BreakArea 
         }
 
         public void Dispose()
