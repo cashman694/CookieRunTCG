@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
-using VContainer;
 
 namespace App.Battle.DataStores
 {

@@ -1,11 +1,13 @@
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
+using App.Battle.Views;
 using App.Common.Data.MasterData;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VContainer;
+using Cysharp.Threading.Tasks;
 
 namespace App.Battle.Presenters
 {
@@ -28,9 +30,13 @@ namespace App.Battle.Presenters
             var newCardView = _CardViewFactory.Invoke(transform);
             _CardViews.Add(cardId, newCardView);
 
-            newCardView.Setup(cardMasterData);
+            var cardViewComponent = (MonoBehaviour)newCardView;
+            cardViewComponent.transform.SetAsFirstSibling();
+            cardViewComponent.gameObject.name = cardMasterData.CardNumber;
 
-            ArrangeCards();
+            newCardView.Setup(cardId, cardMasterData);
+
+            ArrangeCards().Forget();
         }
 
         public void RemoveCard(string cardId)
@@ -45,21 +51,27 @@ namespace App.Battle.Presenters
 
             _CardViews.Remove(cardId);
 
-            ArrangeCards();
+            ArrangeCards().Forget();
         }
 
-        // FIXME: 카드를 적당히 등간격으로 배치
-        private void ArrangeCards()
+        public string GetFirstCardId()
         {
-            var posX = 0f;
+            var cardView = transform.GetComponentInChildren<CardView>();
+            return cardView?.CardId;
+        }
 
-            foreach (var cardView in _CardViews.Values)
+        // FIXME: 카드를 적당한 간격으로 배치
+        private async UniTask ArrangeCards()
+        {
+            // GameObject가 씬에서 삭제될 때까지 대기
+            await UniTask.WaitForEndOfFrame();
+
+            var count = 0;
+
+            foreach (var cardView in transform.GetComponentsInChildren<CardView>())
             {
-                var cardViewTransform = ((MonoBehaviour)cardView).transform;
-                var position = cardViewTransform.position;
-
-                cardViewTransform.position = new Vector3(posX, position.y, position.z);
-                posX += 5f;
+                var cardlocalPos = Vector3.zero + Vector3.right * 5f * count++;
+                cardView.transform.localPosition = cardlocalPos;
             }
         }
     }

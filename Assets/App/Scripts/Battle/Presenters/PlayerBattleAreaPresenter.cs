@@ -25,12 +25,12 @@ namespace App.Battle.Presenters
             Assert.IsNotNull(_CardViewFactory);
         }
 
-        public void SetCard(int areaIndex, CardMasterData cardMasterData)
+        public void SetCard(int areaIndex, string cardId, CardMasterData cardMasterData)
         {
             var areaTransform = _CardAreas[areaIndex];
             var newCardView = _CardViewFactory.Invoke(areaTransform);
 
-            newCardView.Setup(cardMasterData);
+            newCardView.Setup(cardId, cardMasterData);
         }
 
         public void RemoveCard(int areaIndex)

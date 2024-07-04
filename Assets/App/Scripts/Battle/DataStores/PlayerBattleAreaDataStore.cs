@@ -1,74 +1,45 @@
 using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
 using System;
-using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
 namespace App.Battle.DataStores
 {
-    public class PlayerBattleAreaDataStore : MonoBehaviour, IPlayerBattleAreaDataStore, IDisposable
+    public class PlayerBattleAreaDataStore : MonoBehaviour, IPlayerBattleAreaDataStore
     {
-        private const int BATTLE_COOKIE_CARD_COUNT = 2;
-        private readonly ReactiveDictionary<int, BattleCardData> _CookieCards = new();
+        private int _AreaId;
+        public int AreaId => _AreaId;
 
-        public int MaxCookieCardCount => BATTLE_COOKIE_CARD_COUNT;
+        private ReactiveProperty<BattleCardData> _CookieCard = new();
+        public BattleCardData CookieCard => _CookieCard.Value;
 
-        public IObservable<(int, BattleCardData)> OnCookieCardAdded =>
-            _CookieCards.ObserveAdd().Select(x => (x.Key, x.Value));
-        public IObservable<(int, BattleCardData)> OnCookieCardRemoved =>
-            _CookieCards.ObserveRemove().Select(x => (x.Key, x.Value));
+        public IObservable<BattleCardData> OnCookieCardSet => _CookieCard.Where(x => x != null);
+        public IObservable<BattleCardData> OnCookieCardUnset => _CookieCard.Where(x => x == null);
 
-        public bool IsEmpty(int index)
+        public void SetAreaId(int id)
         {
-            if (index < 0 || index > BATTLE_COOKIE_CARD_COUNT - 1)
-            {
-                return false;
-            }
-
-            return !_CookieCards.ContainsKey(index);
+            _AreaId = id;
         }
 
-        public void AddCookieCard(int index, BattleCardData cardData)
+        public void SetCookieCard(BattleCardData cardData)
         {
-            if (index < 0 || index > BATTLE_COOKIE_CARD_COUNT - 1)
+            if (!_CookieCard.HasValue || _CookieCard.Value != null)
             {
                 return;
             }
 
-            if (!IsEmpty(index))
-            {
-                return;
-            }
-
-            _CookieCards.Add(index, cardData);
+            _CookieCard.Value = cardData;
         }
 
-        public BattleCardData RemoveCookieCard(int index)
+        public void UnsetCookieCard()
         {
-            if (index < 0 || index > BATTLE_COOKIE_CARD_COUNT - 1)
-            {
-                return null;
-            }
-
-            if (IsEmpty(index))
-            {
-                return null;
-            }
-
-            var cardData = _CookieCards[index];
-            _CookieCards.Remove(index);
-
-            return cardData;
+            _CookieCard.Value = null;
         }
 
-        public void SwitchCookieCardState(int index, CardState cardState) => throw new System.NotImplementedException();
-
-        public void Dispose()
+        private void OnDestroy()
         {
-            _CookieCards.Clear();
+            _CookieCard.Dispose();
         }
-
-        public BattleCardData RemoveCookieCardBy(int index) => throw new NotImplementedException();
     }
 }
