@@ -3,6 +3,7 @@ using App.Battle.Interfaces.Views;
 using App.Battle.Views;
 using App.Common.Data.MasterData;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -70,8 +71,11 @@ namespace App.Battle.Presenters
 
             foreach (var cardView in transform.GetComponentsInChildren<CardView>())
             {
-                var cardlocalPos = Vector3.zero + Vector3.right * 5f * count++;
-                cardView.transform.localPosition = cardlocalPos;
+                var cardViewTransform = ((MonoBehaviour)cardView).transform;
+                cardViewTransform.localPosition = Vector3.zero + Vector3.right * 5f * count;
+                var cardOrder = cardViewTransform.GetComponent<CardOrder>();
+                cardOrder.SetOriginOrder(count);
+                count++;
             }
         }
 

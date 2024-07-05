@@ -70,6 +70,7 @@ namespace App.Battle.UseCases
 
                 DrawCard();
             }
+            
         }
 
         public void DrawCard()
