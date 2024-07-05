@@ -15,7 +15,7 @@ namespace App.Battle.UseCases
 {
     public class PlayerBattleAreaUseCase : IPlayerBattleAreaUseCase, IInitializable, IDisposable
     {
-        private readonly CardMasterDatabase _CardMasterDatabase;
+        private readonly IPlayerCardDataStore _PlayerCardDataStore;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
         private readonly IPlayerBattleAreaDataStore _PlayerBattleAreaDataStore;
         private readonly IPlayerBattleAreaPresenter _PlayerBattleAreaPresenter;
@@ -24,14 +24,14 @@ namespace App.Battle.UseCases
 
         [Inject]
         public PlayerBattleAreaUseCase(
-            CardMasterDatabase cardMasterDatabase,
+            IPlayerCardDataStore playerCardDataStore,
             IPlayerHandDataStore playerHandDataStore,
             IPlayerBattleAreaDataStore playerBattleAreaDataStore,
             IPlayerBattleAreaPresenter playerBattleAreaPresenter,
             IPlayerHandPresenter playerHandPresenter
         )
         {
-            _CardMasterDatabase = cardMasterDatabase;
+            _PlayerCardDataStore = playerCardDataStore;
             _PlayerHandDataStore = playerHandDataStore;
             _PlayerBattleAreaDataStore = playerBattleAreaDataStore;
             _PlayerBattleAreaPresenter = playerBattleAreaPresenter;
@@ -43,12 +43,13 @@ namespace App.Battle.UseCases
             _PlayerBattleAreaDataStore.OnCookieCardSet
                 .Subscribe(x =>
                 {
-                    if (!_CardMasterDatabase.TryGetByCardNumber(x.card.CardNumber, out var cardMaster))
+                    var cardData = _PlayerCardDataStore.GetCardBy(x.cardId);
+                    if (cardData == null)
                     {
                         return;
                     }
 
-                    _PlayerBattleAreaPresenter.SetCard(x.index, x.card.Id, cardMaster);
+                    _PlayerBattleAreaPresenter.SetCard(x.index, x.cardId, cardData.CardMasterData);
                 })
                 .AddTo(_Disposables);
 
@@ -88,13 +89,17 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            if (_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out _))
+            if (!_PlayerBattleAreaDataStore.CanAddCookieCard(areaIndex))
             {
                 return;
             }
 
-            var cardData = _PlayerHandDataStore.RemoveCardBy(cardId);
-            _PlayerBattleAreaDataStore.SetCookieCard(areaIndex, cardData);
+            if (!_PlayerHandDataStore.RemoveCardBy(cardId))
+            {
+                return;
+            }
+
+            _PlayerBattleAreaDataStore.AddCookieCard(areaIndex, cardId);
         }
 
         public void BrakeCard(int areaId)

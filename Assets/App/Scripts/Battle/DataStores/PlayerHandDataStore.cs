@@ -1,4 +1,3 @@
-using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
 using System;
 using System.Collections.Generic;
@@ -9,39 +8,39 @@ namespace App.Battle.DataStores
 {
     public sealed class PlayerHandDataStore : MonoBehaviour, IPlayerHandDataStore
     {
-        private ReactiveDictionary<string, BattleCardData> _Cards = new();
-        public IEnumerable<BattleCardData> Cards => _Cards.Values;
+        private ReactiveCollection<string> _CardIds = new();
+        public IEnumerable<string> CardIds => _CardIds;
 
-        public bool IsEmpty => _Cards.Values.Count < 1;
+        public bool IsEmpty => _CardIds.Count < 1;
 
-        public IObservable<BattleCardData> OnCardAdded() => _Cards.ObserveAdd().Select(x => x.Value);
-        public IObservable<BattleCardData> OnCardRemoved() => _Cards.ObserveRemove().Select(x => x.Value);
+        public int Count => _CardIds.Count;
 
-        public void AddCard(BattleCardData cardData)
+        public IObservable<string> OnCardAdded => _CardIds.ObserveAdd().Select(x => x.Value);
+        public IObservable<string> OnCardRemoved => _CardIds.ObserveRemove().Select(x => x.Value);
+
+        public void AddCard(string cardId)
         {
-            _Cards.Add(cardData.Id, cardData);
-
-            Debug.Log($"{cardData} added to hand");
+            _CardIds.Add(cardId);
+            Debug.Log($"{cardId} added to hand");
         }
 
-        public BattleCardData RemoveCardBy(string cardId)
+        public bool RemoveCardBy(string cardId)
         {
-            if (!_Cards.ContainsKey(cardId))
+            if (!_CardIds.Contains(cardId))
             {
-                return null;
+                return false;
             }
 
-            var card = _Cards[cardId];
-            _Cards.Remove(card.Id);
+            _CardIds.Remove(cardId);
+            Debug.Log($"{cardId} removed from hand");
 
-            Debug.Log($"{card} removed from hand");
-            return card;
+            return true;
         }
 
         private void OnDestroy()
         {
-            _Cards.Clear();
-            _Cards.Dispose();
+            _CardIds.Clear();
+            _CardIds.Dispose();
         }
     }
 }

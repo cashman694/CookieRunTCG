@@ -30,6 +30,8 @@ namespace App.Battle
 
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.Register<PlayerCardDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
+
             builder.RegisterComponent(_PlayerHandDataStore).As<IPlayerHandDataStore>();
             builder.RegisterComponent(_PlayerHandPresenter).As<IPlayerHandPresenter>();
             builder.RegisterFactory<Transform, ICardView>(resolver =>
@@ -49,7 +51,8 @@ namespace App.Battle
             builder.RegisterComponent(_PlayerBattleAreaDataStore).As<IPlayerBattleAreaDataStore>();
             builder.RegisterComponent(_PlayerBattleAreaPresenter).As<IPlayerBattleAreaPresenter>();
 
-            builder.RegisterEntryPoint<PlayerHandCardUseCase>();
+            builder.RegisterEntryPoint<PlayerCardUseCase>().As<IPlayerCardUseCase>();
+            builder.RegisterEntryPoint<PlayerHandUseCase>();
             builder.RegisterEntryPoint<PlayerDeckUseCase>().As<IPlayerDeckUseCase>();
             builder.RegisterEntryPoint<PlayerBattleAreaUseCase>().As<IPlayerBattleAreaUseCase>();
         }
