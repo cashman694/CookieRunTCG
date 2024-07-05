@@ -2,7 +2,6 @@ using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
 using App.Battle.Views;
 using App.Common.Data.MasterData;
-using Prototype;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -70,7 +69,7 @@ namespace App.Battle.Presenters
 
             var count = 0;
 
-            foreach (var cardView in _CardViews.Values)
+            foreach (var cardView in transform.GetComponentsInChildren<CardView>())
             {
                 var cardViewTransform = ((MonoBehaviour)cardView).transform;
                 cardViewTransform.localPosition = Vector3.zero + Vector3.right * 5f * count;

@@ -11,7 +11,6 @@ namespace App.Battle.Views
         [SerializeField] Renderer[] middleRenderers2;
         [SerializeField] Renderer[] middleRenderers3;
         [SerializeField] Renderer[] middleRenderers4;
-        [SerializeField] string sortingLayerName;
         int originOrder;
 
         public void SetOriginOrder(int originOrder)
@@ -25,27 +24,22 @@ namespace App.Battle.Views
             int mulOrder = order * 10;
             foreach (var renderer in backRenderers)
             {
-                renderer.sortingLayerName = sortingLayerName;
                 renderer.sortingOrder = mulOrder;
             }
             foreach (var renderer in middleRenderers1)
             {
-                renderer.sortingLayerName = sortingLayerName;
                 renderer.sortingOrder = mulOrder + 1;
             }
             foreach (var renderer in middleRenderers2)
             {
-                renderer.sortingLayerName = sortingLayerName;
                 renderer.sortingOrder = mulOrder + 2;
             }
             foreach (var renderer in middleRenderers3)
             {
-                renderer.sortingLayerName = sortingLayerName;
                 renderer.sortingOrder = mulOrder + 3;
             }
             foreach (var renderer in middleRenderers4)
-            {
-                renderer.sortingLayerName = sortingLayerName;
+            { 
                 renderer.sortingOrder = mulOrder + 4;
             }
 

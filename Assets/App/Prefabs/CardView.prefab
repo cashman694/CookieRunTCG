@@ -415,7 +415,6 @@ MonoBehaviour:
   - {fileID: 1450831399921257986}
   - {fileID: 1796978483418986309}
   - {fileID: 5284414431667438324}
-  sortingLayerName: Card
 --- !u!1 &1255649473711112582
 GameObject:
   m_ObjectHideFlags: 0
