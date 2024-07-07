@@ -2,16 +2,16 @@ using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
 using App.Battle.Views;
 using App.Common.Data.MasterData;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VContainer;
-using Cysharp.Threading.Tasks;
 
 namespace App.Battle.Presenters
 {
-    public class PlayerHandPresenter : MonoBehaviour, IPlayerHandPresenter
+    public class PlayerBreakAreaPresenter : MonoBehaviour, IPlayerBreakAreaPresenter
     {
         private Func<Transform, ICardView> _CardViewFactory;
         private readonly Dictionary<string, ICardView> _CardViews = new();
@@ -55,12 +55,6 @@ namespace App.Battle.Presenters
             ArrangeCards().Forget();
         }
 
-        public string GetFirstCardId()
-        {
-            var cardView = transform.GetComponentInChildren<CardView>();
-            return cardView?.CardId;
-        }
-
         // FIXME: 카드를 적당한 간격으로 배치
         private async UniTask ArrangeCards()
         {
@@ -71,7 +65,7 @@ namespace App.Battle.Presenters
 
             foreach (var cardView in transform.GetComponentsInChildren<CardView>())
             {
-                var cardlocalPos = Vector3.zero + Vector3.right * 5f * count++;
+                var cardlocalPos = Vector3.zero + Vector3.down * 5f * count++;
                 cardView.transform.localPosition = cardlocalPos;
             }
         }

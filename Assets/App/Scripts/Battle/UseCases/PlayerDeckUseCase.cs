@@ -91,12 +91,12 @@ namespace App.Battle.UseCases
             var handCardIds = _PlayerHandDataStore.CardIds.ToArray();
             foreach (var cardId in handCardIds)
             {
-                if (!_PlayerHandDataStore.RemoveCardBy(cardId))
+                if (!_PlayerHandDataStore.RemoveCard(cardId))
                 {
                     continue;
                 }
 
-                _PlayerDeckDataStore.ReturnCard(cardId);
+                _PlayerDeckDataStore.AddCard(cardId);
             }
 
             _PlayerDeckDataStore.Shuffle();

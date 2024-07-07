@@ -1,12 +1,18 @@
-using App.Battle.Data;
+using System;
 using System.Collections.Generic;
 
 namespace App.Battle.Interfaces.DataStores
 {
-    public interface IPlayerBrakeAreaDataStore
+    public interface IPlayerBreakAreaDataStore
     {
-        IEnumerable<BattleCardData> Cards { get; }
-        void AddCard(BattleCardData cardData);
-        BattleCardData RemoveCard(int index);
+        IEnumerable<string> CardIds { get; }
+        int Count { get; }
+
+        IObservable<string> OnCardAdded { get; }
+        IObservable<string> OnCardRemoved { get; }
+
+        void AddCard(string cardId);
+        bool RemoveCard(string cardId);
+        string GetCard(int index);
     }
 }

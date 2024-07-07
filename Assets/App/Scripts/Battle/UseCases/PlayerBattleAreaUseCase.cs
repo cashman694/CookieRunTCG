@@ -1,12 +1,8 @@
 using App.Battle.Interfaces.DataStores;
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
-using App.Common.Data.MasterData;
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UniRx;
 using VContainer;
 using VContainer.Unity;
@@ -17,6 +13,7 @@ namespace App.Battle.UseCases
     {
         private readonly IPlayerCardDataStore _PlayerCardDataStore;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
+        private readonly IPlayerBreakAreaDataStore _PlayerBreakAreaDataStore;
         private readonly IPlayerBattleAreaDataStore _PlayerBattleAreaDataStore;
         private readonly IPlayerBattleAreaPresenter _PlayerBattleAreaPresenter;
         private readonly IPlayerHandPresenter _PlayerHandPresenter;
@@ -26,6 +23,7 @@ namespace App.Battle.UseCases
         public PlayerBattleAreaUseCase(
             IPlayerCardDataStore playerCardDataStore,
             IPlayerHandDataStore playerHandDataStore,
+            IPlayerBreakAreaDataStore playerBreakAreaDataStore,
             IPlayerBattleAreaDataStore playerBattleAreaDataStore,
             IPlayerBattleAreaPresenter playerBattleAreaPresenter,
             IPlayerHandPresenter playerHandPresenter
@@ -33,6 +31,7 @@ namespace App.Battle.UseCases
         {
             _PlayerCardDataStore = playerCardDataStore;
             _PlayerHandDataStore = playerHandDataStore;
+            _PlayerBreakAreaDataStore = playerBreakAreaDataStore;
             _PlayerBattleAreaDataStore = playerBattleAreaDataStore;
             _PlayerBattleAreaPresenter = playerBattleAreaPresenter;
             _PlayerHandPresenter = playerHandPresenter;
@@ -50,6 +49,7 @@ namespace App.Battle.UseCases
                     }
 
                     _PlayerBattleAreaPresenter.SetCard(x.index, x.cardId, cardData.CardMasterData);
+                    UnityEngine.Debug.Log($"{x.cardId} added to BattleArea {x.index}");
                 })
                 .AddTo(_Disposables);
 
@@ -57,6 +57,7 @@ namespace App.Battle.UseCases
                 .Subscribe(x =>
                 {
                     _PlayerBattleAreaPresenter.RemoveCard(x.index);
+                    UnityEngine.Debug.Log($"{x.cardId} removed from BattleArea {x.index}");
                 })
                 .AddTo(_Disposables);
         }
@@ -86,7 +87,7 @@ namespace App.Battle.UseCases
         {
             for (var index = 0; index < _PlayerBattleAreaDataStore.MaxCount; index++)
             {
-                if (!_PlayerBattleAreaDataStore.CanAddCookieCard(index))
+                if (!_PlayerBattleAreaDataStore.TryGetCookieCard(index, out _))
                 {
                     continue;
                 }
@@ -108,7 +109,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            if (!_PlayerHandDataStore.RemoveCardBy(cardId))
+            if (!_PlayerHandDataStore.RemoveCard(cardId))
             {
                 return;
             }
@@ -124,7 +125,7 @@ namespace App.Battle.UseCases
             }
 
             _PlayerBattleAreaDataStore.RemoveCookieCard(areaIndex);
-            // TODO: move to BreakArea 
+            _PlayerBreakAreaDataStore.AddCard(cardId);
         }
 
         public void Dispose()

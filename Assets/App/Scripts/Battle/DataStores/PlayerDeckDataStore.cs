@@ -15,6 +15,8 @@ namespace App.Battle.DataStores
 
         public void AddCard(string cardId)
         {
+            Assert.IsFalse(_CardIds.Contains(cardId));
+
             _CardIds.Add(cardId);
             Debug.Log($"{cardId} added to deck");
         }
@@ -31,14 +33,6 @@ namespace App.Battle.DataStores
             Debug.Log($"Remaining deck cards count: {Count}");
 
             return card;
-        }
-
-        public void ReturnCard(string cardId)
-        {
-            Assert.IsFalse(_CardIds.Contains(cardId));
-
-            _CardIds.Add(cardId);
-            Debug.Log($"{cardId} returned to deck");
         }
 
         public void Shuffle()

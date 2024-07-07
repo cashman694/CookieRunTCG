@@ -13,6 +13,6 @@ namespace App.Battle.Interfaces.DataStores
         IObservable<string> OnCardRemoved { get; }
 
         void AddCard(string cardId);
-        bool RemoveCardBy(string cardId);
+        bool RemoveCard(string cardId);
     }
 }

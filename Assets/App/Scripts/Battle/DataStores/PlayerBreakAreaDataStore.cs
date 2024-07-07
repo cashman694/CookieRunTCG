@@ -3,15 +3,14 @@ using System;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace App.Battle.DataStores
 {
-    public sealed class PlayerHandDataStore : MonoBehaviour, IPlayerHandDataStore
+    public class PlayerBreakAreaDataStore : IPlayerBreakAreaDataStore, IDisposable
     {
         private ReactiveCollection<string> _CardIds = new();
         public IEnumerable<string> CardIds => _CardIds;
-
-        public bool IsEmpty => _CardIds.Count < 1;
 
         public int Count => _CardIds.Count;
 
@@ -21,7 +20,7 @@ namespace App.Battle.DataStores
         public void AddCard(string cardId)
         {
             _CardIds.Add(cardId);
-            Debug.Log($"{cardId} added to hand");
+            Debug.Log($"{cardId} added to break area");
         }
 
         public bool RemoveCard(string cardId)
@@ -32,12 +31,19 @@ namespace App.Battle.DataStores
             }
 
             _CardIds.Remove(cardId);
-            Debug.Log($"{cardId} removed from hand");
+            Debug.Log($"{cardId} removed from brak area");
 
             return true;
         }
 
-        private void OnDestroy()
+        public string GetCard(int index)
+        {
+            Assert.IsTrue(index > 0 || index < Count);
+
+            return _CardIds[index];
+        }
+
+        public void Dispose()
         {
             _CardIds.Clear();
             _CardIds.Dispose();

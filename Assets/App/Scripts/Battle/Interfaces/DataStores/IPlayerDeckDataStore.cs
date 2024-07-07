@@ -10,7 +10,6 @@ namespace App.Battle.Interfaces.DataStores
 
         void AddCard(string cardId);
         string RemoveFirstCard();
-        void ReturnCard(string cardId);
         void Shuffle();
     }
 }
