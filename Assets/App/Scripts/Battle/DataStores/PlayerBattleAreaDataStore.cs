@@ -11,47 +11,47 @@ namespace App.Battle.DataStores
         private const int BATTLE_COOKIE_CARD_COUNT = 2;
         public int MaxCount => BATTLE_COOKIE_CARD_COUNT;
 
-        public IObservable<(int index, BattleCardData card)> OnCookieCardSet =>
-            _CookieCards.ObserveAdd().Select(x => (x.Key, x.Value));
+        public IObservable<(int index, string cardId)> OnCookieCardSet =>
+            _CookieCardIds.ObserveAdd().Select(x => (x.Key, x.Value));
 
-        public IObservable<(int index, BattleCardData card)> OnCookieCardUnset =>
-            _CookieCards.ObserveRemove().Select(x => (x.Key, x.Value));
+        public IObservable<(int index, string cardId)> OnCookieCardUnset =>
+            _CookieCardIds.ObserveRemove().Select(x => (x.Key, x.Value));
 
-        private readonly ReactiveDictionary<int, BattleCardData> _CookieCards = new();
+        private readonly ReactiveDictionary<int, string> _CookieCardIds = new();
 
-        public bool TryGetCookieCard(int index, out BattleCardData card)
+        public bool TryGetCookieCard(int index, out string cardId)
         {
-            return _CookieCards.TryGetValue(index, out card);
+            return _CookieCardIds.TryGetValue(index, out cardId);
         }
 
-        public bool CanSetCookieCard(int index)
+        public bool CanAddCookieCard(int index)
         {
-            return !_CookieCards.ContainsKey(index);
+            return !_CookieCardIds.ContainsKey(index);
         }
 
-        public void SetCookieCard(int index, BattleCardData battleCardData)
+        public void AddCookieCard(int index, string cardId)
         {
-            if (_CookieCards.ContainsKey(index))
+            if (_CookieCardIds.ContainsKey(index))
             {
                 return;
             }
 
-            _CookieCards.Add(index, battleCardData);
+            _CookieCardIds.Add(index, cardId);
         }
 
-        public void UnsetCookieCard(int index)
+        public void RemoveCookieCard(int index)
         {
-            if (!_CookieCards.ContainsKey(index))
+            if (!_CookieCardIds.ContainsKey(index))
             {
                 return;
             }
 
-            _CookieCards.Remove(index);
+            _CookieCardIds.Remove(index);
         }
 
         private void OnDestroy()
         {
-            _CookieCards.Dispose();
+            _CookieCardIds.Dispose();
         }
     }
 }

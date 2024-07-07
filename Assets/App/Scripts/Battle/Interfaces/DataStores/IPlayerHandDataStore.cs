@@ -1,4 +1,3 @@
-using App.Battle.Data;
 using System;
 using System.Collections.Generic;
 
@@ -6,13 +5,14 @@ namespace App.Battle.Interfaces.DataStores
 {
     public interface IPlayerHandDataStore
     {
-        IEnumerable<BattleCardData> Cards { get; }
+        IEnumerable<string> CardIds { get; }
+        int Count { get; }
         bool IsEmpty { get; }
 
-        IObservable<BattleCardData> OnCardAdded();
-        IObservable<BattleCardData> OnCardRemoved();
+        IObservable<string> OnCardAdded { get; }
+        IObservable<string> OnCardRemoved { get; }
 
-        void AddCard(BattleCardData cardData);
-        BattleCardData RemoveCardBy(string cardId);
+        void AddCard(string cardId);
+        bool RemoveCard(string cardId);
     }
 }

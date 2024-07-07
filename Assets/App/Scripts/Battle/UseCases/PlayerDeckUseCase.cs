@@ -1,7 +1,6 @@
 using App.Battle.Interfaces.DataStores;
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
-using App.Common.Data.MasterData;
 using System;
 using System.Linq;
 using UniRx;
@@ -14,7 +13,7 @@ namespace App.Battle.UseCases
     {
         private const int INITIAL_DRAW_COUNT = 5;
 
-        private readonly CardMasterDatabase _CardMasterDatabase;
+        private readonly IPlayerCardDataStore _PlayerCardDataStore;
         private readonly IPlayerDeckDataStore _PlayerDeckDataStore;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
         private readonly IPlayerDeckPresenter _PlayerDeckPresenter;
@@ -22,13 +21,13 @@ namespace App.Battle.UseCases
 
         [Inject]
         public PlayerDeckUseCase(
-            CardMasterDatabase cardMasterDatabase,
+            IPlayerCardDataStore playerCardDataStore,
             IPlayerDeckDataStore playerDeckDataStore,
             IPlayerHandDataStore playerHandDataStore,
             IPlayerDeckPresenter playerDeckPresenter
         )
         {
-            _CardMasterDatabase = cardMasterDatabase;
+            _PlayerCardDataStore = playerCardDataStore;
             _PlayerDeckDataStore = playerDeckDataStore;
             _PlayerHandDataStore = playerHandDataStore;
             _PlayerDeckPresenter = playerDeckPresenter;
@@ -36,27 +35,23 @@ namespace App.Battle.UseCases
 
         public void Start()
         {
-            GenerateDeck(_PlayerDeckDataStore.MaxCount);
+            Build();
         }
 
-        private void GenerateDeck(int count)
+        public void Build()
         {
-            var cardsLength = _CardMasterDatabase.Cards.Length;
-
-            for (int i = 0; i < count; i++)
+            foreach (var card in _PlayerCardDataStore.Cards)
             {
-                var randomNumber = UnityEngine.Random.Range(0, cardsLength);
-                var cardMaster = _CardMasterDatabase.Cards[randomNumber];
-
-                _PlayerDeckDataStore.AddCard(cardMaster);
+                _PlayerDeckDataStore.AddCard(card.Id);
             }
 
-            _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Cards.Count());
+            _PlayerDeckDataStore.Shuffle();
+            _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Count);
         }
 
         public void InitialDraw()
         {
-            if (_PlayerHandDataStore.Cards.Count() > 0)
+            if (_PlayerHandDataStore.Count > 0)
             {
                 return;
             }
@@ -81,11 +76,10 @@ namespace App.Battle.UseCases
             }
 
             // TODO: 드로우페이즈인지 아닌지 체크하기
+            var cardId = _PlayerDeckDataStore.RemoveFirstCard();
+            _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Count);
 
-            var card = _PlayerDeckDataStore.RemoveFirstCard();
-            _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Cards.Count());
-
-            _PlayerHandDataStore.AddCard(card);
+            _PlayerHandDataStore.AddCard(cardId);
         }
 
         public void Mulligan()
@@ -95,16 +89,15 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            var handCardIds = _PlayerHandDataStore.Cards.Select(x => x.Id).ToList();
+            var handCardIds = _PlayerHandDataStore.CardIds.ToArray();
             foreach (var cardId in handCardIds)
             {
-                var card = _PlayerHandDataStore.RemoveCardBy(cardId);
-                if (card == null)
+                if (!_PlayerHandDataStore.RemoveCard(cardId))
                 {
                     continue;
                 }
 
-                _PlayerDeckDataStore.ReturnCard(card);
+                _PlayerDeckDataStore.AddCard(cardId);
             }
 
             _PlayerDeckDataStore.Shuffle();

@@ -31,6 +31,7 @@ namespace App.Battle.Presenters
             var newCardView = _CardViewFactory.Invoke(areaTransform);
 
             newCardView.Setup(cardId, cardMasterData);
+            _CardViews[areaIndex] = newCardView;
         }
 
         public void RemoveCard(int areaIndex)
@@ -42,6 +43,7 @@ namespace App.Battle.Presenters
                 return;
             }
 
+            _CardViews[areaIndex] = null;
             cardView.Unspawn();
         }
     }

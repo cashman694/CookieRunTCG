@@ -8,36 +8,45 @@ using Cysharp.Threading.Tasks;
 
 namespace App.Battle.UseCases
 {
-    public sealed class PlayerHandCardUseCase : IInitializable, IDisposable
+    public sealed class PlayerHandUseCase : IInitializable, IDisposable
     {
+        private readonly IPlayerCardDataStore _PlayerCardDataStore;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
         private readonly IPlayerHandPresenter _PlayerHandPresenter;
         private readonly CompositeDisposable _Disposables = new();
 
         [Inject]
-        public PlayerHandCardUseCase
+        public PlayerHandUseCase
         (
+            IPlayerCardDataStore playerCardDataStore,
             IPlayerHandDataStore playerHandDataStore,
             IPlayerHandPresenter playerHandPresenter
         )
         {
+            _PlayerCardDataStore = playerCardDataStore;
             _PlayerHandDataStore = playerHandDataStore;
             _PlayerHandPresenter = playerHandPresenter;
         }
 
         public void Initialize()
         {
-            _PlayerHandDataStore.OnCardAdded()
+            _PlayerHandDataStore.OnCardAdded
                 .Subscribe(x =>
                 {
-                    _PlayerHandPresenter.AddCard(x.Id, x.CardMasterData);
+                    var cardData = _PlayerCardDataStore.GetCardBy(x);
+                    if (cardData == null)
+                    {
+                        return;
+                    }
+
+                    _PlayerHandPresenter.AddCard(x, cardData.CardMasterData);
                 })
                 .AddTo(_Disposables);
 
-            _PlayerHandDataStore.OnCardRemoved()
+            _PlayerHandDataStore.OnCardRemoved
                 .Subscribe(x =>
                 {
-                    _PlayerHandPresenter.RemoveCard(x.Id);
+                    _PlayerHandPresenter.RemoveCard(x);
                 })
                 .AddTo(_Disposables);
         }
