@@ -62,11 +62,15 @@ namespace App.Battle.Presenters
             await UniTask.WaitForEndOfFrame();
 
             var count = 0;
+            var sortingOrder = 0;
 
             foreach (var cardView in transform.GetComponentsInChildren<CardView>())
             {
                 var cardlocalPos = Vector3.zero + Vector3.down * 5f * count++;
                 cardView.transform.localPosition = cardlocalPos;
+                var cardOrder = cardView.GetComponent<CardOrder>();
+                cardOrder.SetOriginOrder(sortingOrder);
+                sortingOrder++;
             }
         }
 
