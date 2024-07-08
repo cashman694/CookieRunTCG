@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace App.Battle.Interfaces.DataStores
@@ -7,6 +8,7 @@ namespace App.Battle.Interfaces.DataStores
         IEnumerable<string> CardIds { get; }
         int Count { get; }
         bool IsEmpty { get; }
+        IObservable<int> OnCountChanged { get; }
 
         void AddCard(string cardId);
         string RemoveFirstCard();

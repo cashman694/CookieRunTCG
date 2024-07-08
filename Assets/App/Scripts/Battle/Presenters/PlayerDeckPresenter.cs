@@ -10,12 +10,12 @@ namespace App.Battle.Presenters
 {
     public class PlayerDeckPresenter : MonoBehaviour, IPlayerDeckPresenter
     {
-        private Func<Transform, IDeckCardView> _CardViewFactory;
-        private readonly List<IDeckCardView> _CardViews = new();
+        private Func<Transform, IBackCardView> _CardViewFactory;
+        private readonly List<ICardView> _CardViews = new();
 
         [Inject]
         private void Construct(
-            Func<Transform, IDeckCardView> cardViewFactory
+            Func<Transform, IBackCardView> cardViewFactory
         )
         {
             _CardViewFactory = cardViewFactory;

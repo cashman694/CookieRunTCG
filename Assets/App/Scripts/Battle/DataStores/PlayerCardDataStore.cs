@@ -39,6 +39,7 @@ namespace App.Battle.DataStores
 
         public void Dispose()
         {
+            _Cards.Clear();
         }
     }
 }

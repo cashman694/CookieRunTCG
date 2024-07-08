@@ -37,7 +37,7 @@ namespace App.Battle
 
             builder.RegisterComponent(_PlayerHandDataStore).As<IPlayerHandDataStore>();
             builder.RegisterComponent(_PlayerHandPresenter).As<IPlayerHandPresenter>();
-            builder.RegisterFactory<Transform, ICardView>(resolver =>
+            builder.RegisterFactory<Transform, IFrontCardView>(resolver =>
                 {
                     return transform => resolver.Instantiate(_CardViewPrefab, transform);
                 },
@@ -45,7 +45,7 @@ namespace App.Battle
 
             builder.RegisterComponent(_PlayerDeckDataStore).As<IPlayerDeckDataStore>();
             builder.RegisterComponent(_PlayerDeckPresenter).As<IPlayerDeckPresenter>();
-            builder.RegisterFactory<Transform, IDeckCardView>(resolver =>
+            builder.RegisterFactory<Transform, IBackCardView>(resolver =>
                 {
                     return transform => resolver.Instantiate(_DeckCardViewPrefab, transform);
                 },

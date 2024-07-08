@@ -12,5 +12,9 @@ namespace App.Battle.Interfaces.DataStores
         bool CanAddCookieCard(int index);
         void AddCookieCard(int index, string cardId);
         void RemoveCookieCard(int index);
+
+        void AddHpCard(int index, string cardId);
+        bool RemoveHpCard(int index);
+        void FlipHpCard();
     }
 }

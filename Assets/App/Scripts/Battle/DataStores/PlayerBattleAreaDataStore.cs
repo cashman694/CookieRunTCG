@@ -1,6 +1,6 @@
-using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
 using System;
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
@@ -18,6 +18,9 @@ namespace App.Battle.DataStores
             _CookieCardIds.ObserveRemove().Select(x => (x.Key, x.Value));
 
         private readonly ReactiveDictionary<int, string> _CookieCardIds = new();
+
+        private readonly Dictionary<int, List<string>> _HpCardIds =
+            new() { { 0, new() }, { 1, new() } };
 
         public bool TryGetCookieCard(int index, out string cardId)
         {
@@ -49,9 +52,41 @@ namespace App.Battle.DataStores
             _CookieCardIds.Remove(index);
         }
 
+        public void AddHpCard(int index, string cardId)
+        {
+            if (!_HpCardIds.ContainsKey(index))
+            {
+                return;
+            }
+
+            var hpCards = _HpCardIds[index];
+            hpCards.Add(cardId);
+        }
+
+        public bool RemoveHpCard(int index)
+        {
+            if (!_HpCardIds.ContainsKey(index))
+            {
+                return false;
+            }
+
+            var hpCards = _HpCardIds[index];
+
+            if (hpCards.Count < 1)
+            {
+                return false;
+            }
+
+            hpCards.RemoveAt(hpCards.Count - 1);
+            return true;
+        }
+
+        public void FlipHpCard() => throw new NotImplementedException();
+
         private void OnDestroy()
         {
             _CookieCardIds.Dispose();
+            _HpCardIds.Clear();
         }
     }
 }

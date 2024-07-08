@@ -12,6 +12,7 @@ namespace App.Battle.UseCases
     public class PlayerBattleAreaUseCase : IPlayerBattleAreaUseCase, IInitializable, IDisposable
     {
         private readonly IPlayerCardDataStore _PlayerCardDataStore;
+        private readonly IPlayerDeckDataStore _PlayerDeckDataStore;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
         private readonly IPlayerBreakAreaDataStore _PlayerBreakAreaDataStore;
         private readonly IPlayerBattleAreaDataStore _PlayerBattleAreaDataStore;
@@ -22,6 +23,7 @@ namespace App.Battle.UseCases
         [Inject]
         public PlayerBattleAreaUseCase(
             IPlayerCardDataStore playerCardDataStore,
+            IPlayerDeckDataStore playerDeckDataStore,
             IPlayerHandDataStore playerHandDataStore,
             IPlayerBreakAreaDataStore playerBreakAreaDataStore,
             IPlayerBattleAreaDataStore playerBattleAreaDataStore,
@@ -30,6 +32,7 @@ namespace App.Battle.UseCases
         )
         {
             _PlayerCardDataStore = playerCardDataStore;
+            _PlayerDeckDataStore = playerDeckDataStore;
             _PlayerHandDataStore = playerHandDataStore;
             _PlayerBreakAreaDataStore = playerBreakAreaDataStore;
             _PlayerBattleAreaDataStore = playerBattleAreaDataStore;
@@ -48,7 +51,7 @@ namespace App.Battle.UseCases
                         return;
                     }
 
-                    _PlayerBattleAreaPresenter.SetCard(x.index, x.cardId, cardData.CardMasterData);
+                    _PlayerBattleAreaPresenter.AddCookieCard(x.index, x.cardId, cardData.CardMasterData);
                     UnityEngine.Debug.Log($"{x.cardId} added to BattleArea {x.index}");
                 })
                 .AddTo(_Disposables);
@@ -56,7 +59,7 @@ namespace App.Battle.UseCases
             _PlayerBattleAreaDataStore.OnCookieCardUnset
                 .Subscribe(x =>
                 {
-                    _PlayerBattleAreaPresenter.RemoveCard(x.index);
+                    _PlayerBattleAreaPresenter.RemoveCookieCard(x.index);
                     UnityEngine.Debug.Log($"{x.cardId} removed from BattleArea {x.index}");
                 })
                 .AddTo(_Disposables);
@@ -83,7 +86,7 @@ namespace App.Battle.UseCases
             }
         }
 
-        public void TestBrakeCard()
+        public void TestBreakCard()
         {
             for (var index = 0; index < _PlayerBattleAreaDataStore.MaxCount; index++)
             {
@@ -92,13 +95,20 @@ namespace App.Battle.UseCases
                     continue;
                 }
 
-                BrakeCard(index);
+                BreakCard(index);
                 return;
             }
         }
 
         public void SetCard(int areaIndex, string cardId)
         {
+            var card = _PlayerCardDataStore.GetCardBy(cardId);
+
+            if (card == null)
+            {
+                return;
+            }
+
             if (_PlayerHandDataStore.IsEmpty)
             {
                 return;
@@ -115,9 +125,22 @@ namespace App.Battle.UseCases
             }
 
             _PlayerBattleAreaDataStore.AddCookieCard(areaIndex, cardId);
+
+            for (int i = 0; i < card.CardMasterData.Hp; i++)
+            {
+                if (_PlayerDeckDataStore.IsEmpty)
+                {
+                    return;
+                }
+
+                var drawCardId = _PlayerDeckDataStore.RemoveFirstCard();
+
+                _PlayerBattleAreaDataStore.AddHpCard(areaIndex, drawCardId);
+                _PlayerBattleAreaPresenter.AddHpCard(areaIndex, drawCardId);
+            }
         }
 
-        public void BrakeCard(int areaIndex)
+        public void BreakCard(int areaIndex)
         {
             if (!_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var cardId))
             {

@@ -1,5 +1,7 @@
 using App.Battle.Interfaces.DataStores;
+using System;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -13,12 +15,17 @@ namespace App.Battle.DataStores
         public int Count => _CardIds.Count;
         public bool IsEmpty => _CardIds.Count < 1;
 
+        private readonly Subject<int> _OnCountChanged = new();
+        public IObservable<int> OnCountChanged => _OnCountChanged;
+
         public void AddCard(string cardId)
         {
             Assert.IsFalse(_CardIds.Contains(cardId));
 
             _CardIds.Add(cardId);
+
             Debug.Log($"{cardId} added to deck");
+            _OnCountChanged.OnNext(Count);
         }
 
         public string RemoveFirstCard()
@@ -28,11 +35,14 @@ namespace App.Battle.DataStores
                 return null;
             }
 
-            var card = _CardIds[0];
+            var cardId = _CardIds[0];
             _CardIds.RemoveAt(0);
-            Debug.Log($"Remaining deck cards count: {Count}");
+            Debug.Log($"{cardId} removed from deck");
 
-            return card;
+            Debug.Log($"Remaining deck cards count: {Count}");
+            _OnCountChanged.OnNext(Count);
+
+            return cardId;
         }
 
         public void Shuffle()
@@ -58,6 +68,7 @@ namespace App.Battle.DataStores
 
         private void OnDestroy()
         {
+            _OnCountChanged.Dispose();
             _CardIds.Clear();
         }
     }

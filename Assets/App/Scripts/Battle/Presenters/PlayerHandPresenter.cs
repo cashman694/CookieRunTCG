@@ -3,7 +3,6 @@ using App.Battle.Interfaces.Views;
 using App.Battle.Views;
 using App.Common.Data.MasterData;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -14,12 +13,12 @@ namespace App.Battle.Presenters
 {
     public class PlayerHandPresenter : MonoBehaviour, IPlayerHandPresenter
     {
-        private Func<Transform, ICardView> _CardViewFactory;
-        private readonly Dictionary<string, ICardView> _CardViews = new();
+        private Func<Transform, IFrontCardView> _CardViewFactory;
+        private readonly Dictionary<string, IFrontCardView> _CardViews = new();
 
         [Inject]
         private void Construct(
-            Func<Transform, ICardView> cardViewFactory
+            Func<Transform, IFrontCardView> cardViewFactory
         )
         {
             _CardViewFactory = cardViewFactory;
