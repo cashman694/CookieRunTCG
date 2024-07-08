@@ -20,12 +20,10 @@ namespace App.Battle
         [SerializeField] private CardView _CardViewPrefab;
 
         [Header("Player Deck")]
-        [SerializeField] private PlayerDeckDataStore _PlayerDeckDataStore;
         [SerializeField] private PlayerDeckPresenter _PlayerDeckPresenter;
         [SerializeField] private DeckCardView _DeckCardViewPrefab;
 
         [Header("Player Battle Area")]
-        [SerializeField] private PlayerBattleAreaDataStore _PlayerBattleAreaDataStore;
         [SerializeField] private PlayerBattleAreaPresenter _PlayerBattleAreaPresenter;
 
         [Header("Player Break Area")]
@@ -35,7 +33,7 @@ namespace App.Battle
         {
             builder.Register<PlayerCardDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
 
-            builder.RegisterComponent(_PlayerHandDataStore).As<IPlayerHandDataStore>();
+            builder.Register<PlayerHandDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerHandPresenter).As<IPlayerHandPresenter>();
             builder.RegisterFactory<Transform, IFrontCardView>(resolver =>
                 {
@@ -43,7 +41,7 @@ namespace App.Battle
                 },
                 Lifetime.Scoped);
 
-            builder.RegisterComponent(_PlayerDeckDataStore).As<IPlayerDeckDataStore>();
+            builder.Register<PlayerDeckDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerDeckPresenter).As<IPlayerDeckPresenter>();
             builder.RegisterFactory<Transform, IBackCardView>(resolver =>
                 {
@@ -51,7 +49,7 @@ namespace App.Battle
                 },
                 Lifetime.Scoped);
 
-            builder.RegisterComponent(_PlayerBattleAreaDataStore).As<IPlayerBattleAreaDataStore>();
+            builder.Register<PlayerBattleAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerBattleAreaPresenter).As<IPlayerBattleAreaPresenter>();
 
             builder.Register<PlayerBreakAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();

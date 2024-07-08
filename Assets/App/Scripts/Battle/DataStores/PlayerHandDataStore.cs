@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace App.Battle.DataStores
 {
-    public sealed class PlayerHandDataStore : MonoBehaviour, IPlayerHandDataStore
+    public sealed class PlayerHandDataStore : IPlayerHandDataStore, IDisposable
     {
         private ReactiveCollection<string> _CardIds = new();
         public IEnumerable<string> CardIds => _CardIds;
@@ -37,7 +37,7 @@ namespace App.Battle.DataStores
             return true;
         }
 
-        private void OnDestroy()
+        public void Dispose()
         {
             _CardIds.Clear();
             _CardIds.Dispose();
