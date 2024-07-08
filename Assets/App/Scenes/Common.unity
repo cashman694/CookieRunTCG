@@ -303,6 +303,7 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
+  _BattleConfig: {fileID: 11400000, guid: 6530d1550dcc64d71b247b753a809073, type: 2}
   _CardMasterDatabase: {fileID: 11400000, guid: 447c6e03d8e2c44238c786cbb9ef568b, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
