@@ -9,7 +9,7 @@ using VContainer.Unity;
 
 namespace App.Battle.UseCases
 {
-    public class PlayerDeckUseCase : IStartable, IDisposable, IPlayerDeckUseCase
+    public class PlayerDeckUseCase : IInitializable, IStartable, IDisposable, IPlayerDeckUseCase
     {
         private const int INITIAL_DRAW_COUNT = 5;
 
@@ -33,6 +33,16 @@ namespace App.Battle.UseCases
             _PlayerDeckPresenter = playerDeckPresenter;
         }
 
+        public void Initialize()
+        {
+            _PlayerDeckDataStore.OnCountChanged
+                .Subscribe(x =>
+                {
+                    _PlayerDeckPresenter.UpdateCards(x);
+                })
+                .AddTo(_Disposables);
+        }
+
         public void Start()
         {
             Build();
@@ -46,7 +56,7 @@ namespace App.Battle.UseCases
             }
 
             _PlayerDeckDataStore.Shuffle();
-            _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Count);
+            // _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Count);
         }
 
         public void InitialDraw()
@@ -65,7 +75,6 @@ namespace App.Battle.UseCases
 
                 DrawCard();
             }
-            
         }
 
         public void DrawCard()
@@ -77,7 +86,7 @@ namespace App.Battle.UseCases
 
             // TODO: 드로우페이즈인지 아닌지 체크하기
             var cardId = _PlayerDeckDataStore.RemoveFirstCard();
-            _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Count);
+            // _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Count);
 
             _PlayerHandDataStore.AddCard(cardId);
         }

@@ -45,7 +45,7 @@ namespace App.BattleDebug.UseCases
                 .AddTo(_Disposables);
 
             _BattleDebugPresenter.OnRequestBrakeCookieCard
-                .Subscribe(x => _PlayerBattleAreaUseCase.TestBrakeCard())
+                .Subscribe(x => _PlayerBattleAreaUseCase.TestBreakCard())
                 .AddTo(_Disposables);
         }
 

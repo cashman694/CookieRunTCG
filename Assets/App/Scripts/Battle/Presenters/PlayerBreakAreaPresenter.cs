@@ -13,12 +13,12 @@ namespace App.Battle.Presenters
 {
     public class PlayerBreakAreaPresenter : MonoBehaviour, IPlayerBreakAreaPresenter
     {
-        private Func<Transform, ICardView> _CardViewFactory;
-        private readonly Dictionary<string, ICardView> _CardViews = new();
+        private Func<Transform, IFrontCardView> _CardViewFactory;
+        private readonly Dictionary<string, IFrontCardView> _CardViews = new();
 
         [Inject]
         private void Construct(
-            Func<Transform, ICardView> cardViewFactory
+            Func<Transform, IFrontCardView> cardViewFactory
         )
         {
             _CardViewFactory = cardViewFactory;

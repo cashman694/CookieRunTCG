@@ -29,7 +29,7 @@ namespace App.Battle.UseCases
         public void GenerateCards()
         {
             var cardsLength = _CardMasterDatabase.Cards.Length;
-            var cardCount = 10;
+            var cardCount = 30;
 
             for (int i = 0; i < cardCount; i++)
             {

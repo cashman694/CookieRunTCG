@@ -752,7 +752,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: BrakeCookieCard
+  m_text: BreakCookieCard
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 55d5ae05437f14a4aac8cef1681517cb, type: 2}
   m_sharedMaterial: {fileID: 7268555141797242002, guid: 55d5ae05437f14a4aac8cef1681517cb, type: 2}
@@ -893,7 +893,7 @@ GameObject:
   - component: {fileID: 969302944}
   - component: {fileID: 969302943}
   m_Layer: 5
-  m_Name: BrakeCookieCardButton
+  m_Name: BreakCookieCardButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

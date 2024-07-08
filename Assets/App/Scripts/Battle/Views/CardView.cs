@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace App.Battle.Views
 {
-    public class CardView : MonoBehaviour, ICardView
+    public class CardView : MonoBehaviour, IFrontCardView
     {
         [SerializeField] TMP_Text _CardNameTMP;
         [SerializeField] TMP_Text _HPTMP;
@@ -26,8 +26,6 @@ namespace App.Battle.Views
             _LevelTMP.text = cardMasterData.Level.ToString();
             Character.sprite = cardMasterData.Sprite;
         }
-
-        public void UpdateHp(int hp) => throw new System.NotImplementedException();
 
         public void Unspawn()
         {
