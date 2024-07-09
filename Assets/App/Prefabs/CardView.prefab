@@ -275,6 +275,7 @@ GameObject:
   - component: {fileID: 6177627881914039666}
   - component: {fileID: 7606624276356573912}
   - component: {fileID: 446027763254868800}
+  - component: {fileID: 489972017518279785}
   m_Layer: 0
   m_Name: CardView
   m_TagString: Untagged
@@ -352,8 +353,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -342588449
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -383,6 +384,11 @@ MonoBehaviour:
   _CardNumberTMP: {fileID: 8978950112474214573}
   _LevelTMP: {fileID: 1912508554032870863}
   Character: {fileID: 7698306254365678349}
+  originPRS:
+    pos: {x: 0, y: 0, z: -10}
+    rot: {x: 0, y: 0, z: 0, w: 0}
+    scale: {x: 1, y: 1, z: 1}
+  IsEnlarged: 0
 --- !u!114 &446027763254868800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -397,6 +403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backRenderers:
   - {fileID: 4229015458487706822}
+  - {fileID: 6177627881914039666}
   middleRenderers1:
   - {fileID: 7698306254365678349}
   middleRenderers2:
@@ -415,6 +422,59 @@ MonoBehaviour:
   - {fileID: 1450831399921257986}
   - {fileID: 1796978483418986309}
   - {fileID: 5284414431667438324}
+--- !u!60 &489972017518279785
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 378424787918454359}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -3.9369516, y: 5.3185616}
+      - {x: -1.619353, y: -1.7863419}
+      - {x: -1.6294913, y: -6.300239}
+      - {x: 1.4912863, y: -6.324025}
+      - {x: 1.587795, y: -1.7639964}
+      - {x: 3.7742155, y: 5.2987866}
+  m_UseDelaunayMesh: 0
 --- !u!1 &1255649473711112582
 GameObject:
   m_ObjectHideFlags: 0

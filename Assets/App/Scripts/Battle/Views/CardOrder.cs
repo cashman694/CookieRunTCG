@@ -19,6 +19,11 @@ namespace App.Battle.Views
             SetOrder(originOrder);
         }
 
+        public void SetMostFrontOrder(bool isMostFront)
+        {
+            SetOrder(isMostFront ? 200 : originOrder);
+        }
+
         public void SetOrder(int order)
         {
             int mulOrder = order * 10;
