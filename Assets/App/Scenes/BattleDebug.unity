@@ -1185,6 +1185,7 @@ MonoBehaviour:
     TypeName: App.Battle.BattleLifetimeScope
   autoRun: 1
   autoInjectGameObjects: []
+  _BattlePlayerCardDebugger: {fileID: 11400000, guid: 4fd15aea5e9ec41468b4382c427768d2, type: 2}
   _BattleDebugPresenter: {fileID: 923362123}
 --- !u!1 &1664800469
 GameObject:

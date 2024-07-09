@@ -18,8 +18,14 @@ namespace App.Battle.DataStores
         public IObservable<(int index, string cardId)> OnCookieCardUnset =>
             _CookieCardIds.ObserveRemove().Select(x => (x.Key, x.Value));
 
+        private readonly Subject<(int index, string cardId)> _OnHpCardAdded = new();
+        public IObservable<(int index, string cardId)> OnHpCardAdded => _OnHpCardAdded;
+
+        private readonly Subject<(int index, string cardId)> _OnHpCardRemoved = new();
+        public IObservable<(int index, string cardId)> OnHpCardRemoved => _OnHpCardRemoved;
+
         private readonly ReactiveDictionary<int, string> _CookieCardIds = new();
-        private readonly Dictionary<int, List<string>> _HpCardIds = new();
+        private readonly Dictionary<int, List<string>> _HpCardIdsMap = new();
 
         [Inject]
         public PlayerBattleAreaDataStore(
@@ -30,7 +36,7 @@ namespace App.Battle.DataStores
 
             for (var i = 0; i < _MaxCount; i++)
             {
-                _HpCardIds.Add(i, new());
+                _HpCardIdsMap.Add(i, new());
             }
         }
 
@@ -66,30 +72,36 @@ namespace App.Battle.DataStores
 
         public void AddHpCard(int index, string cardId)
         {
-            if (!_HpCardIds.ContainsKey(index))
+            if (!_HpCardIdsMap.ContainsKey(index))
             {
                 return;
             }
 
-            var hpCards = _HpCardIds[index];
+            var hpCards = _HpCardIdsMap[index];
             hpCards.Add(cardId);
+
+            _OnHpCardAdded.OnNext((index, cardId));
         }
 
         public bool RemoveHpCard(int index)
         {
-            if (!_HpCardIds.ContainsKey(index))
+            if (!_HpCardIdsMap.ContainsKey(index))
             {
                 return false;
             }
 
-            var hpCards = _HpCardIds[index];
+            var hpCardIds = _HpCardIdsMap[index];
 
-            if (hpCards.Count < 1)
+            if (hpCardIds.Count < 1)
             {
                 return false;
             }
 
-            hpCards.RemoveAt(hpCards.Count - 1);
+            var cardId = hpCardIds[^1];
+            hpCardIds.Remove(cardId);
+
+            _OnHpCardRemoved.OnNext((index, cardId));
+
             return true;
         }
 
@@ -98,7 +110,7 @@ namespace App.Battle.DataStores
         public void Dispose()
         {
             _CookieCardIds.Dispose();
-            _HpCardIds.Clear();
+            _HpCardIdsMap.Clear();
         }
     }
 }
