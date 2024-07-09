@@ -23,6 +23,9 @@ namespace App.Battle.DataStores
         private readonly Subject<string> _OnCardRemoved = new();
         public IObservable<string> OnCardRemoved => _OnCardRemoved;
 
+        private readonly Subject<Unit> _OnShuffled = new();
+        public IObservable<Unit> OnShuffled => _OnShuffled;
+
         public void AddCard(string cardId)
         {
             Assert.IsFalse(_CardIds.Contains(cardId));
@@ -67,12 +70,14 @@ namespace App.Battle.DataStores
             }
 
             Debug.Log($"Deck shuffled");
+            _OnShuffled.OnNext(Unit.Default);
         }
 
         public void Dispose()
         {
             _OnCardAdded.Dispose();
             _OnCardRemoved.Dispose();
+            _OnShuffled.Dispose();
             _CardIds.Clear();
         }
     }

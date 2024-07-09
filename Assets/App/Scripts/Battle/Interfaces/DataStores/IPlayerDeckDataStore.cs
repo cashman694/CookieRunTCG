@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UniRx;
 
 namespace App.Battle.Interfaces.DataStores
 {
@@ -11,6 +12,7 @@ namespace App.Battle.Interfaces.DataStores
         IObservable<string> OnCardAdded { get; }
         IObservable<string> OnCardRemoved { get; }
         IObservable<int> OnCountChanged { get; }
+        IObservable<Unit> OnShuffled { get; }
 
         void AddCard(string cardId);
         string RemoveFirstCard();
