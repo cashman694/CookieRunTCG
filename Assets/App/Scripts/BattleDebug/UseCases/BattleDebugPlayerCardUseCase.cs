@@ -83,7 +83,7 @@ namespace App.BattleDebug.UseCases
 
                         if (cardData == null)
                         {
-                            return;
+                            continue;
                         }
 
                         _BattleCardDebugger.DeckCards.Add(
