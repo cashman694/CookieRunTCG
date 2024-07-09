@@ -1,6 +1,7 @@
 using App.Battle.Interfaces.DataStores;
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
+using App.Common.Data;
 using System;
 using System.Linq;
 using UniRx;
@@ -11,8 +12,7 @@ namespace App.Battle.UseCases
 {
     public class PlayerDeckUseCase : IInitializable, IStartable, IDisposable, IPlayerDeckUseCase
     {
-        private const int INITIAL_DRAW_COUNT = 5;
-
+        private readonly BattleConfig _BattleConfig;
         private readonly IPlayerCardDataStore _PlayerCardDataStore;
         private readonly IPlayerDeckDataStore _PlayerDeckDataStore;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
@@ -21,12 +21,14 @@ namespace App.Battle.UseCases
 
         [Inject]
         public PlayerDeckUseCase(
+            BattleConfig battleConfig,
             IPlayerCardDataStore playerCardDataStore,
             IPlayerDeckDataStore playerDeckDataStore,
             IPlayerHandDataStore playerHandDataStore,
             IPlayerDeckPresenter playerDeckPresenter
         )
         {
+            _BattleConfig = battleConfig;
             _PlayerCardDataStore = playerCardDataStore;
             _PlayerDeckDataStore = playerDeckDataStore;
             _PlayerHandDataStore = playerHandDataStore;
@@ -45,6 +47,7 @@ namespace App.Battle.UseCases
 
         public void Start()
         {
+            // FIXME: 테스트용 코드
             Build();
         }
 
@@ -56,7 +59,6 @@ namespace App.Battle.UseCases
             }
 
             _PlayerDeckDataStore.Shuffle();
-            // _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Count);
         }
 
         public void InitialDraw()
@@ -66,7 +68,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            for (var i = 0; i < INITIAL_DRAW_COUNT; i++)
+            for (var i = 0; i < _BattleConfig.InitialDrawCount; i++)
             {
                 if (_PlayerDeckDataStore.IsEmpty)
                 {
@@ -86,8 +88,6 @@ namespace App.Battle.UseCases
 
             // TODO: 드로우페이즈인지 아닌지 체크하기
             var cardId = _PlayerDeckDataStore.RemoveFirstCard();
-            // _PlayerDeckPresenter.UpdateCards(_PlayerDeckDataStore.Count);
-
             _PlayerHandDataStore.AddCard(cardId);
         }
 
@@ -111,7 +111,7 @@ namespace App.Battle.UseCases
 
             _PlayerDeckDataStore.Shuffle();
 
-            for (var i = 0; i < INITIAL_DRAW_COUNT; i++)
+            for (var i = 0; i < _BattleConfig.InitialDrawCount; i++)
             {
                 if (_PlayerDeckDataStore.IsEmpty)
                 {

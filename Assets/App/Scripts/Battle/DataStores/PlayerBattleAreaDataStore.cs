@@ -1,15 +1,16 @@
 using App.Battle.Interfaces.DataStores;
+using App.Common.Data;
 using System;
 using System.Collections.Generic;
 using UniRx;
-using UnityEngine;
+using VContainer;
 
 namespace App.Battle.DataStores
 {
-    public class PlayerBattleAreaDataStore : MonoBehaviour, IPlayerBattleAreaDataStore
+    public class PlayerBattleAreaDataStore : IPlayerBattleAreaDataStore, IDisposable
     {
-        private const int BATTLE_COOKIE_CARD_COUNT = 2;
-        public int MaxCount => BATTLE_COOKIE_CARD_COUNT;
+        private readonly int _MaxCount;
+        public int MaxCount => _MaxCount;
 
         public IObservable<(int index, string cardId)> OnCookieCardSet =>
             _CookieCardIds.ObserveAdd().Select(x => (x.Key, x.Value));
@@ -18,9 +19,20 @@ namespace App.Battle.DataStores
             _CookieCardIds.ObserveRemove().Select(x => (x.Key, x.Value));
 
         private readonly ReactiveDictionary<int, string> _CookieCardIds = new();
+        private readonly Dictionary<int, List<string>> _HpCardIds = new();
 
-        private readonly Dictionary<int, List<string>> _HpCardIds =
-            new() { { 0, new() }, { 1, new() } };
+        [Inject]
+        public PlayerBattleAreaDataStore(
+            BattleConfig battleConfig
+        )
+        {
+            _MaxCount = battleConfig.BattleAreaSize;
+
+            for (var i = 0; i < _MaxCount; i++)
+            {
+                _HpCardIds.Add(i, new());
+            }
+        }
 
         public bool TryGetCookieCard(int index, out string cardId)
         {
@@ -83,7 +95,7 @@ namespace App.Battle.DataStores
 
         public void FlipHpCard() => throw new NotImplementedException();
 
-        private void OnDestroy()
+        public void Dispose()
         {
             _CookieCardIds.Dispose();
             _HpCardIds.Clear();

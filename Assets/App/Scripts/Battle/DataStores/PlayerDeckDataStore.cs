@@ -7,7 +7,7 @@ using UnityEngine.Assertions;
 
 namespace App.Battle.DataStores
 {
-    public sealed class PlayerDeckDataStore : MonoBehaviour, IPlayerDeckDataStore
+    public sealed class PlayerDeckDataStore : IPlayerDeckDataStore, IDisposable
     {
         [SerializeField] private List<string> _CardIds = new();
         public IEnumerable<string> CardIds => _CardIds;
@@ -66,7 +66,7 @@ namespace App.Battle.DataStores
             Debug.Log($"Deck shuffled");
         }
 
-        private void OnDestroy()
+        public void Dispose()
         {
             _OnCountChanged.Dispose();
             _CardIds.Clear();
