@@ -29,6 +29,14 @@ namespace App.Battle
         [Header("Player Break Area")]
         [SerializeField] private PlayerBreakAreaPresenter _PlayerBreakAreaPresenter;
 
+<<<<<<< Updated upstream
+        [Header("Player Trash")]
+        [SerializeField] private PlayerTrashPresenter _PlayerTrashPresenter;
+=======
+        [Header("Player Stage Area")]
+        [SerializeField] private PlayerStageAreaPresenter _PlayerStageAreaPresenter;
+>>>>>>> Stashed changes
+
         protected override void Configure(IContainerBuilder builder)
         {
             builder.Register<PlayerCardDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
@@ -55,11 +63,24 @@ namespace App.Battle
             builder.Register<PlayerBreakAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerBreakAreaPresenter).As<IPlayerBreakAreaPresenter>();
 
+<<<<<<< Updated upstream
+            builder.Register<PlayerTrashDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.RegisterComponent(_PlayerTrashPresenter).As<IPlayerTrashPresenter>();
+=======
+            builder.Register<PlayerStageAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.RegisterComponent(_PlayerStageAreaPresenter).As<IPlayerStageAreaPresenter>();
+>>>>>>> Stashed changes
+
             builder.RegisterEntryPoint<PlayerCardUseCase>().As<IPlayerCardUseCase>();
             builder.RegisterEntryPoint<PlayerHandUseCase>();
             builder.RegisterEntryPoint<PlayerDeckUseCase>().As<IPlayerDeckUseCase>();
             builder.RegisterEntryPoint<PlayerBattleAreaUseCase>().As<IPlayerBattleAreaUseCase>();
             builder.RegisterEntryPoint<PlayerBreakAreaUseCase>();
+<<<<<<< Updated upstream
+            builder.RegisterEntryPoint<PlayerTrashUseCase>();
+=======
+            builder.RegisterEntryPoint<PlayerStageAreaUseCase>().As<IPlayerStageAreaUseCase>();
+>>>>>>> Stashed changes
         }
     }
 }

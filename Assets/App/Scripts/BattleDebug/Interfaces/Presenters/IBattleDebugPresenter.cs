@@ -9,6 +9,11 @@ namespace App.BattleDebug.Interfaces.Presenters
         IObservable<Unit> OnRequestInitialDraw { get; }
         IObservable<Unit> OnRequestMulligan { get; }
         IObservable<Unit> OnRequestSetCookieCard { get; }
+<<<<<<< Updated upstream
+        IObservable<int> OnRequestAttackBattleArea { get; }
+=======
         IObservable<Unit> OnRequestBrakeCookieCard { get; }
+        IObservable<Unit> OnRequestStageCard { get; }
+>>>>>>> Stashed changes
     }
 }

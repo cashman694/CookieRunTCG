@@ -1,4 +1,3 @@
-using App.Battle.Interfaces.UseCases;
 using App.BattleDebug.Interfaces.Presenters;
 using System;
 using UniRx;
@@ -14,7 +13,13 @@ namespace App.BattleDebug.Presenters
         [SerializeField] private Button _InitialDrawButton;
         [SerializeField] private Button _MulliganButton;
         [SerializeField] private Button _SetCookieCardButton;
+<<<<<<< Updated upstream
+        [SerializeField] private Button _AttackBattleArea0Button;
+        [SerializeField] private Button _AttackBattleArea1Button;
+=======
         [SerializeField] private Button _BrakeCookieCardButton;
+        [SerializeField] private Button _StageCardButton;
+>>>>>>> Stashed changes
 
         private readonly Subject<Unit> _OnRequestDrawCard = new();
         public IObservable<Unit> OnRequestDrawCard => _OnRequestDrawCard;
@@ -28,8 +33,11 @@ namespace App.BattleDebug.Presenters
         private readonly Subject<Unit> _OnRequestSetCookieCard = new();
         public IObservable<Unit> OnRequestSetCookieCard => _OnRequestSetCookieCard;
 
-        private readonly Subject<Unit> _OnRequestBrakeCookieCard = new();
-        public IObservable<Unit> OnRequestBrakeCookieCard => _OnRequestBrakeCookieCard;
+        private readonly Subject<int> _OnRequestAttackBattleArea = new();
+        public IObservable<int> OnRequestAttackBattleArea => _OnRequestAttackBattleArea;
+
+        private readonly Subject<Unit> _OnRequestStageCard = new();
+        public IObservable<Unit> OnRequestStageCard => _OnRequestStageCard;
 
         private readonly CompositeDisposable _Disposables = new();
 
@@ -51,8 +59,16 @@ namespace App.BattleDebug.Presenters
                 .Subscribe(_ => _OnRequestSetCookieCard.OnNext(Unit.Default))
                 .AddTo(_Disposables);
 
-            _BrakeCookieCardButton.OnClickAsObservable()
-                .Subscribe(_ => _OnRequestBrakeCookieCard.OnNext(Unit.Default))
+            _AttackBattleArea0Button.OnClickAsObservable()
+                .Subscribe(_ => _OnRequestAttackBattleArea.OnNext(0))
+                .AddTo(_Disposables);
+
+            _AttackBattleArea1Button.OnClickAsObservable()
+                .Subscribe(_ => _OnRequestAttackBattleArea.OnNext(1))
+                .AddTo(_Disposables);
+
+            _StageCardButton.OnClickAsObservable()
+                .Subscribe(_ => _OnRequestStageCard.OnNext(Unit.Default))
                 .AddTo(_Disposables);
         }
 
