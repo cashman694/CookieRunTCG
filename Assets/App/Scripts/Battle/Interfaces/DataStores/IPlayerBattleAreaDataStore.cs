@@ -15,8 +15,11 @@ namespace App.Battle.Interfaces.DataStores
 
         IObservable<(int index, string cardId)> OnHpCardAdded { get; }
         IObservable<(int index, string cardId)> OnHpCardRemoved { get; }
+
         void AddHpCard(int index, string cardId);
-        bool RemoveHpCard(int index);
-        void FlipHpCard();
+        bool RemoveHpCard(int index, string cardId);
+        bool TryGetLastHpCard(int index, out string cardId);
+        void FlipHpCard(int index);
+        int GetHpCount(int index);
     }
 }
