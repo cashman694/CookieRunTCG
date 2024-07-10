@@ -31,6 +31,8 @@ namespace App.Battle
 
         [Header("Player Stage Area")]
         [SerializeField] private PlayerStageAreaPresenter _PlayerStageAreaPresenter;
+        [Header("Player Trash")]
+        [SerializeField] private PlayerTrashPresenter _PlayerTrashPresenter;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -60,6 +62,9 @@ namespace App.Battle
 
             builder.Register<PlayerStageAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerStageAreaPresenter).As<IPlayerStageAreaPresenter>();
+            
+            builder.Register<PlayerTrashDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.RegisterComponent(_PlayerTrashPresenter).As<IPlayerTrashPresenter>();
 
             builder.RegisterEntryPoint<PlayerCardUseCase>().As<IPlayerCardUseCase>();
             builder.RegisterEntryPoint<PlayerHandUseCase>();
@@ -67,6 +72,7 @@ namespace App.Battle
             builder.RegisterEntryPoint<PlayerBattleAreaUseCase>().As<IPlayerBattleAreaUseCase>();
             builder.RegisterEntryPoint<PlayerBreakAreaUseCase>();
             builder.RegisterEntryPoint<PlayerStageAreaUseCase>().As<IPlayerStageAreaUseCase>();
+            builder.RegisterEntryPoint<PlayerTrashUseCase>();
         }
     }
 }

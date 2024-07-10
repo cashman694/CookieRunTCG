@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46025cf561da4e43bfc02c012b8a8cb, type: 3}
   m_Name: BattleConfig
   m_EditorClassIdentifier: 
-  <InitialDrawCount>k__BackingField: 6
+  DeckCount: 60
+  BattleAreaSize: 2
+  InitialDrawCount: 6

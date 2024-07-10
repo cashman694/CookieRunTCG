@@ -15,17 +15,24 @@ namespace App.Battle.DataStores
         public int Count => _CardIds.Count;
         public bool IsEmpty => _CardIds.Count < 1;
 
-        private readonly Subject<int> _OnCountChanged = new();
-        public IObservable<int> OnCountChanged => _OnCountChanged;
+        public IObservable<int> OnCountChanged => _OnCardAdded.Merge(_OnCardRemoved).Select(_ => Count);
+
+        private readonly Subject<string> _OnCardAdded = new();
+        public IObservable<string> OnCardAdded => _OnCardAdded;
+
+        private readonly Subject<string> _OnCardRemoved = new();
+        public IObservable<string> OnCardRemoved => _OnCardRemoved;
+
+        private readonly Subject<Unit> _OnShuffled = new();
+        public IObservable<Unit> OnShuffled => _OnShuffled;
 
         public void AddCard(string cardId)
         {
             Assert.IsFalse(_CardIds.Contains(cardId));
 
             _CardIds.Add(cardId);
-
+            _OnCardAdded.OnNext(cardId);
             Debug.Log($"{cardId} added to deck");
-            _OnCountChanged.OnNext(Count);
         }
 
         public string RemoveFirstCard()
@@ -37,10 +44,9 @@ namespace App.Battle.DataStores
 
             var cardId = _CardIds[0];
             _CardIds.RemoveAt(0);
-            Debug.Log($"{cardId} removed from deck");
 
-            Debug.Log($"Remaining deck cards count: {Count}");
-            _OnCountChanged.OnNext(Count);
+            Debug.Log($"{cardId} removed from deck");
+            _OnCardRemoved.OnNext(cardId);
 
             return cardId;
         }
@@ -64,11 +70,14 @@ namespace App.Battle.DataStores
             }
 
             Debug.Log($"Deck shuffled");
+            _OnShuffled.OnNext(Unit.Default);
         }
 
         public void Dispose()
         {
-            _OnCountChanged.Dispose();
+            _OnCardAdded.Dispose();
+            _OnCardRemoved.Dispose();
+            _OnShuffled.Dispose();
             _CardIds.Clear();
         }
     }

@@ -47,8 +47,8 @@ namespace App.BattleDebug.UseCases
                 .Subscribe(x => _PlayerBattleAreaUseCase.TestSetCard())
                 .AddTo(_Disposables);
 
-            _BattleDebugPresenter.OnRequestBrakeCookieCard
-                .Subscribe(x => _PlayerBattleAreaUseCase.TestBreakCard())
+            _BattleDebugPresenter.OnRequestAttackBattleArea
+                .Subscribe(x => _PlayerBattleAreaUseCase.TestAttackBattleArea(x))
                 .AddTo(_Disposables);
 
             _BattleDebugPresenter.OnRequestStageCard

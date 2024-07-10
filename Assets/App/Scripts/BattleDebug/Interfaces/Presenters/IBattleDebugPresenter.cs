@@ -11,5 +11,6 @@ namespace App.BattleDebug.Interfaces.Presenters
         IObservable<Unit> OnRequestSetCookieCard { get; }
         IObservable<Unit> OnRequestBrakeCookieCard { get; }
         IObservable<Unit> OnRequestStageCard { get; }
+        IObservable<int> OnRequestAttackBattleArea { get; }
     }
 }
