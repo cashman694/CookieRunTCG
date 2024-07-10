@@ -2,16 +2,16 @@ using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
 using App.Battle.Views;
 using App.Common.Data.MasterData;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VContainer;
-using Cysharp.Threading.Tasks;
 
 namespace App.Battle.Presenters
 {
-    public class PlayerHandPresenter : MonoBehaviour, IPlayerHandPresenter
+    public class PlayerTrashPresenter : MonoBehaviour, IPlayerTrashPresenter
     {
         private Func<Transform, IFrontCardView> _CardViewFactory;
         private readonly Dictionary<string, IFrontCardView> _CardViews = new();
@@ -55,12 +55,6 @@ namespace App.Battle.Presenters
             ArrangeCards().Forget();
         }
 
-        public string GetFirstCardId()
-        {
-            var cardView = transform.GetComponentInChildren<CardView>();
-            return cardView?.CardId;
-        }
-
         // FIXME: 카드를 적당한 간격으로 배치
         private async UniTask ArrangeCards()
         {
@@ -68,17 +62,15 @@ namespace App.Battle.Presenters
             await UniTask.WaitForEndOfFrame();
 
             var count = 0;
-
-            // 배경 게임오브젝트를 제외
-            var sortingOrder = transform.childCount - 1;
+            var sortingOrder = 0;
 
             foreach (var cardView in transform.GetComponentsInChildren<CardView>())
             {
-                var cardViewTransform = ((MonoBehaviour)cardView).transform;
-                cardViewTransform.localPosition = Vector3.zero + Vector3.right * 5f * count++;
-
-                var cardOrder = cardViewTransform.GetComponent<CardOrder>();
-                cardOrder.SetOriginOrder(--sortingOrder);
+                var cardlocalPos = Vector3.zero + Vector3.right * 5f * count++;
+                cardView.transform.localPosition = cardlocalPos;
+                var cardOrder = cardView.GetComponent<CardOrder>();
+                cardOrder.SetOriginOrder(sortingOrder);
+                sortingOrder++;
             }
         }
 

@@ -214,8 +214,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 206276677}
+  - component: {fileID: 206276678}
   m_Layer: 0
-  m_Name: PlayerTrashAreaPresenter
+  m_Name: PlayerTrashPresenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -237,6 +238,18 @@ Transform:
   - {fileID: 477058903}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &206276678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 206276676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8decd456bd6a4e4b94961f7351b5c21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &381456688
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -829,6 +842,7 @@ MonoBehaviour:
   _DeckCardViewPrefab: {fileID: 3366952828782475128, guid: 52597c215ab364fa9b5e7191d81cff47, type: 3}
   _PlayerBattleAreaPresenter: {fileID: 642027813}
   _PlayerBreakAreaPresenter: {fileID: 1852424510}
+  _PlayerTrashPresenter: {fileID: 206276678}
 --- !u!1001 &1137115415
 PrefabInstance:
   m_ObjectHideFlags: 0

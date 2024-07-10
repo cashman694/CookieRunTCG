@@ -25,6 +25,9 @@ namespace App.BattleDebug.Data
         [Header("브레이크에리어")]
         [SerializeField] public List<CardData> BreakAreaCards = new();
 
+        [Header("트래쉬")]
+        [SerializeField] public List<CardData> TrashCards = new();
+
         [Header("패")]
         [SerializeField] public List<CardData> HandCards = new();
 

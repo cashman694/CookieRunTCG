@@ -12,4 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4593b7905f9304f7499d045f2d4fa8c8, type: 3}
   m_Name: PlayerCardDebugger
   m_EditorClassIdentifier: 
-  PlayerCards: []
+  BattleArea0Card:
+    Id: 
+    CardMasterData: {fileID: 0}
+  HpArea0Cards: []
+  BattleArea1Card:
+    Id: 
+    CardMasterData: {fileID: 0}
+  HpArea1Cards: []
+  BreakAreaCards: []
+  TrashCards: []
+  HandCards: []
+  DeckCards: []

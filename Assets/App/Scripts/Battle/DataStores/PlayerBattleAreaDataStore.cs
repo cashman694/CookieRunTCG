@@ -58,6 +58,8 @@ namespace App.Battle.DataStores
             }
 
             _CookieCardIds.Add(index, cardId);
+
+            UnityEngine.Debug.Log($"{cardId} added to BattleArea[{index}]");
         }
 
         public void RemoveCookieCard(int index)
@@ -67,7 +69,10 @@ namespace App.Battle.DataStores
                 return;
             }
 
+            var cardId = _CookieCardIds[index];
             _CookieCardIds.Remove(index);
+
+            UnityEngine.Debug.Log($"{cardId} removed from BattleArea[{index}]");
         }
 
         public void AddHpCard(int index, string cardId)
@@ -80,11 +85,32 @@ namespace App.Battle.DataStores
             var hpCards = _HpCardIdsMap[index];
             hpCards.Add(cardId);
 
+            UnityEngine.Debug.Log($"{cardId} added to BatttleArea[{index}]");
             _OnHpCardAdded.OnNext((index, cardId));
         }
 
-        public bool RemoveHpCard(int index)
+        public bool RemoveHpCard(int index, string cardId)
         {
+            if (!_HpCardIdsMap.ContainsKey(index))
+            {
+                return false;
+            }
+
+            if (!_HpCardIdsMap[index].Remove(cardId))
+            {
+                return false;
+            }
+
+            UnityEngine.Debug.Log($"{cardId} removed from BatttleArea[{index}]");
+            _OnHpCardRemoved.OnNext((index, cardId));
+
+            return true;
+        }
+
+        public bool TryGetLastHpCard(int index, out string cardId)
+        {
+            cardId = string.Empty;
+
             if (!_HpCardIdsMap.ContainsKey(index))
             {
                 return false;
@@ -97,15 +123,25 @@ namespace App.Battle.DataStores
                 return false;
             }
 
-            var cardId = hpCardIds[^1];
-            hpCardIds.Remove(cardId);
-
-            _OnHpCardRemoved.OnNext((index, cardId));
+            cardId = hpCardIds[^1];
 
             return true;
         }
 
-        public void FlipHpCard() => throw new NotImplementedException();
+        public void FlipHpCard(int index)
+        {
+
+        }
+
+        public int GetHpCount(int index)
+        {
+            if (!_HpCardIdsMap.ContainsKey(index))
+            {
+                return 0;
+            }
+
+            return _HpCardIdsMap[index].Count;
+        }
 
         public void Dispose()
         {
