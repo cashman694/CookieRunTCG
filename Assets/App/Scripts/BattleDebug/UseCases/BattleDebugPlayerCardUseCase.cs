@@ -14,6 +14,7 @@ namespace App.BattleDebug.UseCases
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
         private readonly IPlayerBattleAreaDataStore _PlayerBattleAreaDataStore;
         private readonly IPlayerBreakAreaDataStore _PlayerBreakAreaDataStore;
+        private readonly IPlayerTrashDataStore _PlayerTrashDataStore;
         private readonly CompositeDisposable _Disposables = new();
 
         public BattleDebugPlayerCardUseCase(
@@ -22,6 +23,7 @@ namespace App.BattleDebug.UseCases
             IPlayerHandDataStore playerHandDataStore,
             IPlayerBattleAreaDataStore playerBattleAreaDataStore,
             IPlayerBreakAreaDataStore playerBreakAreaDataStore,
+            IPlayerTrashDataStore playerTrashDataStore,
             BattleCardDebugger battleCardDebugger
         )
         {
@@ -30,13 +32,13 @@ namespace App.BattleDebug.UseCases
             _PlayerHandDataStore = playerHandDataStore;
             _PlayerBattleAreaDataStore = playerBattleAreaDataStore;
             _PlayerBreakAreaDataStore = playerBreakAreaDataStore;
+            _PlayerTrashDataStore = playerTrashDataStore;
             _BattleCardDebugger = battleCardDebugger;
         }
 
         public void Initialize()
         {
-            _BattleCardDebugger.DeckCards.Clear();
-            _BattleCardDebugger.HandCards.Clear();
+            ClearAll();
 
             _PlayerDeckDataStore.OnCardAdded
                 .Subscribe(x =>
@@ -248,20 +250,59 @@ namespace App.BattleDebug.UseCases
                     _BattleCardDebugger.BreakAreaCards.RemoveAll(t => t.Id == x);
                 })
                 .AddTo(_Disposables);
+
+            _PlayerTrashDataStore.OnCardAdded
+                .Subscribe(x =>
+                {
+                    var cardData = _PlayerCardDataStore.GetCardBy(x);
+
+                    if (cardData == null)
+                    {
+                        return;
+                    }
+
+                    _BattleCardDebugger.TrashCards.Add(
+                        new()
+                        {
+                            Id = x,
+                            CardMasterData = cardData.CardMasterData
+                        }
+                    );
+                })
+                .AddTo(_Disposables);
+
+            _PlayerTrashDataStore.OnCardRemoved
+                .Subscribe(x =>
+                {
+                    var cardData = _PlayerCardDataStore.GetCardBy(x);
+
+                    if (cardData == null)
+                    {
+                        return;
+                    }
+
+                    _BattleCardDebugger.TrashCards.RemoveAll(t => t.Id == x);
+                })
+                .AddTo(_Disposables);
         }
 
-        public void Dispose()
+        private void ClearAll()
         {
             _BattleCardDebugger.HandCards.Clear();
             _BattleCardDebugger.DeckCards.Clear();
             _BattleCardDebugger.BreakAreaCards.Clear();
+            _BattleCardDebugger.TrashCards.Clear();
 
             _BattleCardDebugger.BattleArea0Card = null;
             _BattleCardDebugger.HpArea0Cards.Clear();
 
             _BattleCardDebugger.BattleArea1Card = null;
             _BattleCardDebugger.HpArea1Cards.Clear();
+        }
 
+        public void Dispose()
+        {
+            ClearAll();
             _Disposables.Dispose();
         }
     }
