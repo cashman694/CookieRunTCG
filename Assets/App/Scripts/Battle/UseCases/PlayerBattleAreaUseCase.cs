@@ -15,7 +15,6 @@ namespace App.Battle.UseCases
         private readonly IPlayerDeckDataStore _PlayerDeckDataStore;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
         private readonly IPlayerBreakAreaDataStore _PlayerBreakAreaDataStore;
-        private readonly IPlayerTrashDataStore _PlayerTrashDataStore;
         private readonly IPlayerBattleAreaDataStore _PlayerBattleAreaDataStore;
         private readonly IPlayerBattleAreaPresenter _PlayerBattleAreaPresenter;
         private readonly IPlayerHandPresenter _PlayerHandPresenter;
@@ -27,7 +26,6 @@ namespace App.Battle.UseCases
             IPlayerDeckDataStore playerDeckDataStore,
             IPlayerHandDataStore playerHandDataStore,
             IPlayerBreakAreaDataStore playerBreakAreaDataStore,
-            IPlayerTrashDataStore playerTrashDataStore,
             IPlayerBattleAreaDataStore playerBattleAreaDataStore,
             IPlayerBattleAreaPresenter playerBattleAreaPresenter,
             IPlayerHandPresenter playerHandPresenter
@@ -37,7 +35,6 @@ namespace App.Battle.UseCases
             _PlayerDeckDataStore = playerDeckDataStore;
             _PlayerHandDataStore = playerHandDataStore;
             _PlayerBreakAreaDataStore = playerBreakAreaDataStore;
-            _PlayerTrashDataStore = playerTrashDataStore;
             _PlayerBattleAreaDataStore = playerBattleAreaDataStore;
             _PlayerBattleAreaPresenter = playerBattleAreaPresenter;
             _PlayerHandPresenter = playerHandPresenter;
@@ -55,6 +52,7 @@ namespace App.Battle.UseCases
                     }
 
                     _PlayerBattleAreaPresenter.AddCookieCard(x.index, x.cardId, cardData.CardMasterData);
+                    UnityEngine.Debug.Log($"{x.cardId} added to BattleArea {x.index}");
                 })
                 .AddTo(_Disposables);
 
@@ -62,20 +60,7 @@ namespace App.Battle.UseCases
                 .Subscribe(x =>
                 {
                     _PlayerBattleAreaPresenter.RemoveCookieCard(x.index);
-                })
-                .AddTo(_Disposables);
-
-            _PlayerBattleAreaDataStore.OnHpCardAdded
-                .Subscribe(x =>
-                {
-                    _PlayerBattleAreaPresenter.AddHpCard(x.index, x.cardId);
-                })
-                .AddTo(_Disposables);
-
-            _PlayerBattleAreaDataStore.OnHpCardRemoved
-                .Subscribe(x =>
-                {
-                    _PlayerBattleAreaPresenter.RemoveHpCard(x.index);
+                    UnityEngine.Debug.Log($"{x.cardId} removed from BattleArea {x.index}");
                 })
                 .AddTo(_Disposables);
         }
@@ -101,28 +86,18 @@ namespace App.Battle.UseCases
             }
         }
 
-        public void TestAttackBattleArea(int index)
+        public void TestBreakCard()
         {
-            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(index, out var cookieCardId))
+            for (var index = 0; index < _PlayerBattleAreaDataStore.MaxCount; index++)
             {
+                if (!_PlayerBattleAreaDataStore.TryGetCookieCard(index, out _))
+                {
+                    continue;
+                }
+
+                BreakCard(index);
                 return;
             }
-
-            if (!_PlayerBattleAreaDataStore.TryGetLastHpCard(index, out var hpCardId))
-            {
-                return;
-            }
-
-            _PlayerBattleAreaDataStore.RemoveHpCard(index, hpCardId);
-            _PlayerTrashDataStore.AddCard(hpCardId);
-
-            if (_PlayerBattleAreaDataStore.GetHpCount(index) > 0)
-            {
-                return;
-            }
-
-            _PlayerBattleAreaDataStore.RemoveCookieCard(index);
-            _PlayerBreakAreaDataStore.AddCard(cookieCardId);
         }
 
         public void SetCard(int areaIndex, string cardId)
@@ -161,6 +136,7 @@ namespace App.Battle.UseCases
                 var drawCardId = _PlayerDeckDataStore.RemoveFirstCard();
 
                 _PlayerBattleAreaDataStore.AddHpCard(areaIndex, drawCardId);
+                _PlayerBattleAreaPresenter.AddHpCard(areaIndex, drawCardId);
             }
         }
 

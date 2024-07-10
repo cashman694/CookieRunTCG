@@ -12,22 +12,18 @@ namespace App.BattleDebug.UseCases
         private readonly IBattleDebugPresenter _BattleDebugPresenter;
         private readonly IPlayerDeckUseCase _PlayerDeckUseCase;
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
-        private readonly IPlayerStageAreaUseCase _PlayerStageAreaUseCase;
         private readonly CompositeDisposable _Disposables = new();
 
         [Inject]
         public BattleDebugUseCase(
             IBattleDebugPresenter battleDebugPresenter,
             IPlayerDeckUseCase playerDeckUseCase,
-            IPlayerBattleAreaUseCase playerBattleAreaUseCase,
-            IPlayerStageAreaUseCase playerStageAreaUseCase
-
+            IPlayerBattleAreaUseCase playerBattleAreaUseCase
         )
         {
             _BattleDebugPresenter = battleDebugPresenter;
             _PlayerDeckUseCase = playerDeckUseCase;
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
-            _PlayerStageAreaUseCase = playerStageAreaUseCase;
         }
 
         public void Initialize()
@@ -48,12 +44,8 @@ namespace App.BattleDebug.UseCases
                 .Subscribe(x => _PlayerBattleAreaUseCase.TestSetCard())
                 .AddTo(_Disposables);
 
-            _BattleDebugPresenter.OnRequestAttackBattleArea
-                .Subscribe(x => _PlayerBattleAreaUseCase.TestAttackBattleArea(x))
-                .AddTo(_Disposables);
-           
-            _BattleDebugPresenter.OnRequestStageCard
-                .Subscribe(x => _PlayerStageAreaUseCase.ShowStage())
+            _BattleDebugPresenter.OnRequestBrakeCookieCard
+                .Subscribe(x => _PlayerBattleAreaUseCase.TestBreakCard())
                 .AddTo(_Disposables);
         }
 
