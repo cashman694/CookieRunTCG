@@ -69,13 +69,16 @@ namespace App.Battle.Presenters
 
             var count = 0;
 
+            // 배경 게임오브젝트를 제외
+            var sortingOrder = transform.childCount - 1;
+
             foreach (var cardView in transform.GetComponentsInChildren<CardView>())
             {
                 var cardViewTransform = ((MonoBehaviour)cardView).transform;
-                cardViewTransform.localPosition = Vector3.zero + Vector3.right * 5f * count;
+                cardViewTransform.localPosition = Vector3.zero + Vector3.right * 5f * count++;
+
                 var cardOrder = cardViewTransform.GetComponent<CardOrder>();
-                cardOrder.SetOriginOrder(count);
-                count++;
+                cardOrder.SetOriginOrder(--sortingOrder);
             }
         }
 
