@@ -29,6 +29,9 @@ namespace App.Battle
         [Header("Player Break Area")]
         [SerializeField] private PlayerBreakAreaPresenter _PlayerBreakAreaPresenter;
 
+        [Header("Player Stage Area")]
+        [SerializeField] private PlayerStageAreaPresenter _PlayerStageAreaPresenter;
+
         protected override void Configure(IContainerBuilder builder)
         {
             builder.Register<PlayerCardDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
@@ -55,11 +58,15 @@ namespace App.Battle
             builder.Register<PlayerBreakAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerBreakAreaPresenter).As<IPlayerBreakAreaPresenter>();
 
+            builder.Register<PlayerStageAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.RegisterComponent(_PlayerStageAreaPresenter).As<IPlayerStageAreaPresenter>();
+
             builder.RegisterEntryPoint<PlayerCardUseCase>().As<IPlayerCardUseCase>();
             builder.RegisterEntryPoint<PlayerHandUseCase>();
             builder.RegisterEntryPoint<PlayerDeckUseCase>().As<IPlayerDeckUseCase>();
             builder.RegisterEntryPoint<PlayerBattleAreaUseCase>().As<IPlayerBattleAreaUseCase>();
             builder.RegisterEntryPoint<PlayerBreakAreaUseCase>();
+            builder.RegisterEntryPoint<PlayerStageAreaUseCase>().As<IPlayerStageAreaUseCase>();
         }
     }
 }
