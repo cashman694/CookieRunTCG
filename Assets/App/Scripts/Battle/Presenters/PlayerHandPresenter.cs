@@ -2,19 +2,12 @@ using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
 using App.Battle.Views;
 using App.Common.Data.MasterData;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VContainer;
-using Cysharp.Threading.Tasks;
-using Unity.VisualScripting.FullSerializer;
-using Prototype;
-using DG.Tweening;
-using Unity.VisualScripting;
-using Cysharp.Threading.Tasks.Triggers;
-using Unity.Burst.Intrinsics;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 namespace App.Battle.Presenters
 {
@@ -102,28 +95,28 @@ namespace App.Battle.Presenters
         }
         public void CardMouseExit(CardView cardView)
         {
-             print("Card Mouse Exit");
+            print("Card Mouse Exit");
             EnlargeCard(false, cardView);
 
         }
         public void CardMouseDown()
         {
-            isMyCardDrag=true;
+            isMyCardDrag = true;
         }
         public void CardMouseUp()
         {
-            isMyCardDrag=false;
+            isMyCardDrag = false;
         }
-        void Update() 
+        void Update()
         {
             if (isMyCardDrag)
                 CardDrag();
         }
 
         void CardDrag()
-        { 
-                selectCard.MoveTransform(new PRS(Utils.MousePos, Utils.QI, selectCard.originPRS.scale), false);
-            
+        {
+            selectCard.MoveTransform(new PRS(Utils.MousePos, Utils.QI, selectCard.originPRS.scale), false);
+
         }
         void EnlargeCard(bool isEnlarge, CardView card)
         {
@@ -133,7 +126,7 @@ namespace App.Battle.Presenters
                 {
                     card.transform.localScale = Vector3.one * 2.0f;
                     card.transform.localPosition = new Vector3(card.transform.localPosition.x,
-                                                               card.transform.localPosition.y, 
+                                                               card.transform.localPosition.y,
                                                                card.transform.localPosition.z - 5f);
 
                     card.IsEnlarged = true; // Set flag indicating the card is enlarged

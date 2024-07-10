@@ -2,7 +2,6 @@ using App.Battle.Interfaces.Views;
 using App.Battle.Presenters;
 using App.Common.Data.MasterData;
 using DG.Tweening;
-using Prototype;
 using TMPro;
 using UnityEngine;
 
