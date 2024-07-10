@@ -103,18 +103,18 @@ namespace App.Battle.UseCases
 
         public void TestAttackBattleArea(int index)
         {
-            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(index, out var cookie))
+            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(index, out var cookieCardId))
             {
                 return;
             }
 
-            if (!_PlayerBattleAreaDataStore.TryGetLastHpCard(index, out var cardId))
+            if (!_PlayerBattleAreaDataStore.TryGetLastHpCard(index, out var hpCardId))
             {
                 return;
             }
 
-            _PlayerBattleAreaDataStore.RemoveHpCard(index, cardId);
-            _PlayerTrashDataStore.AddCard(cardId);
+            _PlayerBattleAreaDataStore.RemoveHpCard(index, hpCardId);
+            _PlayerTrashDataStore.AddCard(hpCardId);
 
             if (_PlayerBattleAreaDataStore.GetHpCount(index) > 0)
             {
@@ -122,7 +122,7 @@ namespace App.Battle.UseCases
             }
 
             _PlayerBattleAreaDataStore.RemoveCookieCard(index);
-            _PlayerBreakAreaDataStore.AddCard(cardId);
+            _PlayerBreakAreaDataStore.AddCard(cookieCardId);
         }
 
         public void SetCard(int areaIndex, string cardId)
