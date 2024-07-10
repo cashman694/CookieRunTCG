@@ -13,7 +13,6 @@ namespace App.BattleDebug.Presenters
         [SerializeField] private Button _InitialDrawButton;
         [SerializeField] private Button _MulliganButton;
         [SerializeField] private Button _SetCookieCardButton;
-        [SerializeField] private Button _BrakeCookieCardButton;
         [SerializeField] private Button _StageCardButton;
         [SerializeField] private Button _AttackBattleArea0Button;
         [SerializeField] private Button _AttackBattleArea1Button;
@@ -31,9 +30,6 @@ namespace App.BattleDebug.Presenters
         public IObservable<Unit> OnRequestSetCookieCard => _OnRequestSetCookieCard;
 
         private readonly Subject<int> _OnRequestAttackBattleArea = new();
-
-        private readonly Subject<Unit> _OnRequestBrakeCookieCard = new();
-        public IObservable<Unit> OnRequestBrakeCookieCard => _OnRequestBrakeCookieCard;
 
         public IObservable<int> OnRequestAttackBattleArea => _OnRequestAttackBattleArea;
 
