@@ -61,12 +61,16 @@ namespace App.Battle
             builder.Register<PlayerTrashDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerTrashPresenter).As<IPlayerTrashPresenter>();
 
+            builder.Register<PlayerSupportAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
+            
+
             builder.RegisterEntryPoint<PlayerCardUseCase>().As<IPlayerCardUseCase>();
             builder.RegisterEntryPoint<PlayerHandUseCase>();
             builder.RegisterEntryPoint<PlayerDeckUseCase>().As<IPlayerDeckUseCase>();
             builder.RegisterEntryPoint<PlayerBattleAreaUseCase>().As<IPlayerBattleAreaUseCase>();
             builder.RegisterEntryPoint<PlayerBreakAreaUseCase>();
             builder.RegisterEntryPoint<PlayerTrashUseCase>();
+            builder.RegisterEntryPoint<PlayerSupportAreaUseCase>().As<IPlayerSupportAreaUseCase>();
         }
     }
 }
