@@ -29,6 +29,8 @@ namespace App.Battle
         [Header("Player Break Area")]
         [SerializeField] private PlayerBreakAreaPresenter _PlayerBreakAreaPresenter;
 
+        [Header("Player Stage Area")]
+        [SerializeField] private PlayerStageAreaPresenter _PlayerStageAreaPresenter;
         [Header("Player Trash")]
         [SerializeField] private PlayerTrashPresenter _PlayerTrashPresenter;
 
@@ -58,6 +60,9 @@ namespace App.Battle
             builder.Register<PlayerBreakAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerBreakAreaPresenter).As<IPlayerBreakAreaPresenter>();
 
+            builder.Register<PlayerStageAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.RegisterComponent(_PlayerStageAreaPresenter).As<IPlayerStageAreaPresenter>();
+            
             builder.Register<PlayerTrashDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerTrashPresenter).As<IPlayerTrashPresenter>();
 
@@ -69,6 +74,7 @@ namespace App.Battle
             builder.RegisterEntryPoint<PlayerDeckUseCase>().As<IPlayerDeckUseCase>();
             builder.RegisterEntryPoint<PlayerBattleAreaUseCase>().As<IPlayerBattleAreaUseCase>();
             builder.RegisterEntryPoint<PlayerBreakAreaUseCase>();
+            builder.RegisterEntryPoint<PlayerStageAreaUseCase>().As<IPlayerStageAreaUseCase>();
             builder.RegisterEntryPoint<PlayerTrashUseCase>();
             builder.RegisterEntryPoint<PlayerSupportAreaUseCase>().As<IPlayerSupportAreaUseCase>();
         }

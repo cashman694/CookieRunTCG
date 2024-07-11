@@ -13,6 +13,7 @@ namespace App.BattleDebug.Presenters
         [SerializeField] private Button _InitialDrawButton;
         [SerializeField] private Button _MulliganButton;
         [SerializeField] private Button _SetCookieCardButton;
+        [SerializeField] private Button _StageCardButton;
         [SerializeField] private Button _AttackBattleArea0Button;
         [SerializeField] private Button _AttackBattleArea1Button;
 
@@ -29,9 +30,13 @@ namespace App.BattleDebug.Presenters
         public IObservable<Unit> OnRequestSetCookieCard => _OnRequestSetCookieCard;
 
         private readonly Subject<int> _OnRequestAttackBattleArea = new();
+
         public IObservable<int> OnRequestAttackBattleArea => _OnRequestAttackBattleArea;
 
         private readonly CompositeDisposable _Disposables = new();
+
+        private readonly Subject<Unit> _OnRequestStageCard = new();
+        public IObservable<Unit> OnRequestStageCard => _OnRequestStageCard;
 
         public void Initialize()
         {
@@ -58,6 +63,10 @@ namespace App.BattleDebug.Presenters
             _AttackBattleArea1Button.OnClickAsObservable()
                 .Subscribe(_ => _OnRequestAttackBattleArea.OnNext(1))
                 .AddTo(_Disposables);
+           
+            _StageCardButton.OnClickAsObservable()
+              .Subscribe(_ => _OnRequestStageCard.OnNext(Unit.Default))
+              .AddTo(_Disposables);
         }
 
         public void Dispose()

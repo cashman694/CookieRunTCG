@@ -2,19 +2,23 @@ using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
 using App.Battle.Views;
 using App.Common.Data.MasterData;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VContainer;
-using Cysharp.Threading.Tasks;
 
 namespace App.Battle.Presenters
 {
     public class PlayerHandPresenter : MonoBehaviour, IPlayerHandPresenter
     {
+        public static PlayerHandPresenter Inst { get; private set; }
+        void Awake() => Inst = this;
         private Func<Transform, IFrontCardView> _CardViewFactory;
         private readonly Dictionary<string, IFrontCardView> _CardViews = new();
+        CardView selectCard;
+        bool isMyCardDrag;
 
         [Inject]
         private void Construct(
@@ -86,5 +90,67 @@ namespace App.Battle.Presenters
         {
             _CardViews.Clear();
         }
+        public void CardMouseOver(CardView cardView)
+        {
+            selectCard = cardView;
+            print("Card Mouse Over");
+            EnlargeCard(true, cardView);
+        }
+        public void CardMouseExit(CardView cardView)
+        {
+            print("Card Mouse Exit");
+            EnlargeCard(false, cardView);
+
+        }
+        public void CardMouseDown()
+        {
+            isMyCardDrag = true;
+        }
+        public void CardMouseUp()
+        {
+            isMyCardDrag = false;
+        }
+        void Update()
+        {
+            if (isMyCardDrag)
+                CardDrag();
+        }
+
+        void CardDrag()
+        {
+            selectCard.MoveTransform(new PRS(Utils.MousePos, Utils.QI, selectCard.originPRS.scale), false);
+
+        }
+        void EnlargeCard(bool isEnlarge, CardView card)
+        {
+            if (isEnlarge)
+            {
+                if (!card.IsEnlarged) // Check if the card is not already enlarged
+                {
+                    card.transform.localScale = Vector3.one * 2.0f;
+                    card.transform.localPosition = new Vector3(card.transform.localPosition.x,
+                                                               card.transform.localPosition.y,
+                                                               card.transform.localPosition.z - 5f);
+
+                    card.IsEnlarged = true; // Set flag indicating the card is enlarged
+                }
+            }
+            else
+            {
+                card.transform.localScale = Vector3.one;
+                card.transform.localPosition = new Vector3(card.transform.localPosition.x,
+                                                               card.transform.localPosition.y,
+                                                               card.transform.localPosition.z + 5f);
+
+                card.IsEnlarged = false; // Reset flag indicating the card is not enlarged
+            }
+
+            card.GetComponent<CardOrder>().SetMostFrontOrder(isEnlarge);
+        }
+
     }
+
+
+
+
 }
