@@ -12,9 +12,11 @@ namespace App.BattleDebug.UseCases
         private readonly IBattleDebugDeckPresenter _BattleDebugDeckPresenter;
         private readonly IBattleDebugBattleAreaPresenter _DebugBattleAreaPresenter;
         private readonly IBattleDebugStageAreaPresenter _DebugStageAreaPresenter;
+        private readonly IBattleDebugSupportAreaPresenter _DebugSupportAreaPresenter;
         private readonly IPlayerDeckUseCase _PlayerDeckUseCase;
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
         private readonly IPlayerStageAreaUseCase _PlayerStageAreaUseCase;
+        private readonly IPlayerSupportAreaUseCase _PlayerSupportAreaUseCase;
         private readonly CompositeDisposable _Disposables = new();
 
         [Inject]
@@ -22,17 +24,21 @@ namespace App.BattleDebug.UseCases
             IBattleDebugDeckPresenter battleDebugDeckPresenter,
             IBattleDebugBattleAreaPresenter debugBattleAreaPresenter,
             IBattleDebugStageAreaPresenter debugStageAreaPresenter,
+            IBattleDebugSupportAreaPresenter debugSupportAreaPresenter,
             IPlayerDeckUseCase playerDeckUseCase,
             IPlayerBattleAreaUseCase playerBattleAreaUseCase,
-            IPlayerStageAreaUseCase playerStageAreaUseCase
+            IPlayerStageAreaUseCase playerStageAreaUseCase,
+            IPlayerSupportAreaUseCase playerSupportAreaUseCase
         )
         {
             _BattleDebugDeckPresenter = battleDebugDeckPresenter;
             _DebugBattleAreaPresenter = debugBattleAreaPresenter;
             _DebugStageAreaPresenter = debugStageAreaPresenter;
+            _DebugSupportAreaPresenter = debugSupportAreaPresenter;
             _PlayerDeckUseCase = playerDeckUseCase;
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
             _PlayerStageAreaUseCase = playerStageAreaUseCase;
+            _PlayerSupportAreaUseCase = playerSupportAreaUseCase;
         }
 
         public void Initialize()
@@ -80,6 +86,29 @@ namespace App.BattleDebug.UseCases
             _DebugStageAreaPresenter.OnRequestRemoveStageCard
                .Subscribe(x => _PlayerStageAreaUseCase.RemoveStageCard())
                .AddTo(_Disposables);
+
+            _DebugSupportAreaPresenter.OnRequestPlaceCard
+                .Subscribe(x =>
+                {
+                    // TODO: 패에서 첫번째 카드를 서포트 에리어에 놓을 수 있도록
+                    // _PlayerSupportAreaUseCase.TestPlaceCard()
+                })
+                .AddTo(_Disposables);
+
+            _DebugSupportAreaPresenter.OnRequestRemoveCard
+                .Subscribe(x =>
+                {
+                    // TODO: 서포트 에리어의 마지막 카드를 삭제할수 있도록
+                    // _PlayerSupportAreaUseCase.TestRemoveCard()
+                })
+                .AddTo(_Disposables);
+
+            _DebugSupportAreaPresenter.OnRequestSwitchCardState
+                .Subscribe(x =>
+                {
+                    // _PlayerSupportAreaUseCase.TestSwitchCardState()
+                })
+                .AddTo(_Disposables);
         }
 
         public void Dispose()
