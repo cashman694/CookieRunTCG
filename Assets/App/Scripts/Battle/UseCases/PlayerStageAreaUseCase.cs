@@ -65,6 +65,11 @@ namespace App.Battle.UseCases
                 return;
             }
 
+            if (!string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
+            {
+                return;
+            }
+
             var cardId = _PlayerHandPresenter.GetFirstCardId();
             if (cardId == null)
             {
