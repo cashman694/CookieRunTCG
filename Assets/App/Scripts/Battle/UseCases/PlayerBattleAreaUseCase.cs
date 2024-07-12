@@ -1,3 +1,4 @@
+using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
@@ -80,7 +81,7 @@ namespace App.Battle.UseCases
                 .AddTo(_Disposables);
         }
 
-        public void TestSetCard()
+        public void TestShowCookieCard(int areaIndex)
         {
             if (_PlayerHandDataStore.IsEmpty)
             {
@@ -88,44 +89,27 @@ namespace App.Battle.UseCases
             }
 
             var cardId = _PlayerHandPresenter.GetFirstCardId();
-
-            for (var i = 0; i < _PlayerBattleAreaDataStore.MaxCount; i++)
-            {
-                if (_PlayerBattleAreaDataStore.TryGetCookieCard(i, out _))
-                {
-                    continue;
-                }
-
-                SetCard(i, cardId);
-                return;
-            }
+            ShowCookieCard(areaIndex, cardId);
         }
 
-        public void TestAttackBattleArea(int index)
+        public void TestSwitchBattleAreaState(int index)
         {
-            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(index, out var cookieCardId))
+            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(index, out var cookie))
             {
                 return;
             }
 
-            if (!_PlayerBattleAreaDataStore.TryGetLastHpCard(index, out var hpCardId))
+            if (cookie.CardState == CardState.Active)
             {
-                return;
+                RestCookieCard(index);
             }
-
-            _PlayerBattleAreaDataStore.RemoveHpCard(index, hpCardId);
-            _PlayerTrashDataStore.AddCard(hpCardId);
-
-            if (_PlayerBattleAreaDataStore.GetHpCount(index) > 0)
+            else
             {
-                return;
+                ActiveCookieCard(index);
             }
-
-            _PlayerBattleAreaDataStore.RemoveCookieCard(index);
-            _PlayerBreakAreaDataStore.AddCard(cookieCardId);
         }
 
-        public void SetCard(int areaIndex, string cardId)
+        public void ShowCookieCard(int areaIndex, string cardId)
         {
             var card = _PlayerCardDataStore.GetCardBy(cardId);
 
@@ -139,7 +123,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            if (!_PlayerBattleAreaDataStore.CanAddCookieCard(areaIndex))
+            if (!_PlayerBattleAreaDataStore.IsEmpty(areaIndex))
             {
                 return;
             }
@@ -149,30 +133,81 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            _PlayerBattleAreaDataStore.AddCookieCard(areaIndex, cardId);
-
-            for (int i = 0; i < card.CardMasterData.Hp; i++)
-            {
-                if (_PlayerDeckDataStore.IsEmpty)
-                {
-                    return;
-                }
-
-                var drawCardId = _PlayerDeckDataStore.RemoveFirstCard();
-
-                _PlayerBattleAreaDataStore.AddHpCard(areaIndex, drawCardId);
-            }
+            _PlayerBattleAreaDataStore.AddCookieCard(areaIndex, card.Id, card.CardMasterData);
         }
 
-        public void BreakCard(int areaIndex)
+        public void ActiveCookieCard(int areaIndex)
         {
-            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var cardId))
+            _PlayerBattleAreaDataStore.SetCardState(areaIndex, CardState.Active);
+            _PlayerBattleAreaPresenter.ActiveCookieCard(areaIndex);
+        }
+
+        public void RestCookieCard(int areaIndex)
+        {
+            _PlayerBattleAreaDataStore.SetCardState(areaIndex, CardState.Rest);
+            _PlayerBattleAreaPresenter.RestCookieCard(areaIndex);
+        }
+
+        public void BreakCookieCard(int areaIndex)
+        {
+            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var cookie))
+            {
+                return;
+            }
+
+            if (_PlayerBattleAreaDataStore.GetHpCount(areaIndex) > 0)
             {
                 return;
             }
 
             _PlayerBattleAreaDataStore.RemoveCookieCard(areaIndex);
-            _PlayerBreakAreaDataStore.AddCard(cardId);
+            _PlayerBreakAreaDataStore.AddCard(cookie.Id);
+        }
+
+        public void AddHpCard(int areaIndex)
+        {
+            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var cookie))
+            {
+                return;
+            }
+
+            if (_PlayerDeckDataStore.IsEmpty)
+            {
+                return;
+            }
+
+            var cardId = _PlayerDeckDataStore.RemoveFirstCard();
+            var card = _PlayerCardDataStore.GetCardBy(cardId);
+
+            _PlayerBattleAreaDataStore.AddHpCard(areaIndex, card.Id, card.CardMasterData);
+        }
+
+        public void FlipHpCard(int areaIndex)
+        {
+            if (!_PlayerBattleAreaDataStore.TryGetLastHpCard(areaIndex, out var hpCardId))
+            {
+                return;
+            }
+
+            var card = _PlayerCardDataStore.GetCardBy(hpCardId);
+
+            if (card == null)
+            {
+                return;
+            }
+
+            _PlayerBattleAreaPresenter.FlipCard(areaIndex, card.Id, card.CardMasterData);
+        }
+
+        public void RemoveHpCard(int areaIndex)
+        {
+            if (!_PlayerBattleAreaDataStore.TryGetLastHpCard(areaIndex, out var hpCardId))
+            {
+                return;
+            }
+
+            _PlayerBattleAreaDataStore.RemoveHpCard(areaIndex, hpCardId);
+            _PlayerTrashDataStore.AddCard(hpCardId);
         }
 
         public void Dispose()

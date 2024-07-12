@@ -60,6 +60,30 @@ namespace App.Battle.Presenters
             cardView.Unspawn();
         }
 
+        public void ActiveCookieCard(int areaIndex)
+        {
+            var cardView = _CookieCardViews[areaIndex];
+
+            if (cardView == null)
+            {
+                return;
+            }
+
+            cardView.Active();
+        }
+
+        public void RestCookieCard(int areaIndex)
+        {
+            var cardView = _CookieCardViews[areaIndex];
+
+            if (cardView == null)
+            {
+                return;
+            }
+
+            cardView.Rest();
+        }
+
         public void AddHpCard(int areaIndex, string cardId)
         {
             Assert.IsFalse(areaIndex < 0 || areaIndex > 1);
@@ -105,6 +129,8 @@ namespace App.Battle.Presenters
 
             var hpCards = _HpCardViews[areaIndex];
             hpCards.Add(newCardView);
+
+            ArrangeHpCards(areaIndex).Forget();
         }
 
         // FIXME: 카드를 적당한 간격으로 배치

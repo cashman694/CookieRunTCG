@@ -14,6 +14,7 @@ namespace App.Battle.UseCases
         private readonly IPlayerStageAreaPresenter _PlayerStageAreaPresenter;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
         private readonly IPlayerHandPresenter _PlayerHandPresenter;
+        private readonly IPlayerTrashDataStore _PlayerTrashDataStore;
         private readonly CompositeDisposable _Disposables = new();
 
         [Inject]
@@ -23,7 +24,8 @@ namespace App.Battle.UseCases
             IPlayerStageAreaDataStore playerStageAreaDataStore,
             IPlayerStageAreaPresenter playerStageAreaPresenter,
             IPlayerHandDataStore playerHandDataStore,
-            IPlayerHandPresenter playerHandPresenter
+            IPlayerHandPresenter playerHandPresenter,
+            IPlayerTrashDataStore playerTrashDataStore
         )
         {
             _PlayerCardDataStore = playerCardDataStore;
@@ -31,6 +33,7 @@ namespace App.Battle.UseCases
             _PlayerStageAreaPresenter = playerStageAreaPresenter;
             _PlayerHandDataStore = playerHandDataStore;
             _PlayerHandPresenter = playerHandPresenter;
+            _PlayerTrashDataStore = playerTrashDataStore;
         }
 
         public void Initialize()
@@ -54,6 +57,7 @@ namespace App.Battle.UseCases
                 })
                 .AddTo(_Disposables);
         }
+
         public void ShowStage()
         {
             if (_PlayerHandDataStore.IsEmpty)
@@ -66,8 +70,22 @@ namespace App.Battle.UseCases
             {
                 return;
             }
-            var card = _PlayerHandDataStore.RemoveCard(cardId);
+
+            _PlayerHandDataStore.RemoveCard(cardId);
             _PlayerStageAreaDataStore.AddCard(cardId);
+        }
+
+        public void RemoveStage()
+        {
+            if (string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
+            {
+                return;
+            }
+
+            var cardId = _PlayerStageAreaDataStore.CardId;
+
+            _PlayerStageAreaDataStore.RemoveCard();
+            _PlayerTrashDataStore.AddCard(cardId);
         }
 
         public void Dispose()

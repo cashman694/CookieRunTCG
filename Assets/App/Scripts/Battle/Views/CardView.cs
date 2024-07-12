@@ -36,18 +36,22 @@ namespace App.Battle.Views
         {
             PlayerHandPresenter.Inst.CardMouseOver(this);
         }
+
         void OnMouseExit()
         {
             PlayerHandPresenter.Inst.CardMouseExit(this);
         }
+
         void OnMouseUp()
         {
             PlayerHandPresenter.Inst.CardMouseUp();
         }
+
         void OnMouseDown()
         {
             PlayerHandPresenter.Inst.CardMouseDown();
         }
+
         public void MoveTransform(PRS prs, bool useDotween, float dotweenTime = 0)
         {
             if (useDotween)
@@ -63,6 +67,16 @@ namespace App.Battle.Views
                 transform.localScale = prs.scale;
             }
         }
+        public void Active()
+        {
+            transform.rotation = Quaternion.identity;
+        }
+
+        public void Rest()
+        {
+            transform.rotation = Quaternion.AngleAxis(90, Vector3.forward);
+        }
+
         public void Unspawn()
         {
             Destroy(gameObject);

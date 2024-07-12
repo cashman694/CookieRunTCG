@@ -1,8 +1,12 @@
+using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
 using App.Common.Data;
+using App.Common.Data.MasterData;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UniRx;
+using UnityEngine.Assertions;
 using VContainer;
 
 namespace App.Battle.DataStores
@@ -13,10 +17,10 @@ namespace App.Battle.DataStores
         public int MaxCount => _MaxCount;
 
         public IObservable<(int index, string cardId)> OnCookieCardSet =>
-            _CookieCardIds.ObserveAdd().Select(x => (x.Key, x.Value));
+            _CookieCards.ObserveAdd().Select(x => (x.Key, x.Value.Id));
 
         public IObservable<(int index, string cardId)> OnCookieCardUnset =>
-            _CookieCardIds.ObserveRemove().Select(x => (x.Key, x.Value));
+            _CookieCards.ObserveRemove().Select(x => (x.Key, x.Value.Id));
 
         private readonly Subject<(int index, string cardId)> _OnHpCardAdded = new();
         public IObservable<(int index, string cardId)> OnHpCardAdded => _OnHpCardAdded;
@@ -24,8 +28,8 @@ namespace App.Battle.DataStores
         private readonly Subject<(int index, string cardId)> _OnHpCardRemoved = new();
         public IObservable<(int index, string cardId)> OnHpCardRemoved => _OnHpCardRemoved;
 
-        private readonly ReactiveDictionary<int, string> _CookieCardIds = new();
-        private readonly Dictionary<int, List<string>> _HpCardIdsMap = new();
+        private readonly ReactiveDictionary<int, BattleAreaCookieCard> _CookieCards = new();
+        private readonly Dictionary<int, List<BattleAreaHpCard>> _HpCardsMap = new();
 
         [Inject]
         public PlayerBattleAreaDataStore(
@@ -36,70 +40,92 @@ namespace App.Battle.DataStores
 
             for (var i = 0; i < _MaxCount; i++)
             {
-                _HpCardIdsMap.Add(i, new());
+                _HpCardsMap.Add(i, new());
             }
         }
 
-        public bool TryGetCookieCard(int index, out string cardId)
+        public bool TryGetCookieCard(int index, out BattleAreaCookieCard card)
         {
-            return _CookieCardIds.TryGetValue(index, out cardId);
+            return _CookieCards.TryGetValue(index, out card);
         }
 
-        public bool CanAddCookieCard(int index)
+        public bool IsEmpty(int index)
         {
-            return !_CookieCardIds.ContainsKey(index);
+            return !_CookieCards.ContainsKey(index);
         }
 
-        public void AddCookieCard(int index, string cardId)
+        public BattleAreaCookieCard AddCookieCard(int index, string cardId, CardMasterData cardMasterData)
         {
-            if (_CookieCardIds.ContainsKey(index))
-            {
-                return;
-            }
+            Assert.IsFalse(_CookieCards.ContainsKey(index));
 
-            _CookieCardIds.Add(index, cardId);
+            var card = new BattleAreaCookieCard(cardId, cardMasterData);
+            _CookieCards.Add(index, card);
 
             UnityEngine.Debug.Log($"{cardId} added to BattleArea[{index}]");
+            return card;
         }
 
         public void RemoveCookieCard(int index)
         {
-            if (!_CookieCardIds.ContainsKey(index))
+            if (!_CookieCards.ContainsKey(index))
             {
                 return;
             }
 
-            var cardId = _CookieCardIds[index];
-            _CookieCardIds.Remove(index);
+            var cardId = _CookieCards[index];
+            _CookieCards.Remove(index);
 
             UnityEngine.Debug.Log($"{cardId} removed from BattleArea[{index}]");
         }
 
-        public void AddHpCard(int index, string cardId)
+        public void SetCardState(int index, CardState cardState)
         {
-            if (!_HpCardIdsMap.ContainsKey(index))
+            if (!_CookieCards.ContainsKey(index))
             {
                 return;
             }
 
-            var hpCards = _HpCardIdsMap[index];
-            hpCards.Add(cardId);
+            var cookie = _CookieCards[index];
+
+            if (cookie.CardState == cardState)
+            {
+                return;
+            }
+
+            cookie.SetState(cardState);
+            UnityEngine.Debug.Log($"{cookie.Id} switched to {cardState} state");
+        }
+
+        public BattleAreaHpCard AddHpCard(int index, string cardId, CardMasterData cardMasterData)
+        {
+            Assert.IsTrue(_HpCardsMap.ContainsKey(index));
+
+            var hpCards = _HpCardsMap[index];
+
+            var hpCard = new BattleAreaHpCard(cardId, cardMasterData);
+            hpCards.Add(hpCard);
 
             UnityEngine.Debug.Log($"{cardId} added to BatttleArea[{index}]");
             _OnHpCardAdded.OnNext((index, cardId));
+
+            return hpCard;
         }
 
         public bool RemoveHpCard(int index, string cardId)
         {
-            if (!_HpCardIdsMap.ContainsKey(index))
+            if (!_HpCardsMap.ContainsKey(index))
             {
                 return false;
             }
 
-            if (!_HpCardIdsMap[index].Remove(cardId))
+            var hpCard = _HpCardsMap[index].FirstOrDefault(x => x.Id == cardId);
+
+            if (hpCard == null)
             {
                 return false;
             }
+
+            _HpCardsMap[index].Remove(hpCard);
 
             UnityEngine.Debug.Log($"{cardId} removed from BatttleArea[{index}]");
             _OnHpCardRemoved.OnNext((index, cardId));
@@ -111,19 +137,19 @@ namespace App.Battle.DataStores
         {
             cardId = string.Empty;
 
-            if (!_HpCardIdsMap.ContainsKey(index))
+            if (!_HpCardsMap.ContainsKey(index))
             {
                 return false;
             }
 
-            var hpCardIds = _HpCardIdsMap[index];
+            var hpCards = _HpCardsMap[index];
 
-            if (hpCardIds.Count < 1)
+            if (hpCards.Count < 1)
             {
                 return false;
             }
 
-            cardId = hpCardIds[^1];
+            cardId = hpCards[^1].Id;
 
             return true;
         }
@@ -135,18 +161,18 @@ namespace App.Battle.DataStores
 
         public int GetHpCount(int index)
         {
-            if (!_HpCardIdsMap.ContainsKey(index))
+            if (!_HpCardsMap.ContainsKey(index))
             {
                 return 0;
             }
 
-            return _HpCardIdsMap[index].Count;
+            return _HpCardsMap[index].Count;
         }
 
         public void Dispose()
         {
-            _CookieCardIds.Dispose();
-            _HpCardIdsMap.Clear();
+            _CookieCards.Dispose();
+            _HpCardsMap.Clear();
         }
     }
 }
