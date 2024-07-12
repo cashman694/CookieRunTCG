@@ -81,6 +81,11 @@ namespace App.Battle.UseCases
                 .AddTo(_Disposables);
         }
 
+        /// <summary>
+        /// 테스트용 코드
+        /// 패의 첫번째 카드를 지정한 배틀에리어에 놓는다
+        /// </summary>
+        /// <param name="areaIndex"></param>
         public void TestShowCookieCard(int areaIndex)
         {
             if (_PlayerHandDataStore.IsEmpty)
@@ -92,23 +97,34 @@ namespace App.Battle.UseCases
             ShowCookieCard(areaIndex, cardId);
         }
 
-        public void TestSwitchBattleAreaState(int index)
+        /// <summary>
+        /// 테스트용 코드
+        /// 지정한 배틀에리어에 있는 카드의 상태(액티브/레스트)를 변경한다
+        /// 액티브 <=> 레스트
+        /// </summary>
+        /// <param name="areaIndex"></param>
+        public void TestSwitchBattleAreaState(int areaIndex)
         {
-            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(index, out var cookie))
+            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var cookie))
             {
                 return;
             }
 
             if (cookie.CardState == CardState.Active)
             {
-                RestCookieCard(index);
+                RestCookieCard(areaIndex);
             }
             else
             {
-                ActiveCookieCard(index);
+                ActiveCookieCard(areaIndex);
             }
         }
 
+        /// <summary>
+        /// 패에서 지정한 카드를 지정한 배틀에리어에 놓는다
+        /// </summary>
+        /// <param name="areaIndex"></param>
+        /// <param name="cardId"></param>
         public void ShowCookieCard(int areaIndex, string cardId)
         {
             var card = _PlayerCardDataStore.GetCardBy(cardId);
@@ -136,18 +152,31 @@ namespace App.Battle.UseCases
             _PlayerBattleAreaDataStore.AddCookieCard(areaIndex, card.Id, card.CardMasterData);
         }
 
+        /// <summary>
+        /// 지정한 배틀에리어의 쿠키카드를 액티브 상태로 변경한다
+        /// </summary>
+        /// <param name="areaIndex"></param>
         public void ActiveCookieCard(int areaIndex)
         {
             _PlayerBattleAreaDataStore.SetCardState(areaIndex, CardState.Active);
             _PlayerBattleAreaPresenter.ActiveCookieCard(areaIndex);
         }
 
+        /// <summary>
+        /// 지정한 배틀에리어의 쿠키카드를 레스트 상태로 변경한다
+        /// </summary>
+        /// <param name="areaIndex"></param>
         public void RestCookieCard(int areaIndex)
         {
             _PlayerBattleAreaDataStore.SetCardState(areaIndex, CardState.Rest);
             _PlayerBattleAreaPresenter.RestCookieCard(areaIndex);
         }
 
+        /// <summary>
+        /// 지정한 배틀에리어의 쿠키카드를 브레이크에리어로 이동시킨다
+        /// Hp가 0이 아닌 경우는 리턴
+        /// </summary>
+        /// <param name="areaIndex"></param>
         public void BreakCookieCard(int areaIndex)
         {
             if (!_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var cookie))
@@ -164,6 +193,11 @@ namespace App.Battle.UseCases
             _PlayerBreakAreaDataStore.AddCard(cookie.Id);
         }
 
+        /// <summary>
+        /// 덱에서 Hp카드를 뽑아 지정한 배틀에리어의 추가한다
+        /// 쿠키가 없는 경우는 리턴
+        /// </summary>
+        /// <param name="areaIndex"></param>
         public void AddHpCard(int areaIndex)
         {
             if (!_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var cookie))
@@ -182,6 +216,10 @@ namespace App.Battle.UseCases
             _PlayerBattleAreaDataStore.AddHpCard(areaIndex, card.Id, card.CardMasterData);
         }
 
+        /// <summary>
+        /// 지정한 배틀에리어의 마지막 Hp카드를 플립힌다
+        /// </summary>
+        /// <param name="areaIndex"></param>
         public void FlipHpCard(int areaIndex)
         {
             if (!_PlayerBattleAreaDataStore.TryGetLastHpCard(areaIndex, out var hpCardId))
@@ -199,6 +237,10 @@ namespace App.Battle.UseCases
             _PlayerBattleAreaPresenter.FlipCard(areaIndex, card.Id, card.CardMasterData);
         }
 
+        /// <summary>
+        /// 지정한 배틀에리어의 마지막 Hp카드를 삭제한다
+        /// </summary>
+        /// <param name="areaIndex"></param>
         public void RemoveHpCard(int areaIndex)
         {
             if (!_PlayerBattleAreaDataStore.TryGetLastHpCard(areaIndex, out var hpCardId))

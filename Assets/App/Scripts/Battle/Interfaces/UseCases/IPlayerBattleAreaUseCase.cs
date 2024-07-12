@@ -3,9 +3,8 @@ namespace App.Battle.Interfaces.UseCases
     public interface IPlayerBattleAreaUseCase
     {
         void TestShowCookieCard(int areaIndex);
-        void TestSwitchBattleAreaState(int index);
+        void TestSwitchBattleAreaState(int areaIndex);
 
-        // 쿠키카드를 등장시킨다
         void ShowCookieCard(int areaIndex, string cardId);
         void ActiveCookieCard(int areaIndex);
         void RestCookieCard(int areaIndex);

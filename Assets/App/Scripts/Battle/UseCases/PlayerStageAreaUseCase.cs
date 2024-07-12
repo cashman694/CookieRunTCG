@@ -58,7 +58,27 @@ namespace App.Battle.UseCases
                 .AddTo(_Disposables);
         }
 
-        public void ShowStage()
+        /// <summary>
+        /// 테스트용 코드
+        /// 패의 첫번째 카드를 스테이지에리어에 놓는다
+        /// </summary>
+        public void TestShowStageCard()
+        {
+            var cardId = _PlayerHandPresenter.GetFirstCardId();
+            if (cardId == null)
+            {
+                return;
+            }
+
+            ShowStageCard(cardId);
+        }
+
+        /// <summary>
+        /// 스테이지에리어에 패에서 지정한 카드를 놓는다
+        /// 이미 놓여져 있는 경우에는 리턴
+        /// </summary>
+        /// <param name="cardId"></param>
+        public void ShowStageCard(string cardId)
         {
             if (_PlayerHandDataStore.IsEmpty)
             {
@@ -70,17 +90,14 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            var cardId = _PlayerHandPresenter.GetFirstCardId();
-            if (cardId == null)
-            {
-                return;
-            }
-
             _PlayerHandDataStore.RemoveCard(cardId);
             _PlayerStageAreaDataStore.AddCard(cardId);
         }
 
-        public void RemoveStage()
+        /// <summary>
+        /// 스테이지에리어의 카드를 트래쉬로 보낸다
+        /// </summary>
+        public void RemoveStageCard()
         {
             if (string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
             {

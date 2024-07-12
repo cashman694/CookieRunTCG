@@ -74,11 +74,11 @@ namespace App.BattleDebug.UseCases
                 .AddTo(_Disposables);
 
             _DebugStageAreaPresenter.OnRequestShowStageCard
-               .Subscribe(x => _PlayerStageAreaUseCase.ShowStage())
+               .Subscribe(x => _PlayerStageAreaUseCase.TestShowStageCard())
                .AddTo(_Disposables);
 
             _DebugStageAreaPresenter.OnRequestRemoveStageCard
-               .Subscribe(x => _PlayerStageAreaUseCase.RemoveStage())
+               .Subscribe(x => _PlayerStageAreaUseCase.RemoveStageCard())
                .AddTo(_Disposables);
         }
 
