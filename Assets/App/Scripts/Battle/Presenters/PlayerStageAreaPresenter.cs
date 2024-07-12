@@ -39,18 +39,13 @@ namespace App.Battle.Presenters
 
         public void RemoveCard(string cardId)
         {
-            if (_CardView == null)
-            {
-                return;
-            }
-
-            _CardView.Unspawn();
+            _CardView?.Unspawn();
             _CardView = null;
         }
 
         private void OnDestroy()
         {
-            _CardView.Unspawn();
+            _CardView?.Unspawn();
             _CardView = null;
         }
     }
