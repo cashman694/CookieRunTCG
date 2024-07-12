@@ -32,7 +32,6 @@ namespace App.Battle.Presenters
             _CardViews.Add(cardId, newCardView);
 
             var cardViewComponent = (MonoBehaviour)newCardView;
-            cardViewComponent.transform.SetAsFirstSibling();
             cardViewComponent.gameObject.name = cardMasterData.CardNumber;
 
             newCardView.Setup(cardId, cardMasterData);

@@ -61,6 +61,10 @@ namespace App.Battle.UseCases
             _PlayerDeckDataStore.Shuffle();
         }
 
+        /// <summary>
+        /// 게임시작 직후 최초 드로우
+        /// 덱에서 정해진 카드매수(6장)를 손으로 가져간다
+        /// </summary>
         public void InitialDraw()
         {
             if (_PlayerHandDataStore.Count > 0)
@@ -79,6 +83,9 @@ namespace App.Battle.UseCases
             }
         }
 
+        /// <summary>
+        /// 덱에서 카드를 한장 손으로 가져간다
+        /// </summary>
         public void DrawCard()
         {
             if (_PlayerDeckDataStore.IsEmpty)
@@ -91,6 +98,10 @@ namespace App.Battle.UseCases
             _PlayerHandDataStore.AddCard(cardId);
         }
 
+        /// <summary>
+        /// 카드가 맘에 들지 않거나, 쿠키카드가 없는경우, 
+        /// 패에 카드를 덱으로 되돌리고 셔플한다. 최초 드로우를 다시 진행한다
+        /// </summary>
         public void Mulligan()
         {
             if (_PlayerDeckDataStore.IsEmpty)
@@ -110,16 +121,7 @@ namespace App.Battle.UseCases
             }
 
             _PlayerDeckDataStore.Shuffle();
-
-            for (var i = 0; i < _BattleConfig.InitialDrawCount; i++)
-            {
-                if (_PlayerDeckDataStore.IsEmpty)
-                {
-                    return;
-                }
-
-                DrawCard();
-            }
+            InitialDraw();
         }
 
         public void Dispose()

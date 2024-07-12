@@ -2,6 +2,8 @@ namespace App.Battle.Interfaces.UseCases
 {
     public interface IPlayerStageAreaUseCase
     {
-        void ShowStage();
+        void TestShowStageCard();
+        void ShowStageCard(string cardId);
+        void RemoveStageCard();
     }
 }

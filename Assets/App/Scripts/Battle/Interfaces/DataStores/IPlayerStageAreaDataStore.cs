@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace App.Battle.Interfaces.DataStores
 {
@@ -11,7 +10,6 @@ namespace App.Battle.Interfaces.DataStores
         IObservable<string> OnCardRemoved { get; }
 
         void AddCard(string cardId);
-        bool RemoveCard(string cardId);
-        string GetCard(int index);
+        bool RemoveCard();
     }
 }

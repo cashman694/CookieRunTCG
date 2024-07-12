@@ -14,7 +14,7 @@ namespace App.Battle.Presenters
     public class PlayerStageAreaPresenter : MonoBehaviour, IPlayerStageAreaPresenter
     {
         private Func<Transform, IFrontCardView> _CardViewFactory;
-        private readonly Dictionary<string, IFrontCardView> _CardViews = new();
+        private IFrontCardView _CardView;
 
         [Inject]
         private void Construct(
@@ -28,34 +28,25 @@ namespace App.Battle.Presenters
 
         public void AddCard(string cardId, CardMasterData cardMasterData)
         {
-            var newCardView = _CardViewFactory.Invoke(transform);
-            _CardViews.Add(cardId, newCardView);
+            _CardView = _CardViewFactory.Invoke(transform);
 
-            var cardViewComponent = (MonoBehaviour)newCardView;
+            var cardViewComponent = (MonoBehaviour)_CardView;
             cardViewComponent.transform.SetAsFirstSibling();
             cardViewComponent.gameObject.name = cardMasterData.CardNumber;
 
-            newCardView.Setup(cardId, cardMasterData);
-
+            _CardView.Setup(cardId, cardMasterData);
         }
 
         public void RemoveCard(string cardId)
         {
-            if (!_CardViews.ContainsKey(cardId))
-            {
-                return;
-            }
-
-            var cardView = _CardViews[cardId];
-            cardView.Unspawn();
-
-            _CardViews.Remove(cardId);
-
+            _CardView?.Unspawn();
+            _CardView = null;
         }
 
         private void OnDestroy()
         {
-            _CardViews.Clear();
+            _CardView?.Unspawn();
+            _CardView = null;
         }
     }
 }
