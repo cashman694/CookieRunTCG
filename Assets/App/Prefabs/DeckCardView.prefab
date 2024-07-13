@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3339550342756374685}
   - component: {fileID: 5662692393371493436}
   - component: {fileID: 3366952828782475128}
+  - component: {fileID: 3125526191903911515}
   m_Layer: 0
   m_Name: DeckCardView
   m_TagString: Untagged
@@ -100,3 +101,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f9b872ef89ed4fc085dad3b806069cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3125526191903911515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2996797505625519995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fafbd90b55f0d548839a77da05580c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backRenderers: []
+  middleRenderers1:
+  - {fileID: 5662692393371493436}
+  middleRenderers2: []
+  middleRenderers3: []
+  middleRenderers4: []

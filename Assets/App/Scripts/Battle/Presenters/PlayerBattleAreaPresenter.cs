@@ -141,11 +141,14 @@ namespace App.Battle.Presenters
 
             var parentTransform = _HpCardAreas[areaIndex];
             var count = 0;
+            var sortingOrder = transform.childCount - 1;
 
             foreach (var cardView in parentTransform.GetComponentsInChildren<ICardView>())
             {
                 var cardViewTransform = ((MonoBehaviour)cardView).transform;
                 cardViewTransform.localPosition = Vector3.zero + Vector3.right * 5f * count;
+                var cardOrder = cardViewTransform.GetComponent<CardOrder>();
+                cardOrder.SetOriginOrder(++sortingOrder);
                 count++;
             }
         }
