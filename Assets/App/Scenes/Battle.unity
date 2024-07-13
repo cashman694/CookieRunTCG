@@ -910,7 +910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: App.Area.AreaLifetimeScope
+    TypeName: App.Field.FieldLifetimeScope
   autoRun: 1
   autoInjectGameObjects: []
   _PlayerHandPresenter: {fileID: 1761343338}
