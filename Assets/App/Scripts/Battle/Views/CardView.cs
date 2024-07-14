@@ -24,6 +24,8 @@ namespace App.Battle.Views
         private readonly Subject<string> _OnCardSelected = new();
         public IObservable<string> OnCardSelected => _OnCardSelected;
 
+        private bool _IsSelected;
+
         public void Setup(string cardId, CardMasterData cardMasterData)
         {
             _CardId = cardId;
@@ -83,6 +85,11 @@ namespace App.Battle.Views
         public void Rest()
         {
             transform.rotation = Quaternion.AngleAxis(90, Vector3.forward);
+        }
+
+        public void Select(bool isSelected)
+        {
+            _IsSelected = isSelected;
         }
 
         public void Unspawn()

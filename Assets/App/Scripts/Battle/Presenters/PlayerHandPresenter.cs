@@ -48,11 +48,7 @@ namespace App.Battle.Presenters
 
             newCardView.Setup(cardId, cardMasterData);
             newCardView.OnCardSelected
-                .Subscribe(x =>
-                {
-                    _OnCardSelected.OnNext(x);
-                    Debug.Log($"Hand card[{x}] selected");
-                })
+                .Subscribe(_OnCardSelected.OnNext)
                 .AddTo(_Disposables);
 
             ArrangeCards().Forget();
@@ -79,6 +75,14 @@ namespace App.Battle.Presenters
             return cardView?.CardId;
         }
 
+        public void SelectCard(string cardId)
+        {
+            foreach (var view in _CardViews.Values)
+            {
+                view.Select(view.CardId == cardId);
+            }
+        }
+
         // FIXME: 카드를 적당한 간격으로 배치
         private async UniTask ArrangeCards()
         {
@@ -98,13 +102,6 @@ namespace App.Battle.Presenters
                 var cardOrder = cardViewTransform.GetComponent<CardOrder>();
                 cardOrder.SetOriginOrder(--sortingOrder);
             }
-        }
-
-        private void OnDestroy()
-        {
-            _OnCardSelected.Dispose();
-            _Disposables.Dispose();
-            _CardViews.Clear();
         }
 
         public void CardMouseOver(CardView cardView)
@@ -169,6 +166,13 @@ namespace App.Battle.Presenters
             }
 
             card.GetComponent<CardOrder>().SetMostFrontOrder(isEnlarge);
+        }
+
+        private void OnDestroy()
+        {
+            _OnCardSelected.Dispose();
+            _Disposables.Dispose();
+            _CardViews.Clear();
         }
     }
 }

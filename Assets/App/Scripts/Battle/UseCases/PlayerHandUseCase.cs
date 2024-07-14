@@ -49,6 +49,14 @@ namespace App.Battle.UseCases
                     _PlayerHandPresenter.RemoveCard(x);
                 })
                 .AddTo(_Disposables);
+
+            _PlayerHandPresenter.OnCardSelected
+                .Subscribe(x =>
+                {
+                    _PlayerHandDataStore.SelectCard(x);
+                    _PlayerHandPresenter.SelectCard(x);
+                })
+                .AddTo(_Disposables);
         }
 
         public void Dispose()

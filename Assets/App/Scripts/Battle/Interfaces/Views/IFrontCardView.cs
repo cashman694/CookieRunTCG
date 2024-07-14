@@ -9,5 +9,6 @@ namespace App.Battle.Interfaces.Views
         void Setup(string cardId, CardMasterData cardMasterData);
         void Active();
         void Rest();
+        void Select(bool isSelected);
     }
 }
