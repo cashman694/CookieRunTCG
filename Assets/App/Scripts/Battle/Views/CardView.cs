@@ -24,6 +24,7 @@ namespace App.Battle.Views
         private readonly Subject<string> _OnCardSelected = new();
         public IObservable<string> OnCardSelected => _OnCardSelected;
 
+        public bool IsSelected => _IsSelected;
         private bool _IsSelected;
 
         public void Setup(string cardId, CardMasterData cardMasterData)

@@ -79,7 +79,14 @@ namespace App.Battle.Presenters
         {
             foreach (var view in _CardViews.Values)
             {
-                view.Select(view.CardId == cardId);
+                var isSelected = view.CardId == cardId;
+                view.Select(isSelected);
+
+                // 선택된 카드를 구분하기 위해 y위치를 조정
+                var cardViewTransform = ((MonoBehaviour)view).transform;
+                var pos = cardViewTransform.localPosition;
+                var posY = isSelected ? 5f : 0f;
+                cardViewTransform.localPosition = new Vector3(pos.x, posY, pos.z);
             }
         }
 

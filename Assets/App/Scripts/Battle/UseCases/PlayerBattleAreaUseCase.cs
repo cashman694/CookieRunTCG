@@ -79,25 +79,6 @@ namespace App.Battle.UseCases
                     _PlayerBattleAreaPresenter.RemoveHpCard(x.index);
                 })
                 .AddTo(_Disposables);
-
-            // DEBUG: 마우스 클릭을 통한 쿠키의 등장
-            _PlayerBattleAreaPresenter.OnCookieAreaSelected
-                .Subscribe(x =>
-                {
-                    // 이미 쿠키가 등장한 에리어는 불가
-                    if (_PlayerBattleAreaDataStore.TryGetCookieCard(x, out var card))
-                    {
-                        return;
-                    }
-
-                    if (string.IsNullOrEmpty(_PlayerHandDataStore.SelectedCardId))
-                    {
-                        return;
-                    }
-
-                    ShowCookieCard(x, _PlayerHandDataStore.SelectedCardId);
-                })
-                .AddTo(_Disposables);
         }
 
         /// <summary>
