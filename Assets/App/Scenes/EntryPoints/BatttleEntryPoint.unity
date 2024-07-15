@@ -164,7 +164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ScenePaths:
   - Assets/App/Scenes/Common.unity
-  - Assets/App/Scenes/Area.unity
+  - Assets/App/Scenes/Field.unity
   - Assets/App/Scenes/Battle.unity
   - Assets/App/Scenes/BattleDebug.unity
 --- !u!1660057539 &9223372036854775807
