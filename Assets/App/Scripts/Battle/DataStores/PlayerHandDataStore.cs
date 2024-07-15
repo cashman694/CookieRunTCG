@@ -2,7 +2,6 @@ using App.Battle.Interfaces.DataStores;
 using System;
 using System.Collections.Generic;
 using UniRx;
-using UnityEngine;
 
 namespace App.Battle.DataStores
 {
@@ -12,7 +11,6 @@ namespace App.Battle.DataStores
         public IEnumerable<string> CardIds => _CardIds;
 
         public bool IsEmpty => _CardIds.Count < 1;
-
         public int Count => _CardIds.Count;
 
         public IObservable<string> OnCardAdded => _CardIds.ObserveAdd().Select(x => x.Value);
@@ -21,7 +19,7 @@ namespace App.Battle.DataStores
         public void AddCard(string cardId)
         {
             _CardIds.Add(cardId);
-            Debug.Log($"{cardId} added to hand");
+            UnityEngine.Debug.Log($"[{cardId}] added to hand");
         }
 
         public bool RemoveCard(string cardId)
@@ -32,7 +30,7 @@ namespace App.Battle.DataStores
             }
 
             _CardIds.Remove(cardId);
-            Debug.Log($"{cardId} removed from hand");
+            UnityEngine.Debug.Log($"[{cardId}] removed from hand");
 
             return true;
         }

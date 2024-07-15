@@ -2,7 +2,9 @@ using App.Battle.Interfaces.Views;
 using App.Battle.Presenters;
 using App.Common.Data.MasterData;
 using DG.Tweening;
+using System;
 using TMPro;
+using UniRx;
 using UnityEngine;
 
 namespace App.Battle.Views
@@ -16,10 +18,14 @@ namespace App.Battle.Views
         [SerializeField] SpriteRenderer Character;
         public PRS originPRS;
         public bool IsEnlarged;
-
-
         private string _CardId;
         public string CardId => _CardId;
+
+        private readonly Subject<string> _OnCardSelected = new();
+        public IObservable<string> OnCardSelected => _OnCardSelected;
+
+        public bool IsSelected => _IsSelected;
+        private bool _IsSelected;
 
         public void Setup(string cardId, CardMasterData cardMasterData)
         {
@@ -40,6 +46,11 @@ namespace App.Battle.Views
         void OnMouseExit()
         {
             PlayerHandPresenter.Inst.CardMouseExit(this);
+        }
+
+        private void OnMouseUpAsButton()
+        {
+            _OnCardSelected.OnNext(_CardId);
         }
 
         void OnMouseUp()
@@ -77,8 +88,14 @@ namespace App.Battle.Views
             transform.rotation = Quaternion.AngleAxis(90, Vector3.forward);
         }
 
+        public void Select(bool isSelected)
+        {
+            _IsSelected = isSelected;
+        }
+
         public void Unspawn()
         {
+            _OnCardSelected.Dispose();
             Destroy(gameObject);
         }
     }

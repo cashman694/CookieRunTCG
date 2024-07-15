@@ -9,12 +9,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using App.Battle.Views;
+using UniRx.Triggers;
+using UniRx;
 
 namespace App.Battle.Presenters
 {
     public class PlayerBattleAreaPresenter : MonoBehaviour, IPlayerBattleAreaPresenter
     {
-        [SerializeField] private Transform[] _CookieCardAreas = new Transform[2];
+        [Header("Cookie")]
+        [SerializeField] private Transform[] _CookieTransforms = new Transform[2];
+        [SerializeField] private SpriteRenderer[] _CookieAreas = new SpriteRenderer[2];
+
+        [Header("Hp")]
         [SerializeField] private Transform[] _HpCardAreas = new Transform[2];
 
         private Func<Transform, IFrontCardView> _FrontCardViewFactory;
@@ -23,6 +29,11 @@ namespace App.Battle.Presenters
         private Func<Transform, IBackCardView> _BackCardViewFactory;
         private Dictionary<int, List<ICardView>> _HpCardViews =
             new() { { 0, new() }, { 1, new() } };
+
+        private readonly Subject<int> _OnCookieAreaSelected = new();
+        public IObservable<int> OnCookieAreaSelected => _OnCookieAreaSelected;
+
+        private readonly CompositeDisposable _Disposables = new();
 
         [Inject]
         private void Construct(
@@ -36,11 +47,33 @@ namespace App.Battle.Presenters
             Assert.IsNotNull(_FrontCardViewFactory);
         }
 
+        private void Start()
+        {
+            Assert.IsTrue(_CookieAreas[0] != null);
+            Assert.IsTrue(_CookieAreas[1] != null);
+
+            _CookieAreas[0].OnMouseUpAsButtonAsObservable()
+                .Subscribe(x =>
+                {
+                    _OnCookieAreaSelected.OnNext(0);
+                    Debug.Log("BattleArea_0 Selected");
+                })
+                .AddTo(_Disposables);
+
+            _CookieAreas[1].OnMouseUpAsButtonAsObservable()
+                .Subscribe(x =>
+                {
+                    _OnCookieAreaSelected.OnNext(1);
+                    Debug.Log("BattleArea_1 Selected");
+                })
+                .AddTo(_Disposables);
+        }
+
         public void AddCookieCard(int areaIndex, string cardId, CardMasterData cardMasterData)
         {
-            Assert.IsFalse(areaIndex < 0 || areaIndex > 1);
+            Assert.IsTrue(areaIndex >= 0 || areaIndex <= _CookieTransforms.Length);
 
-            var areaTransform = _CookieCardAreas[areaIndex];
+            var areaTransform = _CookieTransforms[areaIndex];
             var newCardView = _FrontCardViewFactory.Invoke(areaTransform);
 
             newCardView.Setup(cardId, cardMasterData);
@@ -151,6 +184,12 @@ namespace App.Battle.Presenters
                 cardOrder.SetOriginOrder(++sortingOrder);
                 count++;
             }
+        }
+
+        private void OnDestroy()
+        {
+            _OnCookieAreaSelected.Dispose();
+            _HpCardViews.Clear();
         }
     }
 }

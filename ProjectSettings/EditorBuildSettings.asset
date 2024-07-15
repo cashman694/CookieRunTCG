@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/App/Scenes/Common.unity
     guid: 766460449e1834723a80cff56c536c73
   - enabled: 1
-    path: Assets/App/Scenes/Area.unity
+    path: Assets/App/Scenes/Field.unity
     guid: a32169a2de9d04070a15133318d541a9
   - enabled: 1
     path: Assets/App/Scenes/Battle.unity
