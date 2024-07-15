@@ -16,7 +16,6 @@ namespace App.Battle.UseCases
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
 
         private CompositeDisposable _Disposables;
-        private UniTaskCompletionSource _Utcs;
         private string _SelectedCardId;
 
         [Inject]
@@ -33,23 +32,14 @@ namespace App.Battle.UseCases
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
         }
 
-        public async UniTask Execute()
+        public void Start()
         {
-            if (_Utcs != null)
-            {
-                _Utcs.TrySetCanceled();
-                _Utcs = null;
-            }
-
             if (_Disposables != null)
             {
-                _Disposables.Dispose();
-                _Disposables = null;
+                return;
             }
 
-            _Utcs = new();
             _Disposables = new();
-
             _SelectedCardId = default;
 
             // DEBUG: 마우스 클릭을 통한 쿠키의 등장
@@ -69,7 +59,6 @@ namespace App.Battle.UseCases
 
                     // FIXME: 여기서 "쿠키의 등장"커맨드를 송신하는 식으로..?
                     _PlayerBattleAreaUseCase.ShowCookieCard(areaIndex, _SelectedCardId);
-                    _Utcs.TrySetResult();
                 })
                 .AddTo(_Disposables);
 
@@ -80,27 +69,20 @@ namespace App.Battle.UseCases
                     _PlayerHandPresenter.SelectCard(x);
                 })
                 .AddTo(_Disposables);
-
-            await _Utcs.Task;
-
-            _Disposables.Dispose();
-            _Disposables = null;
-            _Utcs = null;
         }
 
-        public void Dispose()
+        public void Stop()
         {
-            if (_Utcs != null)
-            {
-                _Utcs.TrySetCanceled();
-                _Utcs = null;
-            }
-
             if (_Disposables != null)
             {
                 _Disposables.Dispose();
                 _Disposables = null;
             }
+        }
+
+        public void Dispose()
+        {
+            Stop();
         }
     }
 }
