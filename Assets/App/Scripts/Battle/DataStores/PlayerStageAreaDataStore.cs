@@ -1,3 +1,4 @@
+using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
 using System;
 using UniRx;
@@ -28,6 +29,11 @@ namespace App.Battle.DataStores
             Debug.Log($"{cardId} removed from stage area");
 
             return true;
+        }
+
+        public void SetCardState(CardState cardState)
+        {
+            // TODO: 
         }
 
         public void Dispose()

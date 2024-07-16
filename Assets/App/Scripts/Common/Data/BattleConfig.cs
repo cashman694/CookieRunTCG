@@ -14,5 +14,8 @@ namespace App.Common.Data
 
         [Header("최초 드로우 카드매수")]
         [SerializeField] public int InitialDrawCount = 6;
+
+        [Header("매 턴당 드로우 횟수")]
+        [SerializeField] public int DrawCountEveryTurn = 2;
     }
 }

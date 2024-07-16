@@ -14,6 +14,7 @@ namespace App.BattleDebug
         [SerializeField] private BattleDebugBattleAreaPresenter _BattleDebugBattleAreaPresenter;
         [SerializeField] private BattleDebugStageAreaPresenter _BattleDebugStageAreaPresenter;
         [SerializeField] private BattleDebugSupportAreaPresenter _BattleDebugSupportAreaPresenter;
+        [SerializeField] private BattleDebugPhasePresenter _BattleDebugPhasePresenter;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -23,9 +24,11 @@ namespace App.BattleDebug
             builder.RegisterComponent(_BattleDebugBattleAreaPresenter).AsImplementedInterfaces();
             builder.RegisterComponent(_BattleDebugStageAreaPresenter).AsImplementedInterfaces();
             builder.RegisterComponent(_BattleDebugSupportAreaPresenter).AsImplementedInterfaces();
+            builder.RegisterComponent(_BattleDebugPhasePresenter).AsImplementedInterfaces();
 
             builder.RegisterEntryPoint<BattleDebugUseCase>();
             builder.RegisterEntryPoint<BattleDebugPlayerCardUseCase>();
+            builder.RegisterEntryPoint<BattleDebugPhaseUseCase>();
         }
     }
 }

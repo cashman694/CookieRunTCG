@@ -76,7 +76,12 @@ namespace App.Battle
             builder.RegisterEntryPoint<PlayerStageAreaUseCase>().As<IPlayerStageAreaUseCase>();
             builder.RegisterEntryPoint<PlayerTrashUseCase>();
             builder.RegisterEntryPoint<PlayerSupportAreaUseCase>().As<IPlayerSupportAreaUseCase>();
+
             builder.RegisterEntryPoint<PlayerShowCookieUseCase>().As<IPlayerShowCookieUseCase>();
+            builder.RegisterEntryPoint<BattleActivePhaseUseCase>().As<IBattleActivePhaseUseCase>();
+            builder.RegisterEntryPoint<BattleDrawPhaseUseCase>().As<IBattleDrawPhaseUseCase>();
+            builder.RegisterEntryPoint<BattleSupportPhaseUseCase>().As<IBattleSupportPhaseUseCase>();
+            builder.RegisterEntryPoint<BattleMainPhaseUseCase>().As<IBattleMainPhaseUseCase>();
         }
     }
 }

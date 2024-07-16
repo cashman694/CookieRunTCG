@@ -1,3 +1,4 @@
+using App.Battle.Data;
 using System;
 
 namespace App.Battle.Interfaces.DataStores
@@ -11,5 +12,6 @@ namespace App.Battle.Interfaces.DataStores
 
         void AddCard(string cardId);
         bool RemoveCard();
+        void SetCardState(CardState cardState);
     }
 }

@@ -1,3 +1,4 @@
+using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
@@ -53,7 +54,7 @@ namespace App.Battle.UseCases
             _PlayerStageAreaDataStore.OnCardRemoved
                 .Subscribe(x =>
                 {
-                    _PlayerStageAreaPresenter.RemoveCard(x);
+                    _PlayerStageAreaPresenter.RemoveCard();
                 })
                 .AddTo(_Disposables);
         }
@@ -108,6 +109,28 @@ namespace App.Battle.UseCases
 
             _PlayerStageAreaDataStore.RemoveCard();
             _PlayerTrashDataStore.AddCard(cardId);
+        }
+
+        public void ActiveStageCard()
+        {
+            if (string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
+            {
+                return;
+            }
+
+            _PlayerStageAreaDataStore.SetCardState(CardState.Active);
+            _PlayerStageAreaPresenter.ActiveCard();
+        }
+
+        public void RestStageCard()
+        {
+            if (string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
+            {
+                return;
+            }
+
+            _PlayerStageAreaDataStore.SetCardState(CardState.Rest);
+            _PlayerStageAreaPresenter.RestCard();
         }
 
         public void Dispose()
