@@ -3762,6 +3762,7 @@ MonoBehaviour:
   _StartDrawPhaseButton: {fileID: 777788020}
   _StartSupportPhaseButton: {fileID: 55871720}
   _StartMainPhaseButton: {fileID: 1141846565}
+  _StartMainPhaseText: {fileID: 1200832211}
 --- !u!1 &935983794
 GameObject:
   m_ObjectHideFlags: 0

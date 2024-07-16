@@ -39,8 +39,8 @@ namespace App.Battle.UseCases
 
             _PlayerShowCookieUseCase.Execute(_Cts.Token).Forget();
 
-            // await UniTask.WaitUntil(() => _Cts.IsCancellationRequested);
-            await UniTask.WaitForSeconds(5f, cancellationToken: _Cts.Token);
+            await UniTask.WaitUntil(() => _Cts.IsCancellationRequested);
+            // await UniTask.WaitForSeconds(5f, cancellationToken: _Cts.Token);
 
             _Cts.Cancel();
             _Cts.Dispose();

@@ -2,6 +2,7 @@ using App.Battle.Interfaces.UseCases;
 using App.BattleDebug.Interfaces.Presenters;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 using UniRx;
 using VContainer;
 using VContainer.Unity;
@@ -76,12 +77,22 @@ namespace App.BattleDebug.UseCases
             _DebugPhasePresenter.SetStartSupportButtonInteractable(true);
         }
 
+        private CancellationTokenSource _Cts;
         private async UniTask ExecuteMainPhase()
         {
-            _DebugPhasePresenter.SetStartMainButtonInteractable(false);
-            await _MainPhaseUseCase.Execute(new());
+            if (_Cts != null)
+            {
+                _Cts.Cancel();
+                _Cts.Dispose();
+                _Cts = null;
 
-            _DebugPhasePresenter.SetStartMainButtonInteractable(true);
+                _DebugPhasePresenter.SetStartMainButtonState(true);
+                return;
+            }
+
+            _Cts = new();
+            _DebugPhasePresenter.SetStartMainButtonState(false);
+            await _MainPhaseUseCase.Execute(_Cts.Token);
         }
 
         public void Dispose()

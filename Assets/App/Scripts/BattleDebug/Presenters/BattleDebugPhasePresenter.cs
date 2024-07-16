@@ -1,5 +1,6 @@
 using App.BattleDebug.Interfaces.Presenters;
 using System;
+using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ namespace App.BattleDebug.Presenters
         [SerializeField] private Button _StartDrawPhaseButton;
         [SerializeField] private Button _StartSupportPhaseButton;
         [SerializeField] private Button _StartMainPhaseButton;
+        [SerializeField] private TMP_Text _StartMainPhaseText;
 
         private readonly Subject<Unit> _OnRequestStartActivePhase = new();
         public IObservable<Unit> OnRequestStartActivePhase => _OnRequestStartActivePhase;
@@ -74,9 +76,9 @@ namespace App.BattleDebug.Presenters
             _StartSupportPhaseButton.interactable = value;
         }
 
-        public void SetStartMainButtonInteractable(bool value)
+        public void SetStartMainButtonState(bool value)
         {
-            _StartMainPhaseButton.interactable = value;
+            _StartMainPhaseText.text = value ? "StartMain" : "StopMain";
         }
 
         public void Dispose()
