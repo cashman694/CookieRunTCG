@@ -15,3 +15,4 @@ MonoBehaviour:
   DeckCount: 60
   BattleAreaSize: 2
   InitialDrawCount: 6
+  DrawCountEveryTurn: 2

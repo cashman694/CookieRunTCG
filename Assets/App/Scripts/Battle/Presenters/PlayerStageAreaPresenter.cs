@@ -1,10 +1,7 @@
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
-using App.Battle.Views;
 using App.Common.Data.MasterData;
-using Cysharp.Threading.Tasks;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VContainer;
@@ -37,10 +34,35 @@ namespace App.Battle.Presenters
             _CardView.Setup(cardId, cardMasterData);
         }
 
-        public void RemoveCard(string cardId)
+        public void RemoveCard()
         {
-            _CardView?.Unspawn();
+            if (_CardView == null)
+            {
+                return;
+            }
+
+            _CardView.Unspawn();
             _CardView = null;
+        }
+
+        public void ActiveCard()
+        {
+            if (_CardView == null)
+            {
+                return;
+            }
+
+            _CardView.Active();
+        }
+
+        public void RestCard()
+        {
+            if (_CardView == null)
+            {
+                return;
+            }
+
+            _CardView.Rest();
         }
 
         private void OnDestroy()

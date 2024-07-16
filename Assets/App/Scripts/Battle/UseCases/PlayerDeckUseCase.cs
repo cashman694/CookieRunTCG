@@ -84,18 +84,21 @@ namespace App.Battle.UseCases
         }
 
         /// <summary>
-        /// 덱에서 카드를 한장 손으로 가져간다
+        /// 덱에서 카드를 한장 패로 가져간다
+        /// 덱에 카드가 없거나 드로우가 불가능할 경우 false
         /// </summary>
-        public void DrawCard()
+        /// <returns></returns>
+        public bool DrawCard()
         {
             if (_PlayerDeckDataStore.IsEmpty)
             {
-                return;
+                return false;
             }
 
             // TODO: 드로우페이즈인지 아닌지 체크하기
             var cardId = _PlayerDeckDataStore.RemoveFirstCard();
             _PlayerHandDataStore.AddCard(cardId);
+            return true;
         }
 
         /// <summary>

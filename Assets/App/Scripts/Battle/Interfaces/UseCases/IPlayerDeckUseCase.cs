@@ -4,7 +4,7 @@ namespace App.Battle.Interfaces.UseCases
     {
         void Build();
         void InitialDraw();
-        void DrawCard();
+        bool DrawCard();
         void Mulligan();
     }
 }

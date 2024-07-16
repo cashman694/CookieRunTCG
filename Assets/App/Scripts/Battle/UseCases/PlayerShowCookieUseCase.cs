@@ -3,6 +3,7 @@ using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 using UniRx;
 using VContainer;
 
@@ -15,6 +16,7 @@ namespace App.Battle.UseCases
         private readonly IPlayerHandPresenter _PlayerHandPresenter;
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
 
+        private CancellationTokenSource _Cts;
         private CompositeDisposable _Disposables;
         private string _SelectedCardId;
 
@@ -32,12 +34,21 @@ namespace App.Battle.UseCases
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
         }
 
-        public void Start()
+        // 패에서 카드를 선택하여 배틀에리어에 등장시킨다
+        public async UniTask Execute(CancellationToken token)
         {
             if (_Disposables != null)
             {
                 return;
             }
+
+            if (_Cts != null)
+            {
+                _Cts.Cancel();
+                _Cts.Dispose();
+            }
+
+            _Cts = CancellationTokenSource.CreateLinkedTokenSource(token);
 
             _Disposables = new();
             _SelectedCardId = default;
@@ -69,20 +80,21 @@ namespace App.Battle.UseCases
                     _PlayerHandPresenter.SelectCard(x);
                 })
                 .AddTo(_Disposables);
-        }
 
-        public void Stop()
-        {
-            if (_Disposables != null)
-            {
-                _Disposables.Dispose();
-                _Disposables = null;
-            }
+            await UniTask.WaitUntil(() => _Cts.IsCancellationRequested);
+
+            _Disposables.Dispose();
+            _Disposables = null;
+            _Cts = null;
         }
 
         public void Dispose()
         {
-            Stop();
+            _Disposables?.Dispose();
+            _Disposables = null;
+
+            _Cts?.Cancel();
+            _Cts?.Dispose();
         }
     }
 }
