@@ -11,47 +11,50 @@ namespace App.Battle.UseCases
         private readonly BattleConfig _BattleConfig;
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
         private readonly IPlayerShowCookieUseCase _PlayerShowCookieUseCase;
+        private readonly IPlayerUseStageUseCase _PlayerUseStageUseCase;
         private CancellationTokenSource _Cts;
 
         public BattleMainPhaseUseCase(
             BattleConfig battleConfig,
             IPlayerBattleAreaUseCase playerBattleAreaUseCase,
-            IPlayerShowCookieUseCase playerShowCookieUseCase
+            IPlayerShowCookieUseCase playerShowCookieUseCase,
+            IPlayerUseStageUseCase playerUseStageUseCase
         )
         {
             _BattleConfig = battleConfig;
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
             _PlayerShowCookieUseCase = playerShowCookieUseCase;
+            _PlayerUseStageUseCase = playerUseStageUseCase;
         }
 
         // 자신의 레스트 상태의 카드를 전부 액티브로 돌린다
+        // 실행 중인 태스크를 취소하거나 Dispose로 정지
         public async UniTask Execute(CancellationToken token)
         {
             UnityEngine.Debug.Log($"{nameof(BattleMainPhaseUseCase)} Executed");
 
+            // 실행 중에 불리면 리턴
             if (_Cts != null)
             {
-                _Cts.Cancel();
-                _Cts.Dispose();
+                return;
             }
 
             _Cts = CancellationTokenSource.CreateLinkedTokenSource(token);
 
             _PlayerShowCookieUseCase.Execute(_Cts.Token).Forget();
+            _PlayerUseStageUseCase.Execute(_Cts.Token).Forget();
 
             await UniTask.WaitUntil(() => _Cts.IsCancellationRequested);
-            // await UniTask.WaitForSeconds(5f, cancellationToken: _Cts.Token);
 
-            _Cts.Cancel();
             _Cts.Dispose();
             _Cts = null;
 
             UnityEngine.Debug.Log($"{nameof(BattleMainPhaseUseCase)} Done");
         }
+
         public void Dispose()
         {
             _Cts?.Cancel();
-            _Cts?.Dispose();
         }
     }
 }

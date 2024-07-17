@@ -4,7 +4,7 @@ namespace App.Battle.Interfaces.UseCases
     {
         void TestShowStageCard();
         void ShowStageCard(string cardId);
-        void RemoveStageCard();
+        void SendToTrash();
         void ActiveStageCard();
         void RestStageCard();
     }

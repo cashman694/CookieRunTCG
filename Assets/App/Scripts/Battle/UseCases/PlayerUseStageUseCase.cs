@@ -5,35 +5,34 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
 using UniRx;
-using VContainer;
 
 namespace App.Battle.UseCases
 {
-    public class PlayerShowCookieUseCase : IPlayerShowCookieUseCase, IDisposable
+    public class PlayerUseStageUseCase : IPlayerUseStageUseCase, IDisposable
     {
-        private readonly IPlayerBattleAreaDataStore _PlayerBattleAreaDataStore;
-        private readonly IPlayerBattleAreaPresenter _PlayerBattleAreaPresenter;
+        private readonly IPlayerStageAreaDataStore _PlayerStageAreaDataStore;
+        private readonly IPlayerStageAreaPresenter _PlayerStageAreaPresenter;
         private readonly IPlayerHandPresenter _PlayerHandPresenter;
-        private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
+        private readonly IPlayerTrashPresenter _PlayerTrashPresenter;
+        private readonly IPlayerStageAreaUseCase _PlayerStageAreaUseCase;
 
         private CancellationTokenSource _Cts;
 
-        [Inject]
-        public PlayerShowCookieUseCase(
-            IPlayerBattleAreaDataStore playerBattleAreaDataStore,
-            IPlayerBattleAreaPresenter playerBattleAreaPresenter,
+        public PlayerUseStageUseCase(
+            IPlayerStageAreaDataStore playerStageAreaDataStore,
+            IPlayerStageAreaPresenter playerStageAreaPresenter,
             IPlayerHandPresenter playerHandPresenter,
-            IPlayerBattleAreaUseCase playerBattleAreaUseCase
+            IPlayerTrashPresenter playerTrashPresenter,
+            IPlayerStageAreaUseCase playerStageAreaUseCase
         )
         {
-            _PlayerBattleAreaDataStore = playerBattleAreaDataStore;
-            _PlayerBattleAreaPresenter = playerBattleAreaPresenter;
+            _PlayerStageAreaDataStore = playerStageAreaDataStore;
+            _PlayerStageAreaPresenter = playerStageAreaPresenter;
             _PlayerHandPresenter = playerHandPresenter;
-            _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
+            _PlayerTrashPresenter = playerTrashPresenter;
+            _PlayerStageAreaUseCase = playerStageAreaUseCase;
         }
 
-        // 패에서 카드를 선택하여 배틀에리어에 등장시킨다
-        // 실행 중인 태스크를 취소하거나 Dispose로 정지
         public async UniTask Execute(CancellationToken token)
         {
             // 실행 중에 불리면 리턴
@@ -47,12 +46,12 @@ namespace App.Battle.UseCases
             CompositeDisposable _Disposables = new();
             string _SelectedCardId = default;
 
-            // 마우스 클릭을 통한 쿠키의 등장
-            _PlayerBattleAreaPresenter.OnCookieAreaSelected
-                .Subscribe(areaIndex =>
+            // 마우스 클릭을 통한 스테이지의 사용
+            _PlayerStageAreaPresenter.OnAreaSelected
+                .Subscribe(_ =>
                 {
-                    // 이미 쿠키가 등장한 에리어는 불가
-                    if (_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var card))
+                    // 스테이지가 존재하면 내려놓을 수 없다
+                    if (!string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
                     {
                         return;
                     }
@@ -62,8 +61,7 @@ namespace App.Battle.UseCases
                         return;
                     }
 
-                    // FIXME: 여기서 "쿠키의 등장"커맨드를 송신하는 식으로..?
-                    _PlayerBattleAreaUseCase.ShowCookieCard(areaIndex, _SelectedCardId);
+                    _PlayerStageAreaUseCase.ShowStageCard(_SelectedCardId);
                 })
                 .AddTo(_Disposables);
 
@@ -71,9 +69,10 @@ namespace App.Battle.UseCases
                 .Subscribe(x =>
                 {
                     _SelectedCardId = x;
-                    _PlayerHandPresenter.SelectCard(x);
                 })
                 .AddTo(_Disposables);
+
+            // TODO: 스테이지의 카드를 트래쉬로 보낸다. UI가 필요
 
             await UniTask.WaitUntil(() => _Cts.IsCancellationRequested);
 

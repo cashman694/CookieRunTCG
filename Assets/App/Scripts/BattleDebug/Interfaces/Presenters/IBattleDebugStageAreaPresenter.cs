@@ -6,6 +6,6 @@ namespace App.BattleDebug.Interfaces.Presenters
     public interface IBattleDebugStageAreaPresenter
     {
         IObservable<Unit> OnRequestShowStageCard { get; }
-        IObservable<Unit> OnRequestRemoveStageCard { get; }
+        IObservable<Unit> OnRequestSendToTrash { get; }
     }
 }
