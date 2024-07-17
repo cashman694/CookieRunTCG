@@ -3563,7 +3563,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: RemoveStage
+  m_text: SendToTrash
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 55d5ae05437f14a4aac8cef1681517cb, type: 2}
   m_sharedMaterial: {fileID: 7268555141797242002, guid: 55d5ae05437f14a4aac8cef1681517cb, type: 2}
@@ -3730,7 +3730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ShowStageButton: {fileID: 683780004}
-  _RemoveStageButton: {fileID: 1921504732}
+  _SendToTrashButton: {fileID: 1921504732}
 --- !u!114 &923362126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7297,7 +7297,7 @@ GameObject:
   - component: {fileID: 1921504733}
   - component: {fileID: 1921504732}
   m_Layer: 5
-  m_Name: RemoveStageButton
+  m_Name: SendToTrashButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

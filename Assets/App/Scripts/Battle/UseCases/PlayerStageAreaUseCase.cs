@@ -98,7 +98,7 @@ namespace App.Battle.UseCases
         /// <summary>
         /// 스테이지에리어의 카드를 트래쉬로 보낸다
         /// </summary>
-        public void RemoveStageCard()
+        public void SendToTrash()
         {
             if (string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
             {

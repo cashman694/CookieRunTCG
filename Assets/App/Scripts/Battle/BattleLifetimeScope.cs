@@ -77,7 +77,10 @@ namespace App.Battle
             builder.RegisterEntryPoint<PlayerTrashUseCase>();
             builder.RegisterEntryPoint<PlayerSupportAreaUseCase>().As<IPlayerSupportAreaUseCase>();
 
+            // 메인페이즈의 각 행동
             builder.RegisterEntryPoint<PlayerShowCookieUseCase>().As<IPlayerShowCookieUseCase>();
+            builder.RegisterEntryPoint<PlayerUseStageUseCase>().As<IPlayerUseStageUseCase>();
+
             builder.RegisterEntryPoint<BattleActivePhaseUseCase>().As<IBattleActivePhaseUseCase>();
             builder.RegisterEntryPoint<BattleDrawPhaseUseCase>().As<IBattleDrawPhaseUseCase>();
             builder.RegisterEntryPoint<BattleSupportPhaseUseCase>().As<IBattleSupportPhaseUseCase>();

@@ -10,13 +10,13 @@ namespace App.BattleDebug.Presenters
     public class BattleDebugStageAreaPresenter : MonoBehaviour, IBattleDebugStageAreaPresenter, IInitializable
     {
         [SerializeField] private Button _ShowStageButton;
-        [SerializeField] private Button _RemoveStageButton;
+        [SerializeField] private Button _SendToTrashButton;
 
         private readonly Subject<Unit> _OnRequestShowStageCard = new();
         public IObservable<Unit> OnRequestShowStageCard => _OnRequestShowStageCard;
 
-        private readonly Subject<Unit> _OnRequestRemoveStageCard = new();
-        public IObservable<Unit> OnRequestRemoveStageCard => _OnRequestRemoveStageCard;
+        private readonly Subject<Unit> _OnRequestSendToTrash = new();
+        public IObservable<Unit> OnRequestSendToTrash => _OnRequestSendToTrash;
 
         private readonly CompositeDisposable _Disposables = new();
 
@@ -26,8 +26,8 @@ namespace App.BattleDebug.Presenters
                 .Subscribe(_ => _OnRequestShowStageCard.OnNext(Unit.Default))
                 .AddTo(_Disposables);
 
-            _RemoveStageButton.OnClickAsObservable()
-                .Subscribe(_ => _OnRequestRemoveStageCard.OnNext(Unit.Default))
+            _SendToTrashButton.OnClickAsObservable()
+                .Subscribe(_ => _OnRequestSendToTrash.OnNext(Unit.Default))
                 .AddTo(_Disposables);
         }
 

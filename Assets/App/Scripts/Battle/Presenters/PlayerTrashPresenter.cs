@@ -5,6 +5,8 @@ using App.Common.Data.MasterData;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VContainer;
@@ -13,8 +15,15 @@ namespace App.Battle.Presenters
 {
     public class PlayerTrashPresenter : MonoBehaviour, IPlayerTrashPresenter
     {
+        [SerializeField] private SpriteRenderer _Trash;
+
         private Func<Transform, IFrontCardView> _CardViewFactory;
         private readonly Dictionary<string, IFrontCardView> _CardViews = new();
+
+        private readonly Subject<Unit> _OnTrashSelected = new();
+        public IObservable<Unit> OnTrashSelected => _OnTrashSelected;
+
+        private readonly CompositeDisposable _Disposables = new();
 
         [Inject]
         private void Construct(
@@ -24,6 +33,19 @@ namespace App.Battle.Presenters
             _CardViewFactory = cardViewFactory;
 
             Assert.IsNotNull(_CardViewFactory);
+        }
+
+        private void Start()
+        {
+            Assert.IsTrue(_Trash != null);
+
+            _Trash.OnMouseUpAsButtonAsObservable()
+                .Subscribe(x =>
+                {
+                    _OnTrashSelected.OnNext(Unit.Default);
+                    Debug.Log("Trash Selected");
+                })
+                .AddTo(_Disposables);
         }
 
         public void AddCard(string cardId, CardMasterData cardMasterData)
@@ -75,6 +97,9 @@ namespace App.Battle.Presenters
 
         private void OnDestroy()
         {
+            _OnTrashSelected.Dispose();
+            _Disposables.Dispose();
+
             _CardViews.Clear();
         }
     }
