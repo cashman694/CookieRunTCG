@@ -12,6 +12,7 @@ namespace App.BattleDebug.UseCases
     public class BattleDebugPhaseUseCase : IInitializable, IDisposable
     {
         private readonly IBattleDebugPhasePresenter _DebugPhasePresenter;
+        private readonly IBattlePreparingUseCase _BattlePreparingUseCase;
         private readonly IBattleActivePhaseUseCase _ActivePhaseUseCase;
         private readonly IBattleDrawPhaseUseCase _DrawPhaseUseCase;
         private readonly IBattleSupportPhaseUseCase _SupportPhaseUseCase;
@@ -21,6 +22,7 @@ namespace App.BattleDebug.UseCases
         [Inject]
         public BattleDebugPhaseUseCase(
             IBattleDebugPhasePresenter debugPhasePresenter,
+            IBattlePreparingUseCase battlePreparingUseCase,
             IBattleActivePhaseUseCase activePhaseUseCase,
             IBattleDrawPhaseUseCase drawPhaseUseCase,
             IBattleSupportPhaseUseCase supportPhaseUseCase,
@@ -28,6 +30,7 @@ namespace App.BattleDebug.UseCases
         )
         {
             _DebugPhasePresenter = debugPhasePresenter;
+            _BattlePreparingUseCase = battlePreparingUseCase;
             _ActivePhaseUseCase = activePhaseUseCase;
             _DrawPhaseUseCase = drawPhaseUseCase;
             _SupportPhaseUseCase = supportPhaseUseCase;
@@ -36,6 +39,10 @@ namespace App.BattleDebug.UseCases
 
         public void Initialize()
         {
+            _DebugPhasePresenter.OnRequestStartPreparing
+                .Subscribe(_ => ExecutePreparing().Forget())
+                .AddTo(_Disposables);
+
             _DebugPhasePresenter.OnRequestStartActivePhase
                 .Subscribe(_ => ExecuteActivePhase().Forget())
                 .AddTo(_Disposables);
@@ -51,6 +58,14 @@ namespace App.BattleDebug.UseCases
             _DebugPhasePresenter.OnRequestStartMainPhase
                 .Subscribe(_ => ExecuteMainPhase().Forget())
                 .AddTo(_Disposables);
+        }
+
+        private async UniTask ExecutePreparing()
+        {
+            _DebugPhasePresenter.SetStartPreparingButtonInteractable(false);
+
+            await _BattlePreparingUseCase.Execute(new());
+            _DebugPhasePresenter.SetStartPreparingButtonInteractable(true);
         }
 
         private async UniTask ExecuteActivePhase()

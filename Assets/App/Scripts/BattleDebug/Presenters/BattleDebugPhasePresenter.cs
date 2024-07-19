@@ -10,11 +10,15 @@ namespace App.BattleDebug.Presenters
 {
     public class BattleDebugPhasePresenter : MonoBehaviour, IBattleDebugPhasePresenter, IInitializable, IDisposable
     {
+        [SerializeField] private Button _StartPreparingButton;
         [SerializeField] private Button _StartActivePhaseButton;
         [SerializeField] private Button _StartDrawPhaseButton;
         [SerializeField] private Button _StartSupportPhaseButton;
         [SerializeField] private Button _StartMainPhaseButton;
         [SerializeField] private TMP_Text _StartMainPhaseText;
+
+        private readonly Subject<Unit> _OnRequestStartPreparing = new();
+        public IObservable<Unit> OnRequestStartPreparing => _OnRequestStartPreparing;
 
         private readonly Subject<Unit> _OnRequestStartActivePhase = new();
         public IObservable<Unit> OnRequestStartActivePhase => _OnRequestStartActivePhase;
@@ -32,6 +36,13 @@ namespace App.BattleDebug.Presenters
 
         public void Initialize()
         {
+            _StartPreparingButton.OnClickAsObservable()
+                .Subscribe(_ =>
+                {
+                    _OnRequestStartPreparing.OnNext(Unit.Default);
+                })
+                .AddTo(_Disposables);
+
             _StartActivePhaseButton.OnClickAsObservable()
                 .Subscribe(_ =>
                 {
@@ -59,6 +70,11 @@ namespace App.BattleDebug.Presenters
                     _OnRequestStartMainPhase.OnNext(Unit.Default);
                 })
                 .AddTo(_Disposables);
+        }
+
+        public void SetStartPreparingButtonInteractable(bool value)
+        {
+            _StartPreparingButton.interactable = value;
         }
 
         public void SetStartActiveButtonInteractable(bool value)

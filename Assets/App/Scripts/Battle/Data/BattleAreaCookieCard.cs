@@ -9,10 +9,11 @@ namespace App.Battle.Data
         public CardMasterData CardMasterData { get; }
         public CardState CardState { get; private set; }
 
-        public BattleAreaCookieCard(string id, CardMasterData cardMasterData)
+        public BattleAreaCookieCard(string id, CardMasterData cardMasterData, CardState cardState)
         {
             Id = id;
             CardMasterData = cardMasterData;
+            CardState = cardState;
         }
 
         public void SetState(CardState cardState)
