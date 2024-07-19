@@ -134,7 +134,7 @@ namespace App.BattleDebug.UseCases
                 })
                 .AddTo(_Disposables);
 
-            _PlayerBattleAreaDataStore.OnCookieCardSet
+            _PlayerBattleAreaDataStore.OnCookieCardAdded
                 .Subscribe(x =>
                 {
                     var cardData = _PlayerCardDataStore.GetCardBy(x.cardId);
@@ -161,7 +161,7 @@ namespace App.BattleDebug.UseCases
                 })
                 .AddTo(_Disposables);
 
-            _PlayerBattleAreaDataStore.OnCookieCardUnset
+            _PlayerBattleAreaDataStore.OnCookieCardRemoved
                 .Subscribe(x =>
                 {
                     if (x.index == 0)

@@ -16,10 +16,10 @@ namespace App.Battle.DataStores
         private readonly int _MaxCount;
         public int MaxCount => _MaxCount;
 
-        public IObservable<(int index, string cardId)> OnCookieCardSet =>
+        public IObservable<(int index, string cardId)> OnCookieCardAdded =>
             _CookieCards.ObserveAdd().Select(x => (x.Key, x.Value.Id));
 
-        public IObservable<(int index, string cardId)> OnCookieCardUnset =>
+        public IObservable<(int index, string cardId)> OnCookieCardRemoved =>
             _CookieCards.ObserveRemove().Select(x => (x.Key, x.Value.Id));
 
         private readonly Subject<(int index, string cardId)> _OnHpCardAdded = new();
@@ -54,11 +54,11 @@ namespace App.Battle.DataStores
             return !_CookieCards.ContainsKey(index);
         }
 
-        public BattleAreaCookieCard AddCookieCard(int index, string cardId, CardMasterData cardMasterData)
+        public BattleAreaCookieCard AddCookieCard(int index, string cardId, CardMasterData cardMasterData, CardState cardState)
         {
             Assert.IsFalse(_CookieCards.ContainsKey(index));
 
-            var card = new BattleAreaCookieCard(cardId, cardMasterData);
+            var card = new BattleAreaCookieCard(cardId, cardMasterData, cardState);
             _CookieCards.Add(index, card);
 
             UnityEngine.Debug.Log($"{cardId} added to BattleArea[{index}]");

@@ -11,6 +11,7 @@ using Cysharp.Threading.Tasks;
 using App.Battle.Views;
 using UniRx.Triggers;
 using UniRx;
+using App.Battle.Data;
 
 namespace App.Battle.Presenters
 {
@@ -24,7 +25,7 @@ namespace App.Battle.Presenters
         [SerializeField] private Transform[] _HpCardAreas = new Transform[2];
 
         private Func<Transform, IFrontCardView> _FrontCardViewFactory;
-        private IFrontCardView[] _CookieCardViews = new IFrontCardView[2];
+        private ICardView[] _CookieCardViews = new ICardView[2];
 
         private Func<Transform, IBackCardView> _BackCardViewFactory;
         private Dictionary<int, List<ICardView>> _HpCardViews =
@@ -69,9 +70,32 @@ namespace App.Battle.Presenters
                 .AddTo(_Disposables);
         }
 
-        public void AddCookieCard(int areaIndex, string cardId, CardMasterData cardMasterData)
+        public void AddCookieCard(int areaIndex, string cardId, CardMasterData cardMasterData, CardState cardState)
         {
             Assert.IsTrue(areaIndex >= 0 || areaIndex <= _CookieTransforms.Length);
+
+            var areaTransform = _CookieTransforms[areaIndex];
+
+            if (cardState == CardState.FaceDown)
+            {
+                var newCardView = _BackCardViewFactory.Invoke(areaTransform);
+                _CookieCardViews[areaIndex] = newCardView;
+            }
+            else
+            {
+                var newCardView = _FrontCardViewFactory.Invoke(areaTransform);
+
+                newCardView.Setup(cardId, cardMasterData);
+                _CookieCardViews[areaIndex] = newCardView;
+            }
+        }
+
+        public void FlipCookieCard(int areaIndex, string cardId, CardMasterData cardMasterData)
+        {
+            if (!RemoveCookieCard(areaIndex))
+            {
+                return;
+            }
 
             var areaTransform = _CookieTransforms[areaIndex];
             var newCardView = _FrontCardViewFactory.Invoke(areaTransform);
@@ -80,17 +104,19 @@ namespace App.Battle.Presenters
             _CookieCardViews[areaIndex] = newCardView;
         }
 
-        public void RemoveCookieCard(int areaIndex)
+        public bool RemoveCookieCard(int areaIndex)
         {
             var cardView = _CookieCardViews[areaIndex];
 
             if (cardView == null)
             {
-                return;
+                return false;
             }
 
             _CookieCardViews[areaIndex] = null;
             cardView.Unspawn();
+
+            return true;
         }
 
         public void ActiveCookieCard(int areaIndex)
@@ -102,7 +128,12 @@ namespace App.Battle.Presenters
                 return;
             }
 
-            cardView.Active();
+            if (cardView is not IFrontCardView frontCardView)
+            {
+                return;
+            }
+
+            frontCardView.Active();
         }
 
         public void RestCookieCard(int areaIndex)
@@ -114,7 +145,12 @@ namespace App.Battle.Presenters
                 return;
             }
 
-            cardView.Rest();
+            if (cardView is not IFrontCardView frontCardView)
+            {
+                return;
+            }
+
+            frontCardView.Rest();
         }
 
         public void AddHpCard(int areaIndex, string cardId)
@@ -148,7 +184,7 @@ namespace App.Battle.Presenters
             return true;
         }
 
-        public void FlipCard(int areaIndex, string cardId, CardMasterData cardMasterData)
+        public void FlipHpCard(int areaIndex, string cardId, CardMasterData cardMasterData)
         {
             if (!RemoveHpCard(areaIndex))
             {

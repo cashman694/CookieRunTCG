@@ -2,6 +2,7 @@ using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
+using App.Common.Data;
 using Cysharp.Threading.Tasks;
 using System;
 using UniRx;
@@ -46,20 +47,19 @@ namespace App.Battle.UseCases
 
         public void Initialize()
         {
-            _PlayerBattleAreaDataStore.OnCookieCardSet
+            _PlayerBattleAreaDataStore.OnCookieCardAdded
                 .Subscribe(x =>
                 {
-                    var cardData = _PlayerCardDataStore.GetCardBy(x.cardId);
-                    if (cardData == null)
+                    if (!_PlayerBattleAreaDataStore.TryGetCookieCard(x.index, out var cardData))
                     {
                         return;
                     }
 
-                    _PlayerBattleAreaPresenter.AddCookieCard(x.index, x.cardId, cardData.CardMasterData);
+                    _PlayerBattleAreaPresenter.AddCookieCard(x.index, x.cardId, cardData.CardMasterData, cardData.CardState);
                 })
                 .AddTo(_Disposables);
 
-            _PlayerBattleAreaDataStore.OnCookieCardUnset
+            _PlayerBattleAreaDataStore.OnCookieCardRemoved
                 .Subscribe(x =>
                 {
                     _PlayerBattleAreaPresenter.RemoveCookieCard(x.index);
@@ -117,6 +117,66 @@ namespace App.Battle.UseCases
             else
             {
                 ActiveCookieCard(areaIndex);
+            }
+        }
+
+        /// <summary>
+        /// 패에서 지정한 카드를 지정한 배틀에리어에 뒷면으로 놓는다
+        /// 준비단계에서 실행
+        /// </summary>
+        /// <param name="areaIndex"></param>
+        /// <param name="cardId"></param>
+        public void SetCookieCard(int areaIndex, string cardId)
+        {
+            var card = _PlayerCardDataStore.GetCardBy(cardId);
+
+            if (card == null)
+            {
+                return;
+            }
+
+            if (_PlayerHandDataStore.IsEmpty)
+            {
+                return;
+            }
+
+            if (!_PlayerBattleAreaDataStore.IsEmpty(areaIndex))
+            {
+                return;
+            }
+
+            if (!_PlayerHandDataStore.RemoveCard(cardId))
+            {
+                return;
+            }
+
+            _PlayerBattleAreaDataStore.AddCookieCard(areaIndex, card.Id, card.CardMasterData, CardState.FaceDown);
+        }
+
+        /// <summary>
+        /// 배틀에리어에 뒷면으로 놓여진 쿠키카드를 플립힌다
+        /// </summary>
+        /// <param name="areaIndex"></param>
+        public void FlipCookieCard()
+        {
+            for (var areaIndex = 0; areaIndex < _PlayerBattleAreaDataStore.MaxCount; areaIndex++)
+            {
+                if (!_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var cookie))
+                {
+                    continue;
+                }
+
+                if (cookie.CardState != CardState.FaceDown)
+                {
+                    continue;
+                }
+
+                _PlayerBattleAreaPresenter.FlipCookieCard(areaIndex, cookie.Id, cookie.CardMasterData);
+
+                for (var i = 0; i < cookie.CardMasterData.Hp; i++)
+                {
+                    AddHpCard(areaIndex);
+                }
             }
         }
 
@@ -234,7 +294,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            _PlayerBattleAreaPresenter.FlipCard(areaIndex, card.Id, card.CardMasterData);
+            _PlayerBattleAreaPresenter.FlipHpCard(areaIndex, card.Id, card.CardMasterData);
         }
 
         /// <summary>

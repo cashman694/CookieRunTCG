@@ -31,8 +31,11 @@ namespace App.Battle
 
         [Header("Player Stage Area")]
         [SerializeField] private PlayerStageAreaPresenter _PlayerStageAreaPresenter;
+
         [Header("Player Trash")]
         [SerializeField] private PlayerTrashPresenter _PlayerTrashPresenter;
+
+        [SerializeField] private PlayerMulliganPresenter _PlayerMulliganPresenter;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -66,6 +69,8 @@ namespace App.Battle
             builder.Register<PlayerTrashDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerTrashPresenter).As<IPlayerTrashPresenter>();
 
+            builder.RegisterComponent(_PlayerMulliganPresenter).AsImplementedInterfaces();
+
             builder.Register<PlayerSupportAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
 
             builder.RegisterEntryPoint<PlayerCardUseCase>().As<IPlayerCardUseCase>();
@@ -80,6 +85,10 @@ namespace App.Battle
             // 메인페이즈의 각 행동
             builder.RegisterEntryPoint<PlayerShowCookieUseCase>().As<IPlayerShowCookieUseCase>();
             builder.RegisterEntryPoint<PlayerUseStageUseCase>().As<IPlayerUseStageUseCase>();
+            builder.RegisterEntryPoint<PlayerMulliganUseCase>().As<IPlayerMulliganUseCase>();
+            builder.RegisterEntryPoint<PlayerSetCookieUseCase>().As<IPlayerSetCookieUseCase>();
+
+            builder.RegisterEntryPoint<BattlePreparingUseCase>().As<IBattlePreparingUseCase>();
 
             builder.RegisterEntryPoint<BattleActivePhaseUseCase>().As<IBattleActivePhaseUseCase>();
             builder.RegisterEntryPoint<BattleDrawPhaseUseCase>().As<IBattleDrawPhaseUseCase>();

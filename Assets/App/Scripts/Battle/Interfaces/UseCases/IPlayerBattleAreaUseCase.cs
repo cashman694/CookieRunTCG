@@ -5,6 +5,9 @@ namespace App.Battle.Interfaces.UseCases
         void TestShowCookieCard(int areaIndex);
         void TestSwitchBattleAreaState(int areaIndex);
 
+        void SetCookieCard(int areaIndex, string cardId);
+        void FlipCookieCard();
+
         void ShowCookieCard(int areaIndex, string cardId);
         void ActiveCookieCard(int areaIndex);
         void RestCookieCard(int areaIndex);

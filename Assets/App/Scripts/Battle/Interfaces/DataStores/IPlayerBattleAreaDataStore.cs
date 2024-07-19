@@ -7,12 +7,12 @@ namespace App.Battle.Interfaces.DataStores
     public interface IPlayerBattleAreaDataStore
     {
         int MaxCount { get; }
-        IObservable<(int index, string cardId)> OnCookieCardSet { get; }
-        IObservable<(int index, string cardId)> OnCookieCardUnset { get; }
+        IObservable<(int index, string cardId)> OnCookieCardAdded { get; }
+        IObservable<(int index, string cardId)> OnCookieCardRemoved { get; }
 
         bool TryGetCookieCard(int index, out BattleAreaCookieCard card);
         bool IsEmpty(int index);
-        BattleAreaCookieCard AddCookieCard(int index, string cardId, CardMasterData cardMasterData);
+        BattleAreaCookieCard AddCookieCard(int index, string cardId, CardMasterData cardMasterData, CardState cardState = CardState.Active);
         void RemoveCookieCard(int index);
         void SetCardState(int index, CardState cardState);
 
