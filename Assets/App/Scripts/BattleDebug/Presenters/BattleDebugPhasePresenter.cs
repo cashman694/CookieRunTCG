@@ -1,4 +1,4 @@
-using App.BattleDebug.Interfaces.Presenters;
+ï»¿using App.BattleDebug.Interfaces.Presenters;
 using System;
 using TMPro;
 using UniRx;
@@ -17,7 +17,7 @@ namespace App.BattleDebug.Presenters
         [SerializeField] private Button _StartMainPhaseButton;
         [SerializeField] private TMP_Text _StartMainPhaseText;
 
-        [SerializeField] private MainPhasePanel _MainPhasePanel; // Ãß°¡µÈ ÇÊµå
+        [SerializeField] private MainPhasePanel _MainPhasePanel; // ì¶”ê°€ëœ í•„ë“œ
 
         private readonly Subject<Unit> _OnRequestStartPreparing = new();
         public IObservable<Unit> OnRequestStartPreparing => _OnRequestStartPreparing;
@@ -70,7 +70,7 @@ namespace App.BattleDebug.Presenters
                 .Subscribe(_ =>
                 {
                     _OnRequestStartMainPhase.OnNext(Unit.Default);
-                    _MainPhasePanel.Show("¸ŞÀÎ ÆäÀÌÁî"); // MainPhasePanel »ç¿ë ¿¹½Ã
+                    _MainPhasePanel.Show("ë©”ì¸ í˜ì´ì¦ˆ"); // MainPhasePanel ì‚¬ìš© ì˜ˆì‹œ
                 })
                 .AddTo(_Disposables);
         }
