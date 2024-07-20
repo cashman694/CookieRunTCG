@@ -16,5 +16,6 @@ namespace App.BattleDebug.Interfaces.Presenters
         void SetStartDrawButtonInteractable(bool value);
         void SetStartSupportButtonInteractable(bool value);
         void SetStartMainButtonState(bool value);
+
     }
 }
