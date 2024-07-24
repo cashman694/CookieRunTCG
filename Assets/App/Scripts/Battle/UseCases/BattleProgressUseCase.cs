@@ -1,5 +1,6 @@
 using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
+using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
 using Cysharp.Threading.Tasks;
 using System;
@@ -19,6 +20,7 @@ namespace App.Battle.UseCases
         private readonly IBattleSupportPhaseUseCase _supportPhaseUseCase;
         private readonly IBattleMainPhaseUseCase _mainPhaseUseCase;
         private readonly IBattleEndPhaseUseCase _endPhaseUseCase;
+        private readonly IBattlePhasePresenter _battlePhasePresenter;
         private readonly CompositeDisposable _disposables = new();
         private CancellationTokenSource _cts;
 
@@ -31,7 +33,8 @@ namespace App.Battle.UseCases
             IBattleDrawPhaseUseCase drawPhaseUseCase,
             IBattleSupportPhaseUseCase supportPhaseUseCase,
             IBattleMainPhaseUseCase mainPhaseUseCase,
-            IBattleEndPhaseUseCase endPhaseUseCase
+            IBattleEndPhaseUseCase endPhaseUseCase,
+            IBattlePhasePresenter battlePhasePresenter
         )
         {
             _battleProgressDataStore = battleProgressDataStore;
@@ -41,6 +44,7 @@ namespace App.Battle.UseCases
             _supportPhaseUseCase = supportPhaseUseCase;
             _mainPhaseUseCase = mainPhaseUseCase;
             _endPhaseUseCase = endPhaseUseCase;
+            _battlePhasePresenter = battlePhasePresenter;
         }
 
         public void Initialize()
@@ -72,21 +76,27 @@ namespace App.Battle.UseCases
                 case BattlePhase.None:
                     break;
                 case BattlePhase.Prepare:
+                    _battlePhasePresenter.NotifyPhaseName("게임 준비");
                     _preparingUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.Active:
+                    _battlePhasePresenter.NotifyPhaseName("액티브 페이즈");
                     _activePhaseUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.Draw:
+                    _battlePhasePresenter.NotifyPhaseName("드로우 페이즈");
                     _drawPhaseUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.Support:
+                    _battlePhasePresenter.NotifyPhaseName("서포트 페이즈");
                     _supportPhaseUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.Main:
+                    _battlePhasePresenter.NotifyPhaseName("메인 페이즈");
                     _mainPhaseUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.End:
+                    _battlePhasePresenter.NotifyPhaseName("엔드 페이즈");
                     _endPhaseUseCase.Execute(_cts.Token).Forget();
                     break;
             }

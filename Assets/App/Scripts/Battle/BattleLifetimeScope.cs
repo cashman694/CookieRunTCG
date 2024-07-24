@@ -37,6 +37,8 @@ namespace App.Battle
 
         [SerializeField] private PlayerMulliganPresenter _PlayerMulliganPresenter;
 
+        [SerializeField] private BattlePhasePresenter _battlePhasePresenter;
+
         protected override void Configure(IContainerBuilder builder)
         {
             builder.Register<BattleProgressDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
@@ -71,6 +73,7 @@ namespace App.Battle
             builder.RegisterComponent(_PlayerTrashPresenter).As<IPlayerTrashPresenter>();
 
             builder.RegisterComponent(_PlayerMulliganPresenter).AsImplementedInterfaces();
+            builder.RegisterComponent(_battlePhasePresenter).AsImplementedInterfaces();
 
             builder.Register<PlayerSupportAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
 
