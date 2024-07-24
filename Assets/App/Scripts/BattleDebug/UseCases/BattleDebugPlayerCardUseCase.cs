@@ -2,6 +2,7 @@ using App.Battle.Interfaces.DataStores;
 using App.BattleDebug.Data;
 using System;
 using UniRx;
+using VContainer;
 using VContainer.Unity;
 
 namespace App.BattleDebug.UseCases
@@ -17,6 +18,7 @@ namespace App.BattleDebug.UseCases
         private readonly IPlayerTrashDataStore _PlayerTrashDataStore;
         private readonly CompositeDisposable _Disposables = new();
 
+        [Inject]
         public BattleDebugPlayerCardUseCase(
             IPlayerCardDataStore playerCardDataStore,
             IPlayerDeckDataStore playerDeckDataStore,

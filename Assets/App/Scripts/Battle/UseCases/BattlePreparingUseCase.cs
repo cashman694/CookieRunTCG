@@ -1,9 +1,7 @@
 using App.Battle.Interfaces.UseCases;
-using App.Common.Data;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
-using UniRx;
 
 namespace App.Battle.UseCases
 {
@@ -36,15 +34,17 @@ namespace App.Battle.UseCases
             // _XXXFieldUseCase.ClearCards();
 
             // 덱 생성
-            // _PlayerDeckUseCase.Build();
+            UnityEngine.Debug.Log("Start BuildDeck");
+            _PlayerDeckUseCase.Build();
+            await UniTask.WaitForSeconds(3f, cancellationToken: token);
 
             UnityEngine.Debug.Log("Start InitialDraw");
             _PlayerDeckUseCase.InitialDraw();
-            await UniTask.WaitForSeconds(3f);
+            await UniTask.WaitForSeconds(3f, cancellationToken: token);
 
             UnityEngine.Debug.Log("Start Mulligan");
             await _PlayerMulliganUseCase.Execute(_Cts.Token);
-            await UniTask.WaitForSeconds(3f);
+            await UniTask.WaitForSeconds(3f, cancellationToken: token);
 
             // 쿠키카드가 생길때까지 초기 드로우를 진행
             // await _PlayerDrawCookieUseCase.Execute();
@@ -52,7 +52,7 @@ namespace App.Battle.UseCases
             // 쿠키카드를 한 장을 뒷면으로 내려놓는다
             UnityEngine.Debug.Log("Start SetCookieCard");
             await _PlayerSetCookieUseCase.Execute(token);
-            await UniTask.WaitForSeconds(3f);
+            await UniTask.WaitForSeconds(3f, cancellationToken: token);
 
             // 쿠키카드를 뒤집고 HP카드를 추가
             UnityEngine.Debug.Log("Start FlipCookieCard");

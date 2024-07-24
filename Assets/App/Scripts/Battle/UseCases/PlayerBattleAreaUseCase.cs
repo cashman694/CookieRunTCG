@@ -210,6 +210,11 @@ namespace App.Battle.UseCases
             }
 
             _PlayerBattleAreaDataStore.AddCookieCard(areaIndex, card.Id, card.CardMasterData);
+
+            for (var i = 0; i < card.CardMasterData.Hp; i++)
+            {
+                AddHpCard(areaIndex);
+            }
         }
 
         /// <summary>

@@ -9,9 +9,13 @@ namespace App.BattleDebug.Presenters
 {
     public class BattleDebugDeckPresenter : MonoBehaviour, IBattleDebugDeckPresenter, IInitializable, IDisposable
     {
+        [SerializeField] private Button _BuildButton;
         [SerializeField] private Button _DrawButton;
         [SerializeField] private Button _InitialDrawButton;
         [SerializeField] private Button _MulliganButton;
+
+        private readonly Subject<Unit> _OnRequestBuildDeck = new();
+        public IObservable<Unit> OnRequestBuildDeck => _OnRequestBuildDeck;
 
         private readonly Subject<Unit> _OnRequestDrawCard = new();
         public IObservable<Unit> OnRequestDrawCard => _OnRequestDrawCard;
@@ -26,6 +30,10 @@ namespace App.BattleDebug.Presenters
 
         public void Initialize()
         {
+            _BuildButton.OnClickAsObservable()
+                .Subscribe(_ => _OnRequestBuildDeck.OnNext(Unit.Default))
+                .AddTo(_Disposables);
+
             _DrawButton.OnClickAsObservable()
                 .Subscribe(_ => _OnRequestDrawCard.OnNext(Unit.Default))
                 .AddTo(_Disposables);

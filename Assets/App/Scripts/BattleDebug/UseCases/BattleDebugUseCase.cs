@@ -43,6 +43,10 @@ namespace App.BattleDebug.UseCases
 
         public void Initialize()
         {
+            _BattleDebugDeckPresenter.OnRequestBuildDeck
+                .Subscribe(_ => _PlayerDeckUseCase.Build())
+                .AddTo(_Disposables);
+
             _BattleDebugDeckPresenter.OnRequestInitialDraw
                 .Subscribe(_ => _PlayerDeckUseCase.InitialDraw())
                 .AddTo(_Disposables);

@@ -1,6 +1,7 @@
 using App.Battle.Interfaces.UseCases;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using VContainer;
 
 namespace App.Battle.UseCases
 {
@@ -8,6 +9,7 @@ namespace App.Battle.UseCases
     {
         private readonly IPlayerSupportAreaUseCase _PlayerSupportAreaUseCase;
 
+        [Inject]
         public BattleSupportPhaseUseCase(
             IPlayerSupportAreaUseCase playerSupportAreaUseCase
         )
