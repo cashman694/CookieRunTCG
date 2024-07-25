@@ -10,7 +10,7 @@ using VContainer.Unity;
 
 namespace App.Battle.UseCases
 {
-    public class PlayerDeckUseCase : IInitializable, IStartable, IDisposable, IPlayerDeckUseCase
+    public class PlayerDeckUseCase : IInitializable, IDisposable, IPlayerDeckUseCase
     {
         private readonly BattleConfig _BattleConfig;
         private readonly IPlayerCardDataStore _PlayerCardDataStore;
@@ -45,14 +45,13 @@ namespace App.Battle.UseCases
                 .AddTo(_Disposables);
         }
 
-        public void Start()
-        {
-            // FIXME: 테스트용 코드
-            Build();
-        }
-
         public void Build()
         {
+            if (!_PlayerDeckDataStore.IsEmpty)
+            {
+                return;
+            }
+
             foreach (var card in _PlayerCardDataStore.Cards)
             {
                 _PlayerDeckDataStore.AddCard(card.Id);
@@ -67,6 +66,11 @@ namespace App.Battle.UseCases
         /// </summary>
         public void InitialDraw()
         {
+            if (_PlayerDeckDataStore.IsEmpty)
+            {
+                return;
+            }
+
             if (_PlayerHandDataStore.Count > 0)
             {
                 return;
@@ -74,11 +78,6 @@ namespace App.Battle.UseCases
 
             for (var i = 0; i < _BattleConfig.InitialDrawCount; i++)
             {
-                if (_PlayerDeckDataStore.IsEmpty)
-                {
-                    return;
-                }
-
                 DrawCard();
             }
         }

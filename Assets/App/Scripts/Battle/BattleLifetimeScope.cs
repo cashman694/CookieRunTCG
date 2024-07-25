@@ -37,8 +37,11 @@ namespace App.Battle
 
         [SerializeField] private PlayerMulliganPresenter _PlayerMulliganPresenter;
 
+        [SerializeField] private BattlePhasePresenter _battlePhasePresenter;
+
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.Register<BattleProgressDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.Register<PlayerCardDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
 
             builder.Register<PlayerHandDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
@@ -70,6 +73,7 @@ namespace App.Battle
             builder.RegisterComponent(_PlayerTrashPresenter).As<IPlayerTrashPresenter>();
 
             builder.RegisterComponent(_PlayerMulliganPresenter).AsImplementedInterfaces();
+            builder.RegisterComponent(_battlePhasePresenter).AsImplementedInterfaces();
 
             builder.Register<PlayerSupportAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
 
@@ -94,6 +98,9 @@ namespace App.Battle
             builder.RegisterEntryPoint<BattleDrawPhaseUseCase>().As<IBattleDrawPhaseUseCase>();
             builder.RegisterEntryPoint<BattleSupportPhaseUseCase>().As<IBattleSupportPhaseUseCase>();
             builder.RegisterEntryPoint<BattleMainPhaseUseCase>().As<IBattleMainPhaseUseCase>();
+            builder.RegisterEntryPoint<BattleEndPhaseUseCase>().As<IBattleEndPhaseUseCase>();
+
+            builder.RegisterEntryPoint<BattleProgressUseCase>().As<IBattleProgressUseCase>();
         }
     }
 }

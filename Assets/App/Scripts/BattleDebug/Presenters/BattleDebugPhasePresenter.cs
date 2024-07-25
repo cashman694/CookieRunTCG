@@ -17,8 +17,6 @@ namespace App.BattleDebug.Presenters
         [SerializeField] private Button _StartMainPhaseButton;
         [SerializeField] private TMP_Text _StartMainPhaseText;
 
-        [SerializeField] private MainPhasePanel _MainPhasePanel; // 추가된 필드
-
         private readonly Subject<Unit> _OnRequestStartPreparing = new();
         public IObservable<Unit> OnRequestStartPreparing => _OnRequestStartPreparing;
 
@@ -70,7 +68,6 @@ namespace App.BattleDebug.Presenters
                 .Subscribe(_ =>
                 {
                     _OnRequestStartMainPhase.OnNext(Unit.Default);
-                    _MainPhasePanel.Show("메인 페이즈"); // MainPhasePanel 사용 예시
                 })
                 .AddTo(_Disposables);
         }
