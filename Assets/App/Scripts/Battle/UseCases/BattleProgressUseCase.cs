@@ -76,27 +76,27 @@ namespace App.Battle.UseCases
                 case BattlePhase.None:
                     break;
                 case BattlePhase.Prepare:
-                    _battlePhasePresenter.NotifyPhaseName("게임 준비");
+                    _battlePhasePresenter.NotifyPhaseName("Get Ready");
                     _preparingUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.Active:
-                    _battlePhasePresenter.NotifyPhaseName("액티브 페이즈");
+                    _battlePhasePresenter.NotifyPhaseName("Active Phase");
                     _activePhaseUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.Draw:
-                    _battlePhasePresenter.NotifyPhaseName("드로우 페이즈");
+                    _battlePhasePresenter.NotifyPhaseName("Draw Phase");
                     _drawPhaseUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.Support:
-                    _battlePhasePresenter.NotifyPhaseName("서포트 페이즈");
+                    _battlePhasePresenter.NotifyPhaseName("Support Phase");
                     _supportPhaseUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.Main:
-                    _battlePhasePresenter.NotifyPhaseName("메인 페이즈");
+                    _battlePhasePresenter.NotifyPhaseName("Main Phase");
                     _mainPhaseUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.End:
-                    _battlePhasePresenter.NotifyPhaseName("엔드 페이즈");
+                    _battlePhasePresenter.NotifyPhaseName("End Phase");
                     _endPhaseUseCase.Execute(_cts.Token).Forget();
                     break;
             }
