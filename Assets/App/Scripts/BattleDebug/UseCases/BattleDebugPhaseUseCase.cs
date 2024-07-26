@@ -17,6 +17,8 @@ namespace App.BattleDebug.UseCases
         private readonly IBattleDrawPhaseUseCase _DrawPhaseUseCase;
         private readonly IBattleSupportPhaseUseCase _SupportPhaseUseCase;
         private readonly IBattleMainPhaseUseCase _MainPhaseUseCase;
+        private readonly IBattleEndPhaseUseCase _EndPhaseUseCase;
+        private readonly ChangeTurnPanel _ChangeTurnPanel;
         private readonly CompositeDisposable _Disposables = new();
 
         [Inject]
@@ -26,7 +28,9 @@ namespace App.BattleDebug.UseCases
             IBattleActivePhaseUseCase activePhaseUseCase,
             IBattleDrawPhaseUseCase drawPhaseUseCase,
             IBattleSupportPhaseUseCase supportPhaseUseCase,
-            IBattleMainPhaseUseCase mainPhaseUseCase
+            IBattleMainPhaseUseCase mainPhaseUseCase,
+            IBattleEndPhaseUseCase endPhaseUseCase,
+            ChangeTurnPanel changeTurnPanel // Inject ChangeTurnPanel
         )
         {
             _DebugPhasePresenter = debugPhasePresenter;
@@ -35,6 +39,8 @@ namespace App.BattleDebug.UseCases
             _DrawPhaseUseCase = drawPhaseUseCase;
             _SupportPhaseUseCase = supportPhaseUseCase;
             _MainPhaseUseCase = mainPhaseUseCase;
+            _EndPhaseUseCase = endPhaseUseCase;
+            _ChangeTurnPanel = changeTurnPanel; // Set ChangeTurnPanel
         }
 
         public void Initialize()
@@ -110,6 +116,11 @@ namespace App.BattleDebug.UseCases
             await _MainPhaseUseCase.Execute(_Cts.Token);
         }
 
+        private async UniTask ExecuteEndPhase()
+        {
+            await _EndPhaseUseCase.Execute(new());
+            _ChangeTurnPanel.Show("Turn Ended"); // Show turn ended message
+        }
         public void Dispose()
         {
             _Disposables.Dispose();

@@ -10,19 +10,29 @@ namespace App.Battle.UseCases
         private readonly BattleConfig _BattleConfig;
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
         private readonly IPlayerStageAreaUseCase _PlayerStageAreaUseCase;
+        private readonly ChangeTurnPanel _changeTurnPanel; // 추가된 필드
 
         public BattleActivePhaseUseCase(
             BattleConfig battleConfig,
             IPlayerBattleAreaUseCase playerBattleAreaUseCase,
-            IPlayerStageAreaUseCase playerStageAreaUseCase
+            IPlayerStageAreaUseCase playerStageAreaUseCase,
+            ChangeTurnPanel changeTurnPanel // 추가된 파라미터
         )
         {
             _BattleConfig = battleConfig;
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
             _PlayerStageAreaUseCase = playerStageAreaUseCase;
+            _changeTurnPanel = changeTurnPanel; // 필드 초기화
         }
 
         // 자신의 레스트 상태의 카드를 전부 액티브로 돌린다
+
+        public void StartTurn(CancellationToken token)
+        {
+            // "My Turn" 메시지를 보여줍니다.
+            _changeTurnPanel.Show("My Turn");
+        }
+
         public async UniTask Execute(CancellationToken token)
         {
             UnityEngine.Debug.Log($"{nameof(BattleActivePhaseUseCase)} Executed");

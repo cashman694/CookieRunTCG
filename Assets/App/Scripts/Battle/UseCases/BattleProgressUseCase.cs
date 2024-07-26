@@ -24,7 +24,6 @@ namespace App.Battle.UseCases
         private readonly CompositeDisposable _disposables = new();
         private CancellationTokenSource _cts;
 
-
         [Inject]
         public BattleProgressUseCase(
             IBattleProgressDataStore battleProgressDataStore,
@@ -54,7 +53,7 @@ namespace App.Battle.UseCases
                 .AddTo(_disposables);
         }
 
-        private void OnProgressUpdated(BattleProgress progress)
+        private async void OnProgressUpdated(BattleProgress progress)
         {
             UnityEngine.Debug.Log($"OnProgressUpdated: {progress.Phase}");
 
@@ -80,8 +79,10 @@ namespace App.Battle.UseCases
                     _preparingUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.Active:
+                    _activePhaseUseCase.StartTurn(_cts.Token); // StartTurn은 void 반환
+                    await UniTask.WaitForSeconds(1f, cancellationToken: _cts.Token);
                     _battlePhasePresenter.NotifyPhaseName("Active Phase");
-                    _activePhaseUseCase.Execute(_cts.Token).Forget();
+                    await _activePhaseUseCase.Execute(_cts.Token); // Execute는 async 메서드로 가정
                     break;
                 case BattlePhase.Draw:
                     _battlePhasePresenter.NotifyPhaseName("Draw Phase");
@@ -98,6 +99,8 @@ namespace App.Battle.UseCases
                 case BattlePhase.End:
                     _battlePhasePresenter.NotifyPhaseName("End Phase");
                     _endPhaseUseCase.Execute(_cts.Token).Forget();
+                    await UniTask.WaitForSeconds(1f, cancellationToken: _cts.Token);
+                    _endPhaseUseCase.EndTurn(_cts.Token); // EndTurn은 void 반환
                     break;
             }
         }
@@ -135,70 +138,58 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            if (_battleProgressDataStore.CurrentProgress.Phase == BattlePhase.Prepare)
+            switch (_battleProgressDataStore.CurrentProgress.Phase)
             {
-                var activePhase = new BattleProgress()
-                {
-                    Phase = BattlePhase.Active,
-                    Turn = Turn.Player,
-                };
+                case BattlePhase.Prepare:
+                    var activePhase = new BattleProgress()
+                    {
+                        Phase = BattlePhase.Active,
+                        Turn = Turn.Player,
+                    };
+                    _battleProgressDataStore.SwitchProgressTo(activePhase);
+                    break;
 
-                _battleProgressDataStore.SwitchProgressTo(activePhase);
-                return;
-            }
+                case BattlePhase.Active:
+                    var drawPhase = new BattleProgress()
+                    {
+                        Phase = BattlePhase.Draw,
+                        Turn = Turn.Player,
+                    };
+                    _battleProgressDataStore.SwitchProgressTo(drawPhase);
+                    break;
 
-            if (_battleProgressDataStore.CurrentProgress.Phase == BattlePhase.Active)
-            {
-                var drawPhase = new BattleProgress()
-                {
-                    Phase = BattlePhase.Draw,
-                    Turn = Turn.Player,
-                };
+                case BattlePhase.Draw:
+                    var supportPhase = new BattleProgress()
+                    {
+                        Phase = BattlePhase.Support,
+                        Turn = Turn.Player,
+                    };
+                    _battleProgressDataStore.SwitchProgressTo(supportPhase);
+                    break;
 
-                _battleProgressDataStore.SwitchProgressTo(drawPhase);
-                return;
-            }
+                case BattlePhase.Support:
+                    var mainPhase = new BattleProgress()
+                    {
+                        Phase = BattlePhase.Main,
+                        Turn = Turn.Player,
+                    };
+                    _battleProgressDataStore.SwitchProgressTo(mainPhase);
+                    break;
 
-            if (_battleProgressDataStore.CurrentProgress.Phase == BattlePhase.Draw)
-            {
-                var supportPhase = new BattleProgress()
-                {
-                    Phase = BattlePhase.Support,
-                    Turn = Turn.Player,
-                };
-
-                _battleProgressDataStore.SwitchProgressTo(supportPhase);
-                return;
-            }
-
-            if (_battleProgressDataStore.CurrentProgress.Phase == BattlePhase.Support)
-            {
-                var mainPhase = new BattleProgress()
-                {
-                    Phase = BattlePhase.Main,
-                    Turn = Turn.Player,
-                };
-
-                _battleProgressDataStore.SwitchProgressTo(mainPhase);
-                return;
-            }
-
-            if (_battleProgressDataStore.CurrentProgress.Phase == BattlePhase.Main)
-            {
-                var endPhase = new BattleProgress()
-                {
-                    Phase = BattlePhase.End,
-                    Turn = Turn.Player,
-                };
-
-                _battleProgressDataStore.SwitchProgressTo(endPhase);
-                return;
+                case BattlePhase.Main:
+                    var endPhase = new BattleProgress()
+                    {
+                        Phase = BattlePhase.End,
+                        Turn = Turn.Player,
+                    };
+                    _battleProgressDataStore.SwitchProgressTo(endPhase);
+                    break;
             }
         }
 
         public void ResetBattle()
         {
-
+            // Implement if needed
         }
 
         public void Dispose()
