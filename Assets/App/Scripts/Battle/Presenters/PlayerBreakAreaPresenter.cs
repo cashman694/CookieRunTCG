@@ -73,6 +73,16 @@ namespace App.Battle.Presenters
             }
         }
 
+        public void Clear()
+        {
+            foreach (var cardView in _CardViews.Values)
+            {
+                cardView.Unspawn();
+            }
+
+            _CardViews.Clear();
+        }
+
         private void OnDestroy()
         {
             _CardViews.Clear();

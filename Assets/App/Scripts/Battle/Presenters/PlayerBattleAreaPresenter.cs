@@ -202,6 +202,28 @@ namespace App.Battle.Presenters
             ArrangeHpCards(areaIndex).Forget();
         }
 
+        public void Clear()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                var cardViews = _HpCardViews[i];
+
+                foreach (var cardView in cardViews)
+                {
+                    cardView.Unspawn();
+                }
+
+                cardViews.Clear();
+            }
+
+            foreach (var cardView in _CookieCardViews)
+            {
+                cardView?.Unspawn();
+            }
+
+            _CookieCardViews = new ICardView[2];
+        }
+
         // FIXME: 카드를 적당한 간격으로 배치
         private async UniTask ArrangeHpCards(int areaIndex)
         {

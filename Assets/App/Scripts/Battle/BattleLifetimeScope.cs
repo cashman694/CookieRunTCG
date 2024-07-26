@@ -39,6 +39,9 @@ namespace App.Battle
 
         [SerializeField] private BattlePhasePresenter _battlePhasePresenter;
 
+        // Add this field
+        [SerializeField] private ChangeTurnPanel _changeTurnPanel;
+
         protected override void Configure(IContainerBuilder builder)
         {
             builder.Register<BattleProgressDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
@@ -85,6 +88,7 @@ namespace App.Battle
             builder.RegisterEntryPoint<PlayerStageAreaUseCase>().As<IPlayerStageAreaUseCase>();
             builder.RegisterEntryPoint<PlayerTrashUseCase>();
             builder.RegisterEntryPoint<PlayerSupportAreaUseCase>().As<IPlayerSupportAreaUseCase>();
+            builder.RegisterComponent(_changeTurnPanel).AsSelf();
 
             // 메인페이즈의 각 행동
             builder.RegisterEntryPoint<PlayerShowCookieUseCase>().As<IPlayerShowCookieUseCase>();
@@ -101,6 +105,7 @@ namespace App.Battle
             builder.RegisterEntryPoint<BattleEndPhaseUseCase>().As<IBattleEndPhaseUseCase>();
 
             builder.RegisterEntryPoint<BattleProgressUseCase>().As<IBattleProgressUseCase>();
+            builder.RegisterEntryPoint<BattleResetUseCase>().As<IBattleResetUseCase>();
         }
     }
 }

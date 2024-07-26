@@ -48,6 +48,13 @@ namespace App.Battle.UseCases
                     _PlayerTrashPresenter.RemoveCard(x);
                 })
                 .AddTo(_Disposables);
+
+            _PlayerTrashDataStore.OnReset
+                .Subscribe(x =>
+                {
+                    _PlayerTrashPresenter.Clear();
+                })
+                .AddTo(_Disposables);
         }
 
         public void Dispose()

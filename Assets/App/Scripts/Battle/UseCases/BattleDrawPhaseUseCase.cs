@@ -1,3 +1,4 @@
+using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
 using App.Common.Data;
 using Cysharp.Threading.Tasks;
@@ -9,16 +10,19 @@ namespace App.Battle.UseCases
     {
         private readonly BattleConfig _BattleConfig;
         private readonly IPlayerDeckUseCase _PlayerDeckUseCase;
+        private readonly IBattlePhasePresenter _battlePhasePresenter;
 
         public bool IsProgressing;
 
         public BattleDrawPhaseUseCase(
             BattleConfig battleConfig,
-            IPlayerDeckUseCase playerDeckUseCase
+            IPlayerDeckUseCase playerDeckUseCase,
+            IBattlePhasePresenter battlePhasePresenter
         )
         {
             _BattleConfig = battleConfig;
             _PlayerDeckUseCase = playerDeckUseCase;
+            _battlePhasePresenter = battlePhasePresenter;
         }
 
         // 덱에서 2장 드로우한다.
@@ -26,6 +30,8 @@ namespace App.Battle.UseCases
         public async UniTask Execute(CancellationToken token)
         {
             UnityEngine.Debug.Log($"{nameof(BattleDrawPhaseUseCase)} Executed");
+
+            _battlePhasePresenter.NotifyPhaseName("Draw Phase");
 
             for (int i = 0; i < _BattleConfig.DrawCountEveryTurn; i++)
             {

@@ -23,8 +23,12 @@ namespace App.Battle.DataStores
         private readonly Subject<string> _OnCardRemoved = new();
         public IObservable<string> OnCardRemoved => _OnCardRemoved;
 
+        private readonly Subject<Unit> _OnReset = new();
+        public IObservable<Unit> OnReset => _OnReset;
+
         private readonly Subject<Unit> _OnShuffled = new();
         public IObservable<Unit> OnShuffled => _OnShuffled;
+
 
         public void AddCard(string cardId)
         {
@@ -49,6 +53,12 @@ namespace App.Battle.DataStores
             _OnCardRemoved.OnNext(cardId);
 
             return cardId;
+        }
+
+        public void Clear()
+        {
+            _CardIds.Clear();
+            _OnReset.OnNext(Unit.Default);
         }
 
         public void Shuffle()

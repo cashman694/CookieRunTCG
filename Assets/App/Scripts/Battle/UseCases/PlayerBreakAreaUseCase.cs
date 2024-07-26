@@ -47,6 +47,13 @@ namespace App.Battle.UseCases
                     _PlayerBreakAreaPresenter.RemoveCard(x);
                 })
                 .AddTo(_Disposables);
+
+            _PlayerBreakAreaDataStore.OnReset
+                .Subscribe(x =>
+                {
+                    _PlayerBreakAreaPresenter.Clear();
+                })
+                .AddTo(_Disposables);
         }
 
         public void Dispose()

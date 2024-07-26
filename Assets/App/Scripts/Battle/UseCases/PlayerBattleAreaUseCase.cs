@@ -79,6 +79,13 @@ namespace App.Battle.UseCases
                     _PlayerBattleAreaPresenter.RemoveHpCard(x.index);
                 })
                 .AddTo(_Disposables);
+
+            _PlayerBattleAreaDataStore.OnReset
+                .Subscribe(x =>
+                {
+                    _PlayerBattleAreaPresenter.Clear();
+                })
+                .AddTo(_Disposables);
         }
 
         /// <summary>

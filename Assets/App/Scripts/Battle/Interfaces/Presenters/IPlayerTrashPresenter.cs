@@ -9,5 +9,6 @@ namespace App.Battle.Interfaces.Presenters
         IObservable<Unit> OnTrashSelected { get; }
         void AddCard(string cardId, CardMasterData cardMasterData);
         void RemoveCard(string cardId);
+        void Clear();
     }
 }

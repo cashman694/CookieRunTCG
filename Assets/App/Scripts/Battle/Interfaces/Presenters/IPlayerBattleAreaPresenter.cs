@@ -16,5 +16,7 @@ namespace App.Battle.Interfaces.Presenters
         void AddHpCard(int areaIndex, string cardId);
         bool RemoveHpCard(int areaIndex);
         void FlipHpCard(int areaIndex, string cardId, CardMasterData cardMasterData);
+
+        void Clear();
     }
 }

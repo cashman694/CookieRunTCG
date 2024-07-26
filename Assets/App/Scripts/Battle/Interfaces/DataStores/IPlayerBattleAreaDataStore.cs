@@ -1,6 +1,7 @@
 using App.Battle.Data;
 using App.Common.Data.MasterData;
 using System;
+using UniRx;
 
 namespace App.Battle.Interfaces.DataStores
 {
@@ -24,5 +25,8 @@ namespace App.Battle.Interfaces.DataStores
         bool TryGetLastHpCard(int index, out string cardId);
         void FlipHpCard(int index);
         int GetHpCount(int index);
+
+        IObservable<Unit> OnReset { get; }
+        void Clear();
     }
 }
