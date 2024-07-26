@@ -12,7 +12,7 @@ namespace App.Battle.UseCases
     {
         private readonly IPlayerDeckUseCase _PlayerDeckUseCase;
         private readonly IPlayerMulliganPresenter _PlayerMulliganPresenter;
-        private CancellationTokenSource _Cts;
+        private CancellationTokenSource _cts;
 
         public PlayerMulliganUseCase(
             IPlayerDeckUseCase playerDeckUseCase,
@@ -30,30 +30,45 @@ namespace App.Battle.UseCases
 
         public async UniTask Execute(CancellationToken token)
         {
-            var _Cts = CancellationTokenSource.CreateLinkedTokenSource(token);
+            if (_cts != null)
+            {
+                return;
+            }
+
+            _cts = CancellationTokenSource.CreateLinkedTokenSource(token);
 
             _PlayerMulliganPresenter.Show();
 
-            var requested = await _PlayerMulliganPresenter.OnRequestedMulligan
-                .ToUniTask(true, cancellationToken: _Cts.Token);
+            var (cancelled, result) = await _PlayerMulliganPresenter.OnRequestedMulligan
+                .ToUniTask(true, cancellationToken: _cts.Token).SuppressCancellationThrow();
 
-            if (requested)
+            if (cancelled)
+            {
+                _PlayerMulliganPresenter.Hide();
+
+                _cts.Dispose();
+                _cts = null;
+
+                return;
+            }
+
+            if (result)
             {
                 _PlayerDeckUseCase.Mulligan();
             }
 
-            UnityEngine.Debug.Log($"Mulligan {(requested ? "executed" : "skipped")}");
+            UnityEngine.Debug.Log($"Mulligan {(result ? "executed" : "skipped")}");
             _PlayerMulliganPresenter.Hide();
 
-            await UniTask.WaitForSeconds(1f);
+            await UniTask.WaitForSeconds(1f, cancellationToken: _cts.Token);
 
-            _Cts.Cancel();
-            _Cts.Dispose();
+            _cts.Dispose();
+            _cts = null;
         }
 
         public void Dispose()
         {
-            _Cts?.Dispose();
+            _cts?.Cancel();
         }
     }
 }

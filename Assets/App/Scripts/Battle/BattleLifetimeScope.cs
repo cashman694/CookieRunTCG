@@ -105,6 +105,7 @@ namespace App.Battle
             builder.RegisterEntryPoint<BattleEndPhaseUseCase>().As<IBattleEndPhaseUseCase>();
 
             builder.RegisterEntryPoint<BattleProgressUseCase>().As<IBattleProgressUseCase>();
+            builder.RegisterEntryPoint<BattleResetUseCase>().As<IBattleResetUseCase>();
         }
     }
 }

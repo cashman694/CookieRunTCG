@@ -1,6 +1,5 @@
 using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
-using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
 using Cysharp.Threading.Tasks;
 using System;
@@ -14,36 +13,36 @@ namespace App.Battle.UseCases
     public class BattleProgressUseCase : IBattleProgressUseCase, IInitializable, IDisposable
     {
         private readonly IBattleProgressDataStore _battleProgressDataStore;
+        private readonly IBattleResetUseCase _battleResetUseCase;
         private readonly IBattlePreparingUseCase _preparingUseCase;
         private readonly IBattleActivePhaseUseCase _activePhaseUseCase;
         private readonly IBattleDrawPhaseUseCase _drawPhaseUseCase;
         private readonly IBattleSupportPhaseUseCase _supportPhaseUseCase;
         private readonly IBattleMainPhaseUseCase _mainPhaseUseCase;
         private readonly IBattleEndPhaseUseCase _endPhaseUseCase;
-        private readonly IBattlePhasePresenter _battlePhasePresenter;
         private readonly CompositeDisposable _disposables = new();
         private CancellationTokenSource _cts;
 
         [Inject]
         public BattleProgressUseCase(
             IBattleProgressDataStore battleProgressDataStore,
+            IBattleResetUseCase battleResetUseCase,
             IBattlePreparingUseCase preparingUseCase,
             IBattleActivePhaseUseCase activePhaseUseCase,
             IBattleDrawPhaseUseCase drawPhaseUseCase,
             IBattleSupportPhaseUseCase supportPhaseUseCase,
             IBattleMainPhaseUseCase mainPhaseUseCase,
-            IBattleEndPhaseUseCase endPhaseUseCase,
-            IBattlePhasePresenter battlePhasePresenter
+            IBattleEndPhaseUseCase endPhaseUseCase
         )
         {
             _battleProgressDataStore = battleProgressDataStore;
+            _battleResetUseCase = battleResetUseCase;
             _preparingUseCase = preparingUseCase;
             _activePhaseUseCase = activePhaseUseCase;
             _drawPhaseUseCase = drawPhaseUseCase;
             _supportPhaseUseCase = supportPhaseUseCase;
             _mainPhaseUseCase = mainPhaseUseCase;
             _endPhaseUseCase = endPhaseUseCase;
-            _battlePhasePresenter = battlePhasePresenter;
         }
 
         public void Initialize()
@@ -57,7 +56,8 @@ namespace App.Battle.UseCases
         {
             UnityEngine.Debug.Log($"OnProgressUpdated: {progress.Phase}");
 
-            if (progress.Turn == Turn.Opponent || progress.Phase == BattlePhase.None)
+            if (progress.Turn == Turn.None ||
+                progress.Phase == BattlePhase.None)
             {
                 return;
             }
@@ -75,29 +75,23 @@ namespace App.Battle.UseCases
                 case BattlePhase.None:
                     break;
                 case BattlePhase.Prepare:
-                    _battlePhasePresenter.NotifyPhaseName("Get Ready");
                     _preparingUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.Active:
                     _activePhaseUseCase.StartTurn(_cts.Token); // StartTurn은 void 반환
                     await UniTask.WaitForSeconds(1f, cancellationToken: _cts.Token);
-                    _battlePhasePresenter.NotifyPhaseName("Active Phase");
                     await _activePhaseUseCase.Execute(_cts.Token); // Execute는 async 메서드로 가정
                     break;
                 case BattlePhase.Draw:
-                    _battlePhasePresenter.NotifyPhaseName("Draw Phase");
                     _drawPhaseUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.Support:
-                    _battlePhasePresenter.NotifyPhaseName("Support Phase");
                     _supportPhaseUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.Main:
-                    _battlePhasePresenter.NotifyPhaseName("Main Phase");
                     _mainPhaseUseCase.Execute(_cts.Token).Forget();
                     break;
                 case BattlePhase.End:
-                    _battlePhasePresenter.NotifyPhaseName("End Phase");
                     _endPhaseUseCase.Execute(_cts.Token).Forget();
                     await UniTask.WaitForSeconds(1f, cancellationToken: _cts.Token);
                     _endPhaseUseCase.EndTurn(_cts.Token); // EndTurn은 void 반환
@@ -129,6 +123,10 @@ namespace App.Battle.UseCases
             }
 
             _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
+
+            _battleProgressDataStore.SwitchProgressTo(new());
         }
 
         public void GotoNextPhase()
@@ -189,7 +187,7 @@ namespace App.Battle.UseCases
 
         public void ResetBattle()
         {
-            // Implement if needed
+            _battleResetUseCase.Execute();
         }
 
         public void Dispose()

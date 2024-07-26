@@ -21,14 +21,17 @@ namespace App.Battle.DataStores
             Debug.Log($"{cardId} added to stage area");
         }
 
-        public bool RemoveCard()
+        public void RemoveCard()
         {
+            if (_CardId.Value == null)
+            {
+                return;
+            }
+
             var cardId = _CardId.Value;
 
             _CardId.Value = null;
             Debug.Log($"{cardId} removed from stage area");
-
-            return true;
         }
 
         public void SetCardState(CardState cardState)

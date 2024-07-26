@@ -6,5 +6,6 @@ namespace App.Battle.Interfaces.Presenters
     {
         void AddCard(string cardId, CardMasterData cardMasterData);
         void RemoveCard(string cardId);
+        void Clear();
     }
 }

@@ -1,22 +1,29 @@
+using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
 using Cysharp.Threading.Tasks;
 using System.Threading;
-using UnityEngine;
 
 namespace App.Battle.UseCases
 {
     public class BattleEndPhaseUseCase : IBattleEndPhaseUseCase
     {
         private readonly ChangeTurnPanel _changeTurnPanel;
+        private readonly IBattlePhasePresenter _battlePhasePresenter;
 
-        public BattleEndPhaseUseCase(ChangeTurnPanel changeTurnPanel)
+        public BattleEndPhaseUseCase(
+            ChangeTurnPanel changeTurnPanel,
+            IBattlePhasePresenter battlePhasePresenter
+        )
         {
             _changeTurnPanel = changeTurnPanel;
+            _battlePhasePresenter = battlePhasePresenter;
         }
 
         public async UniTask Execute(CancellationToken token)
         {
             UnityEngine.Debug.Log($"{nameof(BattleEndPhaseUseCase)} Executed");
+
+            _battlePhasePresenter.NotifyPhaseName("End Phase");
 
             await UniTask.WaitForSeconds(1f, cancellationToken: token);
 

@@ -16,6 +16,7 @@ namespace App.Battle.DataStores
 
         public IObservable<string> OnCardAdded => _CardIds.ObserveAdd().Select(x => x.Value);
         public IObservable<string> OnCardRemoved => _CardIds.ObserveRemove().Select(x => x.Value);
+        public IObservable<Unit> OnReset => _CardIds.ObserveReset();
 
         public void AddCard(string cardId)
         {
@@ -41,6 +42,11 @@ namespace App.Battle.DataStores
             Assert.IsTrue(index > 0 || index < Count);
 
             return _CardIds[index];
+        }
+
+        public void Clear()
+        {
+            _CardIds.Clear();
         }
 
         public void Dispose()

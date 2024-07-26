@@ -1,3 +1,4 @@
+using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
 using App.Common.Data;
 using Cysharp.Threading.Tasks;
@@ -12,19 +13,22 @@ namespace App.Battle.UseCases
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
         private readonly IPlayerShowCookieUseCase _PlayerShowCookieUseCase;
         private readonly IPlayerUseStageUseCase _PlayerUseStageUseCase;
+        private readonly IBattlePhasePresenter _battlePhasePresenter;
         private CancellationTokenSource _Cts;
 
         public BattleMainPhaseUseCase(
             BattleConfig battleConfig,
             IPlayerBattleAreaUseCase playerBattleAreaUseCase,
             IPlayerShowCookieUseCase playerShowCookieUseCase,
-            IPlayerUseStageUseCase playerUseStageUseCase
+            IPlayerUseStageUseCase playerUseStageUseCase,
+            IBattlePhasePresenter battlePhasePresenter
         )
         {
             _BattleConfig = battleConfig;
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
             _PlayerShowCookieUseCase = playerShowCookieUseCase;
             _PlayerUseStageUseCase = playerUseStageUseCase;
+            _battlePhasePresenter = battlePhasePresenter;
         }
 
         // 자신의 레스트 상태의 카드를 전부 액티브로 돌린다
@@ -32,6 +36,8 @@ namespace App.Battle.UseCases
         public async UniTask Execute(CancellationToken token)
         {
             UnityEngine.Debug.Log($"{nameof(BattleMainPhaseUseCase)} Executed");
+
+            _battlePhasePresenter.NotifyPhaseName("Main Phase");
 
             // 실행 중에 불리면 리턴
             if (_Cts != null)

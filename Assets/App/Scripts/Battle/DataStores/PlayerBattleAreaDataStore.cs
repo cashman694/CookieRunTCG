@@ -28,6 +28,9 @@ namespace App.Battle.DataStores
         private readonly Subject<(int index, string cardId)> _OnHpCardRemoved = new();
         public IObservable<(int index, string cardId)> OnHpCardRemoved => _OnHpCardRemoved;
 
+        private readonly Subject<Unit> _OnReset = new();
+        public IObservable<Unit> OnReset => _OnReset;
+
         private readonly ReactiveDictionary<int, BattleAreaCookieCard> _CookieCards = new();
         private readonly Dictionary<int, List<BattleAreaHpCard>> _HpCardsMap = new();
 
@@ -167,6 +170,14 @@ namespace App.Battle.DataStores
             }
 
             return _HpCardsMap[index].Count;
+        }
+
+        public void Clear()
+        {
+            _CookieCards.Clear();
+            _HpCardsMap.Clear();
+
+            _OnReset.OnNext(Unit.Default);
         }
 
         public void Dispose()

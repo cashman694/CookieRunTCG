@@ -4702,7 +4702,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _BuildButton: {fileID: 1876483191}
   _DrawButton: {fileID: 242334697}
-  _InitialDrawButton: {fileID: 1876483191}
+  _InitialDrawButton: {fileID: 485784160}
   _MulliganButton: {fileID: 464108515}
 --- !u!114 &923362124
 MonoBehaviour:

@@ -121,6 +121,7 @@ namespace App.BattleDebug.UseCases
             await _EndPhaseUseCase.Execute(new());
             _ChangeTurnPanel.Show("Turn Ended"); // Show turn ended message
         }
+
         public void Dispose()
         {
             _Disposables.Dispose();

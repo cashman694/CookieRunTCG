@@ -1,3 +1,4 @@
+using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
 using App.Common.Data;
 using Cysharp.Threading.Tasks;
@@ -10,18 +11,21 @@ namespace App.Battle.UseCases
         private readonly BattleConfig _BattleConfig;
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
         private readonly IPlayerStageAreaUseCase _PlayerStageAreaUseCase;
+        private readonly IBattlePhasePresenter _battlePhasePresenter;
         private readonly ChangeTurnPanel _changeTurnPanel; // 추가된 필드
 
         public BattleActivePhaseUseCase(
             BattleConfig battleConfig,
             IPlayerBattleAreaUseCase playerBattleAreaUseCase,
             IPlayerStageAreaUseCase playerStageAreaUseCase,
+            IBattlePhasePresenter battlePhasePresenter,
             ChangeTurnPanel changeTurnPanel // 추가된 파라미터
         )
         {
             _BattleConfig = battleConfig;
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
             _PlayerStageAreaUseCase = playerStageAreaUseCase;
+            _battlePhasePresenter = battlePhasePresenter;
             _changeTurnPanel = changeTurnPanel; // 필드 초기화
         }
 
@@ -36,6 +40,7 @@ namespace App.Battle.UseCases
         public async UniTask Execute(CancellationToken token)
         {
             UnityEngine.Debug.Log($"{nameof(BattleActivePhaseUseCase)} Executed");
+            _battlePhasePresenter.NotifyPhaseName("Active Phase");
 
             for (int i = 0; i < _BattleConfig.BattleAreaSize; i++)
             {

@@ -8,6 +8,7 @@ namespace App.Battle.Interfaces.Presenters
         IObservable<string> OnCardSelected { get; }
         void AddCard(string cardId, CardMasterData cardMasterData);
         void RemoveCard(string cardId);
+        void Clear();
         string GetFirstCardId();
         void SelectCard(string cardId);
     }

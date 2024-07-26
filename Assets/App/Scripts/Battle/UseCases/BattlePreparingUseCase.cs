@@ -1,3 +1,4 @@
+using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
 using Cysharp.Threading.Tasks;
 using System;
@@ -11,32 +12,41 @@ namespace App.Battle.UseCases
         private readonly IPlayerMulliganUseCase _PlayerMulliganUseCase;
         private readonly IPlayerSetCookieUseCase _PlayerSetCookieUseCase;
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
+        private readonly IBattlePhasePresenter _battlePhasePresenter;
         private CancellationTokenSource _Cts;
 
         public BattlePreparingUseCase(
             IPlayerDeckUseCase playerDeckUseCase,
             IPlayerMulliganUseCase playerMulliganUseCase,
             IPlayerSetCookieUseCase playerSetCookieUseCase,
-            IPlayerBattleAreaUseCase playerBattleAreaUseCase
+            IPlayerBattleAreaUseCase playerBattleAreaUseCase,
+            IBattlePhasePresenter battlePhasePresenter
         )
         {
             _PlayerDeckUseCase = playerDeckUseCase;
             _PlayerMulliganUseCase = playerMulliganUseCase;
             _PlayerSetCookieUseCase = playerSetCookieUseCase;
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
+            _battlePhasePresenter = battlePhasePresenter;
         }
 
         public async UniTask Execute(CancellationToken token)
         {
             _Cts = CancellationTokenSource.CreateLinkedTokenSource(token);
 
+            UnityEngine.Debug.Log($"{nameof(BattlePreparingUseCase)} Executed");
+
             // TODO: 모든 에리어를 클리어
             // _XXXFieldUseCase.ClearCards();
 
             // 덱 생성
             UnityEngine.Debug.Log("Start BuildDeck");
+
             _PlayerDeckUseCase.Build();
-            await UniTask.WaitForSeconds(3f, cancellationToken: token);
+            await UniTask.WaitForSeconds(1f, cancellationToken: token);
+
+            // 테스트
+            _battlePhasePresenter.NotifyPhaseName("Get Ready");
 
             UnityEngine.Debug.Log("Start InitialDraw");
             _PlayerDeckUseCase.InitialDraw();
@@ -63,6 +73,8 @@ namespace App.Battle.UseCases
             _Cts.Cancel();
             _Cts.Dispose();
             _Cts = null;
+
+            UnityEngine.Debug.Log($"{nameof(BattlePreparingUseCase)} Done");
         }
 
         public void Dispose()

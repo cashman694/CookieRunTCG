@@ -69,6 +69,16 @@ namespace App.Battle.Presenters
             ArrangeCards().Forget();
         }
 
+        public void Clear()
+        {
+            foreach (var cardView in _CardViews.Values)
+            {
+                cardView.Unspawn();
+            }
+
+            _CardViews.Clear();
+        }
+
         public string GetFirstCardId()
         {
             var cardView = transform.GetComponentInChildren<CardView>();

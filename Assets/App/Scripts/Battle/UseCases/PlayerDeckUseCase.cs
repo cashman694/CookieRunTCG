@@ -43,6 +43,13 @@ namespace App.Battle.UseCases
                     _PlayerDeckPresenter.UpdateCards(x);
                 })
                 .AddTo(_Disposables);
+
+            _PlayerDeckDataStore.OnReset
+                .Subscribe(x =>
+                {
+                    _PlayerDeckPresenter.UpdateCards(0);
+                })
+                .AddTo(_Disposables);
         }
 
         public void Build()

@@ -16,11 +16,18 @@ namespace App.Battle.DataStores
 
         public IObservable<string> OnCardAdded => _CardIds.ObserveAdd().Select(x => x.Value);
         public IObservable<string> OnCardRemoved => _CardIds.ObserveRemove().Select(x => x.Value);
+        public IObservable<Unit> OnReset => _CardIds.ObserveReset();
+
 
         public void AddCard(string cardId)
         {
             _CardIds.Add(cardId);
             Debug.Log($"{cardId} added to support area");
+        }
+
+        public void Clear()
+        {
+            _CardIds.Clear();
         }
     }
 }
