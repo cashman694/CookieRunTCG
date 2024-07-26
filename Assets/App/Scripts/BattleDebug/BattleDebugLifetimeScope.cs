@@ -1,3 +1,4 @@
+using App.Battle.UseCases;
 using App.BattleDebug.Data;
 using App.BattleDebug.Presenters;
 using App.BattleDebug.UseCases;
@@ -32,6 +33,7 @@ namespace App.BattleDebug
             builder.RegisterEntryPoint<BattleDebugPlayerCardUseCase>();
             builder.RegisterEntryPoint<BattleDebugPhaseUseCase>();
             builder.RegisterEntryPoint<BattleDebugBattleUseCase>();
+            builder.RegisterEntryPoint<BattleEndPhaseUseCase>();
         }
     }
 }
