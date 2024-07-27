@@ -113,9 +113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fafbd90b55f0d548839a77da05580c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backRenderers: []
-  middleRenderers1:
+  backRenderers:
   - {fileID: 5662692393371493436}
+  middleRenderers1: []
   middleRenderers2: []
-  middleRenderers3: []
-  middleRenderers4: []
