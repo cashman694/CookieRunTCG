@@ -1828,6 +1828,7 @@ MonoBehaviour:
   _PlayerBattleAreaPresenter: {fileID: 642027813}
   _PlayerBreakAreaPresenter: {fileID: 1852424510}
   _PlayerStageAreaPresenter: {fileID: 62496281}
+  _stageCardViewPrefab: {fileID: 7005383553740221686, guid: 827dcf1d7aeee460bb5ef02b2a3516ec, type: 3}
   _PlayerTrashPresenter: {fileID: 206276678}
   _PlayerMulliganPresenter: {fileID: 221783598}
   _battlePhasePresenter: {fileID: 959600870}

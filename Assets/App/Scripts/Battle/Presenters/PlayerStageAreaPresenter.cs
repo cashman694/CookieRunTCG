@@ -1,6 +1,7 @@
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
 using App.Common.Data.MasterData;
+using Cysharp.Threading.Tasks;
 using System;
 using UniRx;
 using UniRx.Triggers;
@@ -14,8 +15,8 @@ namespace App.Battle.Presenters
     {
         [SerializeField] private SpriteRenderer _StageArea;
 
-        private Func<Transform, IFrontCardView> _CardViewFactory;
-        private IFrontCardView _CardView;
+        private Func<Transform, IStageCardView> _CardViewFactory;
+        private IStageCardView _CardView;
 
         private readonly Subject<Unit> _OnAreaSelected = new();
         public IObservable<Unit> OnAreaSelected => _OnAreaSelected;
@@ -23,11 +24,14 @@ namespace App.Battle.Presenters
         private readonly Subject<Unit> _OnRequestSendToTrash = new();
         public IObservable<Unit> OnRequestSendToTrash => _OnRequestSendToTrash;
 
+        private readonly Subject<string> _OnRequestUseStage = new();
+        public IObservable<string> OnRequestUseStage => _OnRequestUseStage;
+
         private readonly CompositeDisposable _Disposables = new();
 
         [Inject]
         private void Construct(
-            Func<Transform, IFrontCardView> cardViewFactory
+            Func<Transform, IStageCardView> cardViewFactory
         )
         {
             _CardViewFactory = cardViewFactory;
@@ -57,6 +61,9 @@ namespace App.Battle.Presenters
             cardViewComponent.gameObject.name = cardMasterData.CardNumber;
 
             _CardView.Setup(cardId, cardMasterData);
+            _CardView.OnUseSelected
+                .Subscribe(_OnRequestUseStage.OnNext)
+                .AddTo(cardViewComponent);
         }
 
         public void RemoveCard()
@@ -93,6 +100,7 @@ namespace App.Battle.Presenters
         private void OnDestroy()
         {
             _OnAreaSelected.Dispose();
+            _OnRequestUseStage.Dispose();
             _Disposables.Dispose();
 
             _CardView?.Unspawn();

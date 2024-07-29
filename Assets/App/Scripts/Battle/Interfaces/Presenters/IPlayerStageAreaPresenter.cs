@@ -8,6 +8,8 @@ namespace App.Battle.Interfaces.Presenters
     {
         IObservable<Unit> OnAreaSelected { get; }
         IObservable<Unit> OnRequestSendToTrash { get; }
+        IObservable<string> OnRequestUseStage { get; }
+
         void AddCard(string cardId, CardMasterData cardMasterData);
         void RemoveCard();
         void ActiveCard();
