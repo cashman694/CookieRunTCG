@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6042434bfb0d74a5bbbff800bbdc7656, type: 3}
-  m_Name: CookieCardMaster9
+  m_Name: ST1-007
   m_EditorClassIdentifier: 
-  <CardNumber>k__BackingField: ST1-009
-  <Name>k__BackingField: "\uC5D0\uC2A4\uD504\uB808\uC18C\uB9DB \uCFE0\uD0A4"
+  <CardNumber>k__BackingField: ST1-007
+  <Name>k__BackingField: "\uBBFC\uD2B8\uCD08\uCF54 \uCFE0\uD0A4"
   <Level>k__BackingField: 3
+  <Hp>k__BackingField: 3
+  <CardType>k__BackingField: 0
   <EnergyType>k__BackingField: 1
-  <Hp>k__BackingField: 5
-  <RareType>k__BackingField: 3
-  <Sprite>k__BackingField: {fileID: -8743550512286378322, guid: f458e3f0005cb4d69837dc88abb0c0c8, type: 3}
+  <Rarity>k__BackingField: 0
+  <Sprite>k__BackingField: {fileID: -6389145135224931954, guid: 14bca372b710e4e11b3dc9b71d99dfdf, type: 3}

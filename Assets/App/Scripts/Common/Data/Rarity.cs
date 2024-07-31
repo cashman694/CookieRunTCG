@@ -1,9 +1,9 @@
 namespace App.Common.Data
 {
-    public enum RareType
+    public enum Rarity
     {
         C,      // Common
-        UC,     // Uncommon
+        U,     // Uncommon
         R,      // Rare
         SR,     // SuperRare
         UR,     // UltraRare
