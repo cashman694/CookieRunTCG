@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace App.Battle.Interfaces.UseCases
 {
-    public interface IPlayerSetCookieUseCase
+    public interface IPlayerShowStageUseCase
     {
         UniTask Execute(CancellationToken token);
     }

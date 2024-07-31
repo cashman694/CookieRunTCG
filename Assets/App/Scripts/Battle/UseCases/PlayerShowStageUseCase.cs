@@ -1,6 +1,7 @@
 using App.Battle.Interfaces.DataStores;
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
+using App.Common.Data;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
@@ -8,7 +9,7 @@ using UniRx;
 
 namespace App.Battle.UseCases
 {
-    public class PlayerUseStageUseCase : IPlayerUseStageUseCase, IDisposable
+    public class PlayerShowStageUseCase : IPlayerShowStageUseCase, IDisposable
     {
         private readonly IPlayerStageAreaDataStore _PlayerStageAreaDataStore;
         private readonly IPlayerStageAreaPresenter _PlayerStageAreaPresenter;
@@ -18,7 +19,7 @@ namespace App.Battle.UseCases
 
         private CancellationTokenSource _Cts;
 
-        public PlayerUseStageUseCase(
+        public PlayerShowStageUseCase(
             IPlayerStageAreaDataStore playerStageAreaDataStore,
             IPlayerStageAreaPresenter playerStageAreaPresenter,
             IPlayerHandPresenter playerHandPresenter,
@@ -52,11 +53,6 @@ namespace App.Battle.UseCases
                 {
                     // 스테이지가 존재하면 내려놓을 수 없다
                     if (!string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
-                    {
-                        return;
-                    }
-
-                    if (string.IsNullOrEmpty(_SelectedCardId))
                     {
                         return;
                     }

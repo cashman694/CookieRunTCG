@@ -16,6 +16,7 @@ MonoBehaviour:
   <Name>k__BackingField: "\uD0D0\uD5D8\uAC00\uB9DB \uCFE0\uD0A4"
   <Level>k__BackingField: 1
   <Hp>k__BackingField: 1
+  <HasFlipEffect>k__BackingField: 1
   <CardType>k__BackingField: 0
   <EnergyType>k__BackingField: 1
   <Rarity>k__BackingField: 0

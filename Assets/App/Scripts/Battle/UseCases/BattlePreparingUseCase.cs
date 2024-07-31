@@ -10,7 +10,7 @@ namespace App.Battle.UseCases
     {
         private readonly IPlayerDeckUseCase _PlayerDeckUseCase;
         private readonly IPlayerMulliganUseCase _PlayerMulliganUseCase;
-        private readonly IPlayerSetCookieUseCase _PlayerSetCookieUseCase;
+        private readonly IPlayerStartingCookieUseCase _PlayerSetCookieUseCase;
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
         private readonly IBattlePhasePresenter _battlePhasePresenter;
         private CancellationTokenSource _Cts;
@@ -18,7 +18,7 @@ namespace App.Battle.UseCases
         public BattlePreparingUseCase(
             IPlayerDeckUseCase playerDeckUseCase,
             IPlayerMulliganUseCase playerMulliganUseCase,
-            IPlayerSetCookieUseCase playerSetCookieUseCase,
+            IPlayerStartingCookieUseCase playerSetCookieUseCase,
             IPlayerBattleAreaUseCase playerBattleAreaUseCase,
             IBattlePhasePresenter battlePhasePresenter
         )

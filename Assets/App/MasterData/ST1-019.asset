@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6042434bfb0d74a5bbbff800bbdc7656, type: 3}
-  m_Name: ST1-011
+  m_Name: ST1-019
   m_EditorClassIdentifier: 
-  <CardNumber>k__BackingField: ST1-011
-  <Name>k__BackingField: "\uC6A9\uAC10\uD55C \uCFE0\uD0A4"
-  <Level>k__BackingField: 1
-  <Hp>k__BackingField: 2
+  <CardNumber>k__BackingField: ST1-019
+  <Name>k__BackingField: "\uD654\uB048\uD55C \uC824\uB9AC \uB369\uC5B4\uB9AC"
+  <Level>k__BackingField: 0
+  <Hp>k__BackingField: 0
   <HasFlipEffect>k__BackingField: 0
-  <CardType>k__BackingField: 0
-  <EnergyType>k__BackingField: 0
-  <Rarity>k__BackingField: 0
-  <Sprite>k__BackingField: {fileID: 3877695244451474172, guid: 0a2eed8cade794b828daf8e3a8899f56, type: 3}
+  <CardType>k__BackingField: 1
+  <EnergyType>k__BackingField: 1
+  <Rarity>k__BackingField: 1
+  <Sprite>k__BackingField: {fileID: -5244835997706302796, guid: 266701f77733d487bb941768a480a788, type: 3}

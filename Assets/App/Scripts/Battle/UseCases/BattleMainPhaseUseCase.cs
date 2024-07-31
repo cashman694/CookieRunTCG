@@ -12,7 +12,7 @@ namespace App.Battle.UseCases
         private readonly BattleConfig _BattleConfig;
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
         private readonly IPlayerShowCookieUseCase _PlayerShowCookieUseCase;
-        private readonly IPlayerUseStageUseCase _PlayerUseStageUseCase;
+        private readonly IPlayerShowStageUseCase _PlayerUseStageUseCase;
         private readonly IBattlePhasePresenter _battlePhasePresenter;
         private CancellationTokenSource _Cts;
 
@@ -20,7 +20,7 @@ namespace App.Battle.UseCases
             BattleConfig battleConfig,
             IPlayerBattleAreaUseCase playerBattleAreaUseCase,
             IPlayerShowCookieUseCase playerShowCookieUseCase,
-            IPlayerUseStageUseCase playerUseStageUseCase,
+            IPlayerShowStageUseCase playerUseStageUseCase,
             IBattlePhasePresenter battlePhasePresenter
         )
         {
