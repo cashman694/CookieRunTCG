@@ -12,7 +12,7 @@ namespace App.Catalog.Data
             Hp = cardMasterData.Hp;
             Level = cardMasterData.Level;
             CostType = cardMasterData.EnergyType.ToString();
-            RareType = cardMasterData.RareType.ToString();
+            Rarity = cardMasterData.Rarity.ToString();
             Sprite = cardMasterData.Sprite;
         }
 
@@ -21,7 +21,7 @@ namespace App.Catalog.Data
         public int Hp { get; }
         public int Level { get; }
         public string CostType { get; }
-        public string RareType { get; }
+        public string Rarity { get; }
         public Sprite Sprite { get; }
 
         public override string ToString()
