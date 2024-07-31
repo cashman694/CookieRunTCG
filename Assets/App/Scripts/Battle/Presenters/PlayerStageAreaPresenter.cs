@@ -21,6 +21,9 @@ namespace App.Battle.Presenters
         private readonly Subject<Unit> _OnAreaSelected = new();
         public IObservable<Unit> OnAreaSelected => _OnAreaSelected;
 
+        private readonly Subject<string> _OnCardSelected = new();
+        public IObservable<string> OnCardSelected => _OnCardSelected;
+
         private readonly Subject<Unit> _OnRequestSendToTrash = new();
         public IObservable<Unit> OnRequestSendToTrash => _OnRequestSendToTrash;
 
@@ -57,10 +60,17 @@ namespace App.Battle.Presenters
             _CardView = _CardViewFactory.Invoke(transform);
 
             var cardViewComponent = (MonoBehaviour)_CardView;
-            cardViewComponent.transform.SetAsFirstSibling();
             cardViewComponent.gameObject.name = cardMasterData.CardNumber;
 
+            cardViewComponent.transform.SetAsLastSibling();
+            cardViewComponent.transform.Translate(Vector3.back);
+
             _CardView.Setup(cardId, cardMasterData);
+
+            _CardView.OnCardSelected
+                .Subscribe(_OnCardSelected.OnNext)
+                .AddTo(cardViewComponent);
+
             _CardView.OnUseSelected
                 .Subscribe(_OnRequestUseStage.OnNext)
                 .AddTo(cardViewComponent);
@@ -95,6 +105,16 @@ namespace App.Battle.Presenters
             }
 
             _CardView.Rest();
+        }
+
+        public void SelectCard()
+        {
+            if (_CardView == null)
+            {
+                return;
+            }
+
+            _CardView.Select(true);
         }
 
         private void OnDestroy()

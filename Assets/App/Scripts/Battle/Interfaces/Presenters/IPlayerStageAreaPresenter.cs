@@ -7,6 +7,7 @@ namespace App.Battle.Interfaces.Presenters
     public interface IPlayerStageAreaPresenter
     {
         IObservable<Unit> OnAreaSelected { get; }
+        IObservable<string> OnCardSelected { get; }
         IObservable<Unit> OnRequestSendToTrash { get; }
         IObservable<string> OnRequestUseStage { get; }
 
@@ -14,5 +15,6 @@ namespace App.Battle.Interfaces.Presenters
         void RemoveCard();
         void ActiveCard();
         void RestCard();
+        void SelectCard();
     }
 }

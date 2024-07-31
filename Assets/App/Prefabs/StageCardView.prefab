@@ -50,6 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardImage: {fileID: 7698306254365678349}
   _cardCollider: {fileID: 1513067374986353670}
+  _useButton: {fileID: 2152098224272865755}
   _useButtonCollider: {fileID: 7974558830417230142}
 --- !u!114 &2655773191571196268
 MonoBehaviour:

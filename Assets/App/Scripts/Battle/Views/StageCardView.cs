@@ -12,6 +12,8 @@ namespace App.Battle.Views
         [SerializeField] SpriteRenderer _cardImage;
         [SerializeField] Collider2D _cardCollider;
 
+        [Header("UseButton")]
+        [SerializeField] GameObject _useButton;
         [SerializeField] Collider2D _useButtonCollider;
 
         private string _CardId;
@@ -30,6 +32,15 @@ namespace App.Battle.Views
         {
             _CardId = cardId;
             _cardImage.sprite = cardMasterData.Sprite;
+            _useButton.SetActive(false);
+
+            _cardCollider.OnMouseUpAsButtonAsObservable()
+                .Subscribe(x =>
+                {
+                    UnityEngine.Debug.Log("OnCardClicked");
+                    _OnCardSelected.OnNext(_CardId);
+                })
+                .AddTo(this);
 
             _useButtonCollider.OnMouseUpAsButtonAsObservable()
                 .Subscribe(x =>
@@ -38,11 +49,6 @@ namespace App.Battle.Views
                     _OnUseSelected.OnNext(_CardId);
                 })
                 .AddTo(this);
-        }
-
-        private void OnMouseUpAsButton()
-        {
-            _OnCardSelected.OnNext(_CardId);
         }
 
         public void Active()
@@ -58,6 +64,7 @@ namespace App.Battle.Views
         public void Select(bool isSelected)
         {
             _IsSelected = isSelected;
+            _useButton.SetActive(isSelected);
         }
 
         public void Unspawn()
