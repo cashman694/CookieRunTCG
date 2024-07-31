@@ -100,7 +100,7 @@ namespace App.Battle
             builder.RegisterEntryPoint<PlayerShowCookieUseCase>().As<IPlayerShowCookieUseCase>();
             builder.RegisterEntryPoint<PlayerUseStageUseCase>().As<IPlayerUseStageUseCase>();
             builder.RegisterEntryPoint<PlayerMulliganUseCase>().As<IPlayerMulliganUseCase>();
-            builder.RegisterEntryPoint<PlayerSetCookieUseCase>().As<IPlayerSetCookieUseCase>();
+            builder.RegisterEntryPoint<PlayerStartingCookieUseCase>().As<IPlayerStartingCookieUseCase>();
 
             builder.RegisterEntryPoint<BattlePreparingUseCase>().As<IBattlePreparingUseCase>();
 

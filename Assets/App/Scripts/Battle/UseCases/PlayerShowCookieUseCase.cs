@@ -1,6 +1,7 @@
 using App.Battle.Interfaces.DataStores;
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
+using App.Common.Data;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
@@ -11,6 +12,7 @@ namespace App.Battle.UseCases
 {
     public class PlayerShowCookieUseCase : IPlayerShowCookieUseCase, IDisposable
     {
+        private readonly IPlayerCardDataStore _playerCardDataStore;
         private readonly IPlayerBattleAreaDataStore _PlayerBattleAreaDataStore;
         private readonly IPlayerBattleAreaPresenter _PlayerBattleAreaPresenter;
         private readonly IPlayerHandPresenter _PlayerHandPresenter;
@@ -20,12 +22,14 @@ namespace App.Battle.UseCases
 
         [Inject]
         public PlayerShowCookieUseCase(
+            IPlayerCardDataStore playerCardDataStore,
             IPlayerBattleAreaDataStore playerBattleAreaDataStore,
             IPlayerBattleAreaPresenter playerBattleAreaPresenter,
             IPlayerHandPresenter playerHandPresenter,
             IPlayerBattleAreaUseCase playerBattleAreaUseCase
         )
         {
+            _playerCardDataStore = playerCardDataStore;
             _PlayerBattleAreaDataStore = playerBattleAreaDataStore;
             _PlayerBattleAreaPresenter = playerBattleAreaPresenter;
             _PlayerHandPresenter = playerHandPresenter;
@@ -57,7 +61,14 @@ namespace App.Battle.UseCases
                         return;
                     }
 
-                    if (string.IsNullOrEmpty(_SelectedCardId))
+                    var cardData = _playerCardDataStore.GetCardBy(_SelectedCardId);
+
+                    if (cardData == null)
+                    {
+                        return;
+                    }
+
+                    if (cardData.CardType != CardType.Cookie)
                     {
                         return;
                     }

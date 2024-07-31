@@ -4,22 +4,27 @@ using Cysharp.Threading.Tasks;
 using UniRx;
 using System;
 using System.Threading;
+using App.Battle.Interfaces.DataStores;
+using App.Common.Data;
 
 namespace App.Battle.UseCases
 {
-    public class PlayerSetCookieUseCase : IPlayerSetCookieUseCase, IDisposable
+    public class PlayerStartingCookieUseCase : IPlayerStartingCookieUseCase, IDisposable
     {
+        private readonly IPlayerCardDataStore _playerCardDataStore;
         private readonly IPlayerHandPresenter _PlayerHandPresenter;
         private readonly IPlayerBattleAreaPresenter _PlayerBattleAreaPresenter;
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
         private CancellationTokenSource _Cts;
 
-        public PlayerSetCookieUseCase(
+        public PlayerStartingCookieUseCase(
+            IPlayerCardDataStore playerCardDataStore,
             IPlayerHandPresenter playerHandPresenter,
             IPlayerBattleAreaPresenter playerBattleAreaPresenter,
             IPlayerBattleAreaUseCase playerBattleAreaUseCase
         )
         {
+            _playerCardDataStore = playerCardDataStore;
             _PlayerHandPresenter = playerHandPresenter;
             _PlayerBattleAreaPresenter = playerBattleAreaPresenter;
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
@@ -43,7 +48,14 @@ namespace App.Battle.UseCases
             _PlayerBattleAreaPresenter.OnCookieAreaSelected
                 .Subscribe(areaIndex =>
                 {
-                    if (string.IsNullOrEmpty(_SelectedCardId))
+                    var cardData = _playerCardDataStore.GetCardBy(_SelectedCardId);
+
+                    if (cardData == null)
+                    {
+                        return;
+                    }
+
+                    if (cardData.CardType != CardType.Cookie)
                     {
                         return;
                     }
