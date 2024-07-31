@@ -2,6 +2,7 @@ using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
+using App.Common.Data;
 using UniRx;
 using VContainer;
 using VContainer.Unity;
@@ -10,7 +11,7 @@ namespace App.Battle.UseCases
 {
     public class PlayerStageAreaUseCase : IPlayerStageAreaUseCase, IInitializable
     {
-        private readonly IPlayerCardDataStore _PlayerCardDataStore;
+        private readonly IPlayerCardDataStore _playerCardDataStore;
         private readonly IPlayerStageAreaDataStore _PlayerStageAreaDataStore;
         private readonly IPlayerStageAreaPresenter _PlayerStageAreaPresenter;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
@@ -29,7 +30,7 @@ namespace App.Battle.UseCases
             IPlayerTrashDataStore playerTrashDataStore
         )
         {
-            _PlayerCardDataStore = playerCardDataStore;
+            _playerCardDataStore = playerCardDataStore;
             _PlayerStageAreaDataStore = playerStageAreaDataStore;
             _PlayerStageAreaPresenter = playerStageAreaPresenter;
             _PlayerHandDataStore = playerHandDataStore;
@@ -42,7 +43,7 @@ namespace App.Battle.UseCases
             _PlayerStageAreaDataStore.OnCardAdded
                 .Subscribe(x =>
                 {
-                    var cardData = _PlayerCardDataStore.GetCardBy(x);
+                    var cardData = _playerCardDataStore.GetCardBy(x);
                     if (cardData == null)
                     {
                         return;
@@ -94,6 +95,18 @@ namespace App.Battle.UseCases
             }
 
             if (!string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
+            {
+                return;
+            }
+
+            var cardData = _playerCardDataStore.GetCardBy(cardId);
+
+            if (cardData == null)
+            {
+                return;
+            }
+
+            if (cardData.CardType != CardType.Stage)
             {
                 return;
             }

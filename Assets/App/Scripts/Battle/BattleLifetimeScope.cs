@@ -98,7 +98,7 @@ namespace App.Battle
 
             // 메인페이즈의 각 행동
             builder.RegisterEntryPoint<PlayerShowCookieUseCase>().As<IPlayerShowCookieUseCase>();
-            builder.RegisterEntryPoint<PlayerUseStageUseCase>().As<IPlayerUseStageUseCase>();
+            builder.RegisterEntryPoint<PlayerShowStageUseCase>().As<IPlayerShowStageUseCase>();
             builder.RegisterEntryPoint<PlayerMulliganUseCase>().As<IPlayerMulliganUseCase>();
             builder.RegisterEntryPoint<PlayerStartingCookieUseCase>().As<IPlayerStartingCookieUseCase>();
 
