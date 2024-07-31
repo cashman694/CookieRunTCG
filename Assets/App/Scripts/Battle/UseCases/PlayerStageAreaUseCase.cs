@@ -57,6 +57,13 @@ namespace App.Battle.UseCases
                     _PlayerStageAreaPresenter.RemoveCard();
                 })
                 .AddTo(_Disposables);
+
+            _PlayerStageAreaPresenter.OnCardSelected
+                .Subscribe(x =>
+                {
+                    _PlayerStageAreaPresenter.SelectCard();
+                })
+                .AddTo(_Disposables);
         }
 
         /// <summary>

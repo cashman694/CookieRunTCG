@@ -31,6 +31,7 @@ namespace App.Battle
 
         [Header("Player Stage Area")]
         [SerializeField] private PlayerStageAreaPresenter _PlayerStageAreaPresenter;
+        [SerializeField] private StageCardView _stageCardViewPrefab;
 
         [Header("Player Trash")]
         [SerializeField] private PlayerTrashPresenter _PlayerTrashPresenter;
@@ -71,6 +72,11 @@ namespace App.Battle
 
             builder.Register<PlayerStageAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerStageAreaPresenter).As<IPlayerStageAreaPresenter>();
+            builder.RegisterFactory<Transform, IStageCardView>(resolver =>
+                {
+                    return transform => resolver.Instantiate(_stageCardViewPrefab, transform);
+                },
+                Lifetime.Scoped);
 
             builder.Register<PlayerTrashDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerTrashPresenter).As<IPlayerTrashPresenter>();

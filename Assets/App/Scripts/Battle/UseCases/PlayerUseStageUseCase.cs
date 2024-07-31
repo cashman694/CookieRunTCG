@@ -46,7 +46,7 @@ namespace App.Battle.UseCases
             CompositeDisposable _Disposables = new();
             string _SelectedCardId = default;
 
-            // 마우스 클릭을 통한 스테이지의 사용
+            // 마우스 클릭을 통한 스테이지의 등장
             _PlayerStageAreaPresenter.OnAreaSelected
                 .Subscribe(_ =>
                 {
@@ -62,6 +62,13 @@ namespace App.Battle.UseCases
                     }
 
                     _PlayerStageAreaUseCase.ShowStageCard(_SelectedCardId);
+                })
+                .AddTo(_Disposables);
+
+            _PlayerStageAreaPresenter.OnRequestUseStage
+                .Subscribe(x =>
+                {
+                    UnityEngine.Debug.Log($"Use Stage: [{x}]");
                 })
                 .AddTo(_Disposables);
 

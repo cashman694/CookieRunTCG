@@ -11,13 +11,8 @@ namespace App.Battle.Views
 {
     public class CardView : MonoBehaviour, IFrontCardView
     {
-        [SerializeField] TMP_Text _CardNameTMP;
-        [SerializeField] TMP_Text _HPTMP;
-        [SerializeField] TMP_Text _CardNumberTMP;
-        [SerializeField] TMP_Text _LevelTMP;
         [SerializeField] SpriteRenderer Character;
-        public PRS originPRS;
-        public bool IsEnlarged;
+
         private string _CardId;
         public string CardId => _CardId;
 
@@ -27,14 +22,13 @@ namespace App.Battle.Views
         public bool IsSelected => _IsSelected;
         private bool _IsSelected;
 
+        public PRS originPRS;
+        public bool IsEnlarged;
+
         public void Setup(string cardId, CardMasterData cardMasterData)
         {
             _CardId = cardId;
 
-            _CardNameTMP.text = cardMasterData.Name;
-            _HPTMP.text = "HP" + cardMasterData.Hp.ToString();
-            _CardNumberTMP.text = cardMasterData.CardNumber;
-            _LevelTMP.text = cardMasterData.Level.ToString();
             Character.sprite = cardMasterData.Sprite;
         }
 
