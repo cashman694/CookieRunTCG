@@ -69,17 +69,22 @@ namespace App.Battle.UseCases
 
         /// <summary>
         /// 테스트용 코드
-        /// 패의 첫번째 카드를 스테이지에리어에 놓는다
+        /// 패의 존재하는 스테이지 카드를 스테이지에리어에 놓는다
         /// </summary>
         public void TestShowStageCard()
         {
-            var cardId = _PlayerHandPresenter.GetFirstCardId();
-            if (cardId == null)
+            foreach (var cardId in _PlayerHandDataStore.CardIds)
             {
+                var card = _playerCardDataStore.GetCardBy(cardId);
+
+                if (card == null || card.CardType != CardType.Stage)
+                {
+                    continue;
+                }
+
+                ShowStageCard(cardId);
                 return;
             }
-
-            ShowStageCard(cardId);
         }
 
         /// <summary>
