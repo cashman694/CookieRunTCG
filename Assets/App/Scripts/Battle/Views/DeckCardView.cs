@@ -7,6 +7,11 @@ namespace App.Battle.Views
     {
         public string CardId => string.Empty;
 
+        public void SetPosition(Vector3 pos)
+        {
+            transform.SetPositionAndRotation(pos, transform.rotation);
+        }
+
         public void Unspawn()
         {
             Destroy(gameObject);

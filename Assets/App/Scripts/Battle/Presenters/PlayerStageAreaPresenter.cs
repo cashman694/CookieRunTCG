@@ -1,6 +1,7 @@
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
 using App.Common.Data.MasterData;
+using App.Field.Presenters;
 using Cysharp.Threading.Tasks;
 using System;
 using UniRx;
@@ -13,8 +14,7 @@ namespace App.Battle.Presenters
 {
     public class PlayerStageAreaPresenter : MonoBehaviour, IPlayerStageAreaPresenter
     {
-        [SerializeField] private SpriteRenderer _StageArea;
-
+        private PlayerFieldPresenter _playerFieldPresenter;
         private Func<Transform, IStageCardView> _CardViewFactory;
         private IStageCardView _CardView;
 
@@ -34,9 +34,11 @@ namespace App.Battle.Presenters
 
         [Inject]
         private void Construct(
+            PlayerFieldPresenter playerFieldPresenter,
             Func<Transform, IStageCardView> cardViewFactory
         )
         {
+            _playerFieldPresenter = playerFieldPresenter;
             _CardViewFactory = cardViewFactory;
 
             Assert.IsNotNull(_CardViewFactory);
@@ -44,25 +46,17 @@ namespace App.Battle.Presenters
 
         private void Start()
         {
-            Assert.IsTrue(_StageArea != null);
-
-            _StageArea.OnMouseUpAsButtonAsObservable()
-                .Subscribe(x =>
-                {
-                    _OnAreaSelected.OnNext(Unit.Default);
-                    Debug.Log("StageArea Selected");
-                })
+            _playerFieldPresenter.OnStageAreaClicked
+                .Subscribe(_OnAreaSelected.OnNext)
                 .AddTo(_Disposables);
         }
 
         public void AddCard(string cardId, CardMasterData cardMasterData)
         {
             _CardView = _CardViewFactory.Invoke(transform);
+            _CardView.SetPosition(_playerFieldPresenter.StageAreaTransform.position);
 
             var cardViewComponent = (MonoBehaviour)_CardView;
-            cardViewComponent.gameObject.name = cardMasterData.CardNumber;
-
-            cardViewComponent.transform.SetAsLastSibling();
             cardViewComponent.transform.Translate(Vector3.back);
 
             _CardView.Setup(cardId, cardMasterData);

@@ -10,7 +10,7 @@ namespace App.Battle.UseCases
     {
         private readonly IPlayerDeckUseCase _PlayerDeckUseCase;
         private readonly IPlayerMulliganUseCase _PlayerMulliganUseCase;
-        private readonly IPlayerStartingCookieUseCase _PlayerSetCookieUseCase;
+        private readonly IPlayerStartingCookieUseCase _playerStartingCookieUseCase;
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
         private readonly IBattlePhasePresenter _battlePhasePresenter;
         private CancellationTokenSource _Cts;
@@ -18,14 +18,14 @@ namespace App.Battle.UseCases
         public BattlePreparingUseCase(
             IPlayerDeckUseCase playerDeckUseCase,
             IPlayerMulliganUseCase playerMulliganUseCase,
-            IPlayerStartingCookieUseCase playerSetCookieUseCase,
+            IPlayerStartingCookieUseCase playerStartingCookieUseCase,
             IPlayerBattleAreaUseCase playerBattleAreaUseCase,
             IBattlePhasePresenter battlePhasePresenter
         )
         {
             _PlayerDeckUseCase = playerDeckUseCase;
             _PlayerMulliganUseCase = playerMulliganUseCase;
-            _PlayerSetCookieUseCase = playerSetCookieUseCase;
+            _playerStartingCookieUseCase = playerStartingCookieUseCase;
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
             _battlePhasePresenter = battlePhasePresenter;
         }
@@ -60,8 +60,8 @@ namespace App.Battle.UseCases
             // await _PlayerDrawCookieUseCase.Execute();
 
             // 쿠키카드를 한 장을 뒷면으로 내려놓는다
-            UnityEngine.Debug.Log("Start SetCookieCard");
-            await _PlayerSetCookieUseCase.Execute(token);
+            UnityEngine.Debug.Log("Start PlaceStartingCookie");
+            await _playerStartingCookieUseCase.Execute(token);
             await UniTask.WaitForSeconds(3f, cancellationToken: token);
 
             // 쿠키카드를 뒤집고 HP카드를 추가

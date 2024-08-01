@@ -41,6 +41,7 @@ namespace App.Battle.UseCases
                 .Subscribe(x =>
                 {
                     _SelectedCardId = x;
+                    _PlayerHandPresenter.SelectCard(x);
                 })
                 .AddTo(_Disposables);
 
@@ -69,7 +70,9 @@ namespace App.Battle.UseCases
 
             await UniTask.WaitUntil(() => _Cts.IsCancellationRequested);
 
+            _PlayerHandPresenter.SelectCard(default);
             _Disposables.Dispose();
+
             _Cts.Dispose();
             _Cts = null;
         }

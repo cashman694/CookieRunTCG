@@ -34,6 +34,8 @@ namespace App.Battle.Views
             _cardImage.sprite = cardMasterData.Sprite;
             _useButton.SetActive(false);
 
+            gameObject.name = cardMasterData.Name;
+
             _cardCollider.OnMouseUpAsButtonAsObservable()
                 .Subscribe(x =>
                 {
@@ -49,6 +51,11 @@ namespace App.Battle.Views
                     _OnUseSelected.OnNext(_CardId);
                 })
                 .AddTo(this);
+        }
+
+        public void SetPosition(Vector3 pos)
+        {
+            transform.SetPositionAndRotation(pos, transform.rotation);
         }
 
         public void Active()

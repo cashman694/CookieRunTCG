@@ -28,8 +28,14 @@ namespace App.Battle.Views
         public void Setup(string cardId, CardMasterData cardMasterData)
         {
             _CardId = cardId;
-
             Character.sprite = cardMasterData.Sprite;
+
+            gameObject.name = cardMasterData.CardNumber;
+        }
+
+        public void SetPosition(Vector3 pos)
+        {
+            transform.SetPositionAndRotation(pos, transform.rotation);
         }
 
         void OnMouseOver()

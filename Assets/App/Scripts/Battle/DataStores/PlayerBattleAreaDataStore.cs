@@ -177,6 +177,11 @@ namespace App.Battle.DataStores
             _CookieCards.Clear();
             _HpCardsMap.Clear();
 
+            for (var i = 0; i < _MaxCount; i++)
+            {
+                _HpCardsMap.Add(i, new());
+            }
+
             _OnReset.OnNext(Unit.Default);
         }
 
