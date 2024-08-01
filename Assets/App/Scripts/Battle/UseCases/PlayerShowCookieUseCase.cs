@@ -88,6 +88,7 @@ namespace App.Battle.UseCases
 
             await UniTask.WaitUntil(() => _Cts.IsCancellationRequested);
 
+            _PlayerHandPresenter.SelectCard(default);
             _Disposables.Dispose();
 
             _Cts.Dispose();

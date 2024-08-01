@@ -1,5 +1,6 @@
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
+using App.Field.Presenters;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,14 +11,18 @@ namespace App.Battle.Presenters
 {
     public class PlayerDeckPresenter : MonoBehaviour, IPlayerDeckPresenter
     {
+        private PlayerFieldPresenter _playerFieldPresenter;
         private Func<Transform, IBackCardView> _CardViewFactory;
+
         private readonly List<ICardView> _CardViews = new();
 
         [Inject]
         private void Construct(
+            PlayerFieldPresenter playerFieldPresenter,
             Func<Transform, IBackCardView> cardViewFactory
         )
         {
+            _playerFieldPresenter = playerFieldPresenter;
             _CardViewFactory = cardViewFactory;
 
             Assert.IsNotNull(_CardViewFactory);
@@ -42,6 +47,8 @@ namespace App.Battle.Presenters
             }
 
             var deckCard = _CardViewFactory.Invoke(transform);
+            deckCard.SetPosition(_playerFieldPresenter.DeckTransform.position);
+
             _CardViews.Add(deckCard);
         }
 

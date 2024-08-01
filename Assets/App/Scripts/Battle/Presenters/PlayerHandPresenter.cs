@@ -2,6 +2,7 @@ using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
 using App.Battle.Views;
 using App.Common.Data.MasterData;
+using App.Field.Presenters;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,8 @@ namespace App.Battle.Presenters
     public class PlayerHandPresenter : MonoBehaviour, IPlayerHandPresenter
     {
         public static PlayerHandPresenter Inst { get; private set; }
-        CardView selectCard;
-        bool isMyCardDrag;
-        void Awake() => Inst = this;
 
+        private PlayerFieldPresenter _playerFieldPresenter;
         private Func<Transform, IFrontCardView> _CardViewFactory;
         private readonly Dictionary<string, IFrontCardView> _CardViews = new();
 
@@ -27,15 +26,22 @@ namespace App.Battle.Presenters
 
         private readonly CompositeDisposable _Disposables = new();
 
+        CardView selectCard;
+        bool isMyCardDrag;
+
         [Inject]
         private void Construct(
+            PlayerFieldPresenter playerFieldPresenter,
             Func<Transform, IFrontCardView> cardViewFactory
         )
         {
+            _playerFieldPresenter = playerFieldPresenter;
             _CardViewFactory = cardViewFactory;
 
             Assert.IsNotNull(_CardViewFactory);
         }
+
+        void Awake() => Inst = this;
 
         public void AddCard(string cardId, CardMasterData cardMasterData)
         {
@@ -44,7 +50,8 @@ namespace App.Battle.Presenters
 
             var cardViewComponent = (MonoBehaviour)newCardView;
             cardViewComponent.transform.SetAsFirstSibling();
-            cardViewComponent.gameObject.name = cardMasterData.CardNumber;
+
+            newCardView.SetPosition(_playerFieldPresenter.HandTransform.position);
 
             newCardView.Setup(cardId, cardMasterData);
             newCardView.OnCardSelected
@@ -91,13 +98,9 @@ namespace App.Battle.Presenters
             {
                 var isSelected = view.CardId == cardId;
                 view.Select(isSelected);
-
-                // 선택된 카드를 구분하기 위해 y위치를 조정
-                var cardViewTransform = ((MonoBehaviour)view).transform;
-                var pos = cardViewTransform.localPosition;
-                var posY = isSelected ? 5f : 0f;
-                cardViewTransform.localPosition = new Vector3(pos.x, posY, pos.z);
             }
+
+            ArrangeCards().Forget();
         }
 
         // FIXME: 카드를 적당한 간격으로 배치
@@ -107,16 +110,21 @@ namespace App.Battle.Presenters
             await UniTask.WaitForEndOfFrame();
 
             var count = 0;
-
-            // 배경 게임오브젝트를 제외
-            var sortingOrder = transform.childCount - 1;
+            var sortingOrder = transform.childCount;
 
             foreach (var cardView in transform.GetComponentsInChildren<CardView>())
             {
-                var cardViewTransform = ((MonoBehaviour)cardView).transform;
-                cardViewTransform.localPosition = Vector3.zero + Vector3.right * 5f * count++;
+                var originPos = _playerFieldPresenter.HandTransform.position;
+                var cardPos = originPos + Vector3.right * 5f * count++;
 
-                var cardOrder = cardViewTransform.GetComponent<CardOrder>();
+                if (cardView.IsSelected)
+                {
+                    cardPos += Vector3.up * 5f;
+                }
+
+                cardView.SetPosition(cardPos);
+
+                var cardOrder = cardView.GetComponent<CardOrder>();
                 cardOrder.SetOriginOrder(--sortingOrder);
             }
         }

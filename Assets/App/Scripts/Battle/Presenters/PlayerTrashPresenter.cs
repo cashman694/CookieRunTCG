@@ -2,11 +2,11 @@ using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
 using App.Battle.Views;
 using App.Common.Data.MasterData;
+using App.Field.Presenters;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UniRx;
-using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VContainer;
@@ -17,6 +17,7 @@ namespace App.Battle.Presenters
     {
         [SerializeField] private SpriteRenderer _Trash;
 
+        private PlayerFieldPresenter _playerFieldPresenter;
         private Func<Transform, IFrontCardView> _CardViewFactory;
         private readonly Dictionary<string, IFrontCardView> _CardViews = new();
 
@@ -27,9 +28,11 @@ namespace App.Battle.Presenters
 
         [Inject]
         private void Construct(
+            PlayerFieldPresenter playerFieldPresenter,
             Func<Transform, IFrontCardView> cardViewFactory
         )
         {
+            _playerFieldPresenter = playerFieldPresenter;
             _CardViewFactory = cardViewFactory;
 
             Assert.IsNotNull(_CardViewFactory);
@@ -37,14 +40,8 @@ namespace App.Battle.Presenters
 
         private void Start()
         {
-            Assert.IsTrue(_Trash != null);
-
-            _Trash.OnMouseUpAsButtonAsObservable()
-                .Subscribe(x =>
-                {
-                    _OnTrashSelected.OnNext(Unit.Default);
-                    Debug.Log("Trash Selected");
-                })
+            _playerFieldPresenter.OnTrashClicked
+                .Subscribe(_OnTrashSelected.OnNext)
                 .AddTo(_Disposables);
         }
 
@@ -53,9 +50,7 @@ namespace App.Battle.Presenters
             var newCardView = _CardViewFactory.Invoke(transform);
             _CardViews.Add(cardId, newCardView);
 
-            var cardViewComponent = (MonoBehaviour)newCardView;
-            cardViewComponent.gameObject.name = cardMasterData.CardNumber;
-
+            newCardView.SetPosition(_playerFieldPresenter.TrashTransform.position);
             newCardView.Setup(cardId, cardMasterData);
 
             ArrangeCards().Forget();
@@ -87,8 +82,10 @@ namespace App.Battle.Presenters
 
             foreach (var cardView in transform.GetComponentsInChildren<CardView>())
             {
-                var cardlocalPos = Vector3.zero + Vector3.right * 5f * count++;
-                cardView.transform.localPosition = cardlocalPos;
+                var originPos = _playerFieldPresenter.TrashTransform.position;
+                var cardPos = originPos + Vector3.right * 5f * count++;
+                cardView.SetPosition(cardPos);
+
                 var cardOrder = cardView.GetComponent<CardOrder>();
                 cardOrder.SetOriginOrder(sortingOrder);
                 sortingOrder++;

@@ -9,21 +9,21 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using App.Battle.Views;
-using UniRx.Triggers;
 using UniRx;
 using App.Battle.Data;
+using App.Field.Presenters;
 
 namespace App.Battle.Presenters
 {
     public class PlayerBattleAreaPresenter : MonoBehaviour, IPlayerBattleAreaPresenter
     {
         [Header("Cookie")]
-        [SerializeField] private Transform[] _CookieTransforms = new Transform[2];
-        [SerializeField] private SpriteRenderer[] _CookieAreas = new SpriteRenderer[2];
+        [SerializeField] private Transform[] _cookieContainer = new Transform[2];
 
         [Header("Hp")]
-        [SerializeField] private Transform[] _HpCardAreas = new Transform[2];
+        [SerializeField] private Transform[] _hpContainer = new Transform[2];
 
+        private PlayerFieldPresenter _playerFieldPresenter;
         private Func<Transform, IFrontCardView> _FrontCardViewFactory;
         private ICardView[] _CookieCardViews = new ICardView[2];
 
@@ -38,10 +38,12 @@ namespace App.Battle.Presenters
 
         [Inject]
         private void Construct(
+            PlayerFieldPresenter playerFieldPresenter,
             Func<Transform, IFrontCardView> frontCardViewFactory,
             Func<Transform, IBackCardView> backCardViewFactory
         )
         {
+            _playerFieldPresenter = playerFieldPresenter;
             _FrontCardViewFactory = frontCardViewFactory;
             _BackCardViewFactory = backCardViewFactory;
 
@@ -50,40 +52,28 @@ namespace App.Battle.Presenters
 
         private void Start()
         {
-            Assert.IsTrue(_CookieAreas[0] != null);
-            Assert.IsTrue(_CookieAreas[1] != null);
-
-            _CookieAreas[0].OnMouseUpAsButtonAsObservable()
-                .Subscribe(x =>
-                {
-                    _OnCookieAreaSelected.OnNext(0);
-                    Debug.Log("BattleArea_0 Selected");
-                })
-                .AddTo(_Disposables);
-
-            _CookieAreas[1].OnMouseUpAsButtonAsObservable()
-                .Subscribe(x =>
-                {
-                    _OnCookieAreaSelected.OnNext(1);
-                    Debug.Log("BattleArea_1 Selected");
-                })
+            _playerFieldPresenter.OnCookieAreaClicked
+                .Subscribe(_OnCookieAreaSelected.OnNext)
                 .AddTo(_Disposables);
         }
 
         public void AddCookieCard(int areaIndex, string cardId, CardMasterData cardMasterData, CardState cardState)
         {
-            Assert.IsTrue(areaIndex >= 0 || areaIndex <= _CookieTransforms.Length);
+            Assert.IsTrue(areaIndex >= 0 || areaIndex <= _cookieContainer.Length);
 
-            var areaTransform = _CookieTransforms[areaIndex];
+            var cookieParent = _cookieContainer[areaIndex];
 
             if (cardState == CardState.FaceDown)
             {
-                var newCardView = _BackCardViewFactory.Invoke(areaTransform);
+                var newCardView = _BackCardViewFactory.Invoke(cookieParent);
+                newCardView.SetPosition(_playerFieldPresenter.CookieTransforms[areaIndex].position);
+
                 _CookieCardViews[areaIndex] = newCardView;
             }
             else
             {
-                var newCardView = _FrontCardViewFactory.Invoke(areaTransform);
+                var newCardView = _FrontCardViewFactory.Invoke(cookieParent);
+                newCardView.SetPosition(_playerFieldPresenter.CookieTransforms[areaIndex].position);
 
                 newCardView.Setup(cardId, cardMasterData);
                 _CookieCardViews[areaIndex] = newCardView;
@@ -97,11 +87,12 @@ namespace App.Battle.Presenters
                 return;
             }
 
-            var areaTransform = _CookieTransforms[areaIndex];
-            var newCardView = _FrontCardViewFactory.Invoke(areaTransform);
+            var cookieParent = _cookieContainer[areaIndex];
+            var newCardView = _FrontCardViewFactory.Invoke(cookieParent);
+            _CookieCardViews[areaIndex] = newCardView;
 
             newCardView.Setup(cardId, cardMasterData);
-            _CookieCardViews[areaIndex] = newCardView;
+            newCardView.SetPosition(_playerFieldPresenter.CookieTransforms[areaIndex].position);
         }
 
         public bool RemoveCookieCard(int areaIndex)
@@ -157,8 +148,9 @@ namespace App.Battle.Presenters
         {
             Assert.IsFalse(areaIndex < 0 || areaIndex > 1);
 
-            var hpArea = _HpCardAreas[areaIndex];
-            var newCardView = _BackCardViewFactory.Invoke(hpArea);
+            var hpParent = _hpContainer[areaIndex];
+            var newCardView = _BackCardViewFactory.Invoke(hpParent);
+            newCardView.SetPosition(_playerFieldPresenter.HpTransforms[areaIndex].position);
 
             var hpCards = _HpCardViews[areaIndex];
             hpCards.Add(newCardView);
@@ -191,9 +183,10 @@ namespace App.Battle.Presenters
                 return;
             }
 
-            var hpArea = _HpCardAreas[areaIndex];
+            var hpArea = _hpContainer[areaIndex];
             var newCardView = _FrontCardViewFactory.Invoke(hpArea);
 
+            newCardView.SetPosition(_playerFieldPresenter.HpTransforms[areaIndex].position);
             newCardView.Setup(cardId, cardMasterData);
 
             var hpCards = _HpCardViews[areaIndex];
@@ -230,17 +223,18 @@ namespace App.Battle.Presenters
             // GameObject가 씬에서 삭제될 때까지 대기
             await UniTask.WaitForEndOfFrame();
 
-            var parentTransform = _HpCardAreas[areaIndex];
+            var parentTransform = _hpContainer[areaIndex];
             var count = 0;
-            var sortingOrder = transform.childCount - 1;
+            var sortingOrder = transform.childCount;
 
             foreach (var cardView in parentTransform.GetComponentsInChildren<ICardView>())
             {
-                var cardViewTransform = ((MonoBehaviour)cardView).transform;
-                cardViewTransform.localPosition = Vector3.zero + Vector3.right * 5f * count;
-                var cardOrder = cardViewTransform.GetComponent<CardOrder>();
+                var originPos = _playerFieldPresenter.HpTransforms[areaIndex].position;
+                var cardPos = originPos + Vector3.right * 5f * count++;
+                cardView.SetPosition(cardPos);
+
+                var cardOrder = ((MonoBehaviour)cardView).GetComponent<CardOrder>();
                 cardOrder.SetOriginOrder(++sortingOrder);
-                count++;
             }
         }
 
