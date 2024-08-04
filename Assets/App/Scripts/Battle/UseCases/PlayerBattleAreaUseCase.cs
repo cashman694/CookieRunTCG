@@ -135,7 +135,7 @@ namespace App.Battle.UseCases
         /// <param name="cardId"></param>
         public void SetCookieCard(int areaIndex, string cardId)
         {
-            var card = _PlayerCardDataStore.GetCardBy(cardId);
+            var card = _PlayerCardDataStore.GetCardBy("player1", cardId);
 
             if (card == null)
             {
@@ -194,7 +194,7 @@ namespace App.Battle.UseCases
         /// <param name="cardId"></param>
         public void ShowCookieCard(int areaIndex, string cardId)
         {
-            var card = _PlayerCardDataStore.GetCardBy(cardId);
+            var card = _PlayerCardDataStore.GetCardBy("player1", cardId);
 
             if (card == null)
             {
@@ -283,7 +283,7 @@ namespace App.Battle.UseCases
             }
 
             var cardId = _PlayerDeckDataStore.RemoveFirstCard();
-            var card = _PlayerCardDataStore.GetCardBy(cardId);
+            var card = _PlayerCardDataStore.GetCardBy("player1", cardId);
 
             _PlayerBattleAreaDataStore.AddHpCard(areaIndex, card.Id, card.CardMasterData);
         }
@@ -299,7 +299,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            var card = _PlayerCardDataStore.GetCardBy(hpCardId);
+            var card = _PlayerCardDataStore.GetCardBy("player1", hpCardId);
 
             if (card == null)
             {

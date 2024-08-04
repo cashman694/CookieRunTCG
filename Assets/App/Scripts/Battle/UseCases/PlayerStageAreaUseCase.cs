@@ -43,7 +43,7 @@ namespace App.Battle.UseCases
             _PlayerStageAreaDataStore.OnCardAdded
                 .Subscribe(x =>
                 {
-                    var cardData = _playerCardDataStore.GetCardBy(x);
+                    var cardData = _playerCardDataStore.GetCardBy("player1", x);
                     if (cardData == null)
                     {
                         return;
@@ -75,7 +75,7 @@ namespace App.Battle.UseCases
         {
             foreach (var cardId in _PlayerHandDataStore.CardIds)
             {
-                var card = _playerCardDataStore.GetCardBy(cardId);
+                var card = _playerCardDataStore.GetCardBy("player1", cardId);
 
                 if (card == null || card.CardType != CardType.Stage)
                 {
@@ -104,7 +104,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            var cardData = _playerCardDataStore.GetCardBy(cardId);
+            var cardData = _playerCardDataStore.GetCardBy("player1", cardId);
 
             if (cardData == null)
             {

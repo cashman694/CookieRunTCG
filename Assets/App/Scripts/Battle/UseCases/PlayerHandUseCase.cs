@@ -33,7 +33,7 @@ namespace App.Battle.UseCases
             _PlayerHandDataStore.OnCardAdded
                 .Subscribe(x =>
                 {
-                    var cardData = _PlayerCardDataStore.GetCardBy(x);
+                    var cardData = _PlayerCardDataStore.GetCardBy("player1", x);
                     if (cardData == null)
                     {
                         return;

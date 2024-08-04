@@ -61,7 +61,7 @@ namespace App.Battle.UseCases
                         return;
                     }
 
-                    var cardData = _playerCardDataStore.GetCardBy(_SelectedCardId);
+                    var cardData = _playerCardDataStore.GetCardBy("player1", _SelectedCardId);
 
                     if (cardData == null)
                     {

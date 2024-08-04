@@ -49,7 +49,7 @@ namespace App.Battle.UseCases
             _PlayerBattleAreaPresenter.OnCookieAreaSelected
                 .Subscribe(areaIndex =>
                 {
-                    var cardData = _playerCardDataStore.GetCardBy(_SelectedCardId);
+                    var cardData = _playerCardDataStore.GetCardBy("player1", _SelectedCardId);
 
                     if (cardData == null)
                     {

@@ -59,7 +59,9 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            foreach (var card in _PlayerCardDataStore.Cards)
+            var playerId = "player1";
+
+            foreach (var card in _PlayerCardDataStore.GetCardsOf(playerId))
             {
                 _PlayerDeckDataStore.AddCard(card.Id);
             }

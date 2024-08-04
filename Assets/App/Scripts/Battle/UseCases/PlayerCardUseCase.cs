@@ -28,40 +28,42 @@ namespace App.Battle.UseCases
 
         public void Initialize()
         {
-            GenerateCards();
+            var playerId = "player1";
+            GenerateCardsOf(playerId);
         }
 
-        public void GenerateCards()
+        public void GenerateCardsOf(string playerId)
         {
             var cardsLength = _CardMasterDatabase.Cards.Length;
+            var cards = _PlayerCardDataStore.GetCardsOf(playerId);
 
-            while (_PlayerCardDataStore.Cards.Count() < _BattleConfig.DeckCount)
+            while (cards.Count() < _BattleConfig.DeckCount)
             {
                 var randomNumber = UnityEngine.Random.Range(0, cardsLength);
                 var cardMaster = _CardMasterDatabase.Cards[randomNumber];
 
                 // 쿠키카드는 반드시 1장 이상 포함되어야 한다
-                if (!_PlayerCardDataStore.Cards.Any() && cardMaster.CardType != CardType.Cookie)
+                if (!cards.Any() && cardMaster.CardType != CardType.Cookie)
                 {
                     continue;
                 }
 
                 // 같은 넘버의 카드는 최대 4장까지 넣을 수 있다
-                if (_PlayerCardDataStore.Cards.Count(x => x.CardNumber == cardMaster.CardNumber) >= 4)
+                if (cards.Count(x => x.CardNumber == cardMaster.CardNumber) >= 4)
                 {
                     continue;
                 }
 
                 // FLIP 카드는 최대 16장까지 넣을 수 있다
-                if (_PlayerCardDataStore.Cards.Count(x => x.CardMasterData.HasFlipEffect) >= 16)
+                if (cards.Count(x => x.CardMasterData.HasFlipEffect) >= 16)
                 {
                     continue;
                 }
 
-                var count = _PlayerCardDataStore.Cards.Count();
-                var id = (++count).ToString();
+                var count = cards.Count();
+                var cardId = (++count).ToString();
 
-                _PlayerCardDataStore.AddCard(id, cardMaster);
+                _PlayerCardDataStore.AddCard(playerId, cardId, cardMaster);
             }
         }
     }

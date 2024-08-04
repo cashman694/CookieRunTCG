@@ -5,41 +5,56 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
+using UnityEngine.Assertions;
 
 namespace App.Battle.DataStores
 {
     public class PlayerCardDataStore : IPlayerCardDataStore, IDisposable
     {
-        private Dictionary<string, PlayerCardData> _Cards = new();
-        public IEnumerable<PlayerCardData> Cards => _Cards.Values.ToArray();
+        private readonly Dictionary<string, List<PlayerCardData>> _playerCards = new();
 
-
-        public void AddCard(string id, CardMasterData cardMasterData)
+        public IEnumerable<PlayerCardData> GetCardsOf(string playerId)
         {
-            if (cardMasterData == null)
+            if (!_playerCards.ContainsKey(playerId))
             {
-                throw new NullReferenceException($"{nameof(CardMasterData)} is null");
+                // FIXME: 초기화 처리를 따로 분리하기
+                _playerCards.Add(playerId, new());
             }
 
-            var cardData = new PlayerCardData(id, cardMasterData);
-            UnityEngine.Debug.Log($"{cardData} added");
-
-            _Cards.Add(id, cardData);
+            return _playerCards[playerId];
         }
 
-        public PlayerCardData GetCardBy(string id)
+        public void AddCard(string playerId, string cardId, CardMasterData cardMasterData)
         {
-            if (!_Cards.ContainsKey(id))
+            Assert.IsNotNull(cardMasterData);
+
+            var cardData = new PlayerCardData(cardId, cardMasterData);
+            UnityEngine.Debug.Log($"{cardData} added");
+
+            if (!_playerCards.ContainsKey(playerId))
+            {
+                _playerCards.Add(playerId, new List<PlayerCardData>());
+            }
+
+            var playerCards = _playerCards[playerId];
+            playerCards.Add(cardData);
+        }
+
+        public PlayerCardData GetCardBy(string playerId, string cardId)
+        {
+            if (!_playerCards.ContainsKey(playerId))
             {
                 return null;
             }
 
-            return _Cards[id];
+            var playerCards = _playerCards[playerId];
+
+            return playerCards.Find(x => x.Id == cardId);
         }
 
         public void Dispose()
         {
-            _Cards.Clear();
+            _playerCards.Clear();
         }
     }
 }
