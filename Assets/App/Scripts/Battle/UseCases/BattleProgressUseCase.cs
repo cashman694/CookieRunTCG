@@ -70,29 +70,31 @@ namespace App.Battle.UseCases
 
             _cts = new();
 
+            var playerId = "player1";
+
             switch (progress.Phase)
             {
                 case BattlePhase.None:
                     break;
                 case BattlePhase.Prepare:
-                    _preparingUseCase.Execute(_cts.Token).Forget();
+                    _preparingUseCase.Execute(playerId, _cts.Token).Forget();
                     break;
                 case BattlePhase.Active:
                     _activePhaseUseCase.StartTurn(_cts.Token); // StartTurn은 void 반환
                     await UniTask.WaitForSeconds(1f, cancellationToken: _cts.Token);
-                    await _activePhaseUseCase.Execute(_cts.Token); // Execute는 async 메서드로 가정
+                    await _activePhaseUseCase.Execute(playerId, _cts.Token); // Execute는 async 메서드로 가정
                     break;
                 case BattlePhase.Draw:
-                    _drawPhaseUseCase.Execute(_cts.Token).Forget();
+                    _drawPhaseUseCase.Execute(playerId, _cts.Token).Forget();
                     break;
                 case BattlePhase.Support:
-                    _supportPhaseUseCase.Execute(_cts.Token).Forget();
+                    _supportPhaseUseCase.Execute(playerId, _cts.Token).Forget();
                     break;
                 case BattlePhase.Main:
-                    _mainPhaseUseCase.Execute(_cts.Token).Forget();
+                    _mainPhaseUseCase.Execute(playerId, _cts.Token).Forget();
                     break;
                 case BattlePhase.End:
-                    _endPhaseUseCase.Execute(_cts.Token).Forget();
+                    _endPhaseUseCase.Execute(playerId, _cts.Token).Forget();
                     await UniTask.WaitForSeconds(1f, cancellationToken: _cts.Token);
                     _endPhaseUseCase.EndTurn(_cts.Token); // EndTurn은 void 반환
                     break;

@@ -37,7 +37,7 @@ namespace App.Battle.UseCases
             _changeTurnPanel.Show("My Turn");
         }
 
-        public async UniTask Execute(CancellationToken token)
+        public async UniTask Execute(string playerId, CancellationToken token)
         {
             UnityEngine.Debug.Log($"{nameof(BattleActivePhaseUseCase)} Executed");
             _battlePhasePresenter.NotifyPhaseName("Active Phase");

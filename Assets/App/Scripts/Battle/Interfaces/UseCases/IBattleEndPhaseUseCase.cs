@@ -5,7 +5,7 @@ namespace App.Battle.Interfaces.UseCases
 {
     public interface IBattleEndPhaseUseCase
     {
-        UniTask Execute(CancellationToken token);
+        UniTask Execute(string playerId, CancellationToken token);
         public void EndTurn(CancellationToken token);
     }
 }

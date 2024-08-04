@@ -22,7 +22,7 @@ namespace App.Battle.UseCases
         }
 
         // 패에서 카드를 한장 서포트에리어에 추가할 수 있다
-        public async UniTask Execute(CancellationToken token)
+        public async UniTask Execute(string playerId, CancellationToken token)
         {
             UnityEngine.Debug.Log($"{nameof(IPlayerSupportAreaUseCase)} Executed");
 

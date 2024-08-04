@@ -5,6 +5,6 @@ namespace App.Battle.Interfaces.UseCases
 {
     public interface IBattlePreparingUseCase
     {
-        UniTask Execute(CancellationToken token);
+        UniTask Execute(string playerId, CancellationToken token);
     }
 }

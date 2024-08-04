@@ -6,6 +6,6 @@ namespace App.Battle.Interfaces.UseCases
     public interface IBattleActivePhaseUseCase
     {
         public void StartTurn(CancellationToken token);
-        UniTask Execute(CancellationToken token);
+        UniTask Execute(string playerId, CancellationToken token);
     }
 }

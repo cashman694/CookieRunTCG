@@ -33,7 +33,7 @@ namespace App.Battle.UseCases
 
         // 자신의 레스트 상태의 카드를 전부 액티브로 돌린다
         // 실행 중인 태스크를 취소하거나 Dispose로 정지
-        public async UniTask Execute(CancellationToken token)
+        public async UniTask Execute(string playerId, CancellationToken token)
         {
             UnityEngine.Debug.Log($"{nameof(BattleMainPhaseUseCase)} Executed");
 

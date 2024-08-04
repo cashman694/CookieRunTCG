@@ -19,7 +19,7 @@ namespace App.Battle.UseCases
             _battlePhasePresenter = battlePhasePresenter;
         }
 
-        public async UniTask Execute(CancellationToken token)
+        public async UniTask Execute(string playerId, CancellationToken token)
         {
             UnityEngine.Debug.Log($"{nameof(BattleEndPhaseUseCase)} Executed");
 

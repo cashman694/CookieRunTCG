@@ -27,7 +27,7 @@ namespace App.Battle.UseCases
 
         // 덱에서 2장 드로우한다.
         // 덱이 0장인 경우 리프레쉬를 진행한다.
-        public async UniTask Execute(CancellationToken token)
+        public async UniTask Execute(string playerId, CancellationToken token)
         {
             UnityEngine.Debug.Log($"{nameof(BattleDrawPhaseUseCase)} Executed");
 
