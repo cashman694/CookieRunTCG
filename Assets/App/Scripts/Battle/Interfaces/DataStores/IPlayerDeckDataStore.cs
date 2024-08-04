@@ -6,18 +6,17 @@ namespace App.Battle.Interfaces.DataStores
 {
     public interface IPlayerDeckDataStore
     {
-        IEnumerable<string> CardIds { get; }
-        int Count { get; }
-        bool IsEmpty { get; }
         IObservable<(string playerId, string cardId)> OnCardAdded { get; }
         IObservable<(string playerId, string cardId)> OnCardRemoved { get; }
-        IObservable<Unit> OnReset { get; }
-        IObservable<int> OnCountChanged { get; }
-        IObservable<Unit> OnShuffled { get; }
+        IObservable<(string playerId, int cardCount)> OnCountChanged { get; }
+        IObservable<string> OnReset { get; }
+        IObservable<string> OnShuffled { get; }
 
+        IEnumerable<string> GetCardsOf(string playerId);
+        int GetCountOf(string playerId);
         void AddCard(string playerId, string cardId);
         string RemoveFirstCardOf(string playerId);
-        void Clear();
-        void Shuffle();
+        void ClearOf(string playerId);
+        void Shuffle(string playerId);
     }
 }

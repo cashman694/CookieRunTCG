@@ -40,7 +40,7 @@ namespace App.Battle.UseCases
             _playerBreakAreaDataStore.Clear();
             _playerSupportAreaDataStore.Clear();
             _playerBattleAreaDataStore.Clear();
-            _playerDeckDataStore.Clear();
+            _playerDeckDataStore.ClearOf("player1");
         }
     }
 }

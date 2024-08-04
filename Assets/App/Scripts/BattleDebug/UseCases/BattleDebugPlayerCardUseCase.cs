@@ -81,7 +81,7 @@ namespace App.BattleDebug.UseCases
                 {
                     _BattleCardDebugger.DeckCards.Clear();
 
-                    foreach (var cardId in _PlayerDeckDataStore.CardIds)
+                    foreach (var cardId in _PlayerDeckDataStore.GetCardsOf("player1"))
                     {
                         var cardData = _PlayerCardDataStore.GetCardBy("player1", cardId);
 

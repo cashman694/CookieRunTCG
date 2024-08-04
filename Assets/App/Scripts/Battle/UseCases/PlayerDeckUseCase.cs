@@ -5,6 +5,7 @@ using App.Common.Data;
 using System;
 using System.Linq;
 using UniRx;
+using UnityEngine.Assertions;
 using VContainer;
 using VContainer.Unity;
 
@@ -40,7 +41,7 @@ namespace App.Battle.UseCases
             _PlayerDeckDataStore.OnCountChanged
                 .Subscribe(x =>
                 {
-                    _PlayerDeckPresenter.UpdateCards(x);
+                    _PlayerDeckPresenter.UpdateCards(x.cardCount);
                 })
                 .AddTo(_Disposables);
 
@@ -54,7 +55,7 @@ namespace App.Battle.UseCases
 
         public void Build(string playerId)
         {
-            if (!_PlayerDeckDataStore.IsEmpty)
+            if (_PlayerDeckDataStore.GetCountOf(playerId) > 0)
             {
                 return;
             }
@@ -64,7 +65,7 @@ namespace App.Battle.UseCases
                 _PlayerDeckDataStore.AddCard(playerId, card.Id);
             }
 
-            _PlayerDeckDataStore.Shuffle();
+            _PlayerDeckDataStore.Shuffle(playerId);
         }
 
         /// <summary>
@@ -73,15 +74,8 @@ namespace App.Battle.UseCases
         /// </summary>
         public void InitialDraw(string playerId)
         {
-            if (_PlayerDeckDataStore.IsEmpty)
-            {
-                return;
-            }
-
-            if (_PlayerHandDataStore.Count > 0)
-            {
-                return;
-            }
+            Assert.IsTrue(_PlayerDeckDataStore.GetCountOf(playerId) > _BattleConfig.InitialDrawCount);
+            Assert.IsTrue(_PlayerHandDataStore.Count == 0);
 
             for (var i = 0; i < _BattleConfig.InitialDrawCount; i++)
             {
@@ -96,7 +90,7 @@ namespace App.Battle.UseCases
         /// <returns></returns>
         public bool DrawCard(string playerId)
         {
-            if (_PlayerDeckDataStore.IsEmpty)
+            if (_PlayerDeckDataStore.GetCountOf(playerId) <= 0)
             {
                 return false;
             }
@@ -113,7 +107,7 @@ namespace App.Battle.UseCases
         /// </summary>
         public void Mulligan(string playerId)
         {
-            if (_PlayerDeckDataStore.IsEmpty)
+            if (_PlayerDeckDataStore.GetCountOf(playerId) <= 0)
             {
                 return;
             }
@@ -129,7 +123,7 @@ namespace App.Battle.UseCases
                 _PlayerDeckDataStore.AddCard(playerId, cardId);
             }
 
-            _PlayerDeckDataStore.Shuffle();
+            _PlayerDeckDataStore.Shuffle(playerId);
             InitialDraw(playerId);
         }
 

@@ -277,7 +277,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            if (_PlayerDeckDataStore.IsEmpty)
+            if (_PlayerDeckDataStore.GetCountOf("player1") <= 0)
             {
                 return;
             }

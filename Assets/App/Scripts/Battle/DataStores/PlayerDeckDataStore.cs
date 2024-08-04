@@ -9,27 +9,44 @@ namespace App.Battle.DataStores
 {
     public sealed class PlayerDeckDataStore : IPlayerDeckDataStore, IDisposable
     {
-        private Dictionary<string, List<string>> _playerCardIds;
-        private List<string> _CardIds = new();
-        public IEnumerable<string> CardIds => _CardIds;
+        private readonly Dictionary<string, List<string>> _playerCardIds = new();
 
-        public int Count => _CardIds.Count;
-        public bool IsEmpty => _CardIds.Count < 1;
+        private readonly Subject<(string playerId, string cardId)> _OnCardAdded = new();
+        public IObservable<(string playerId, string cardId)> OnCardAdded => _OnCardAdded;
 
-        public IObservable<int> OnCountChanged => _OnCardAdded.Merge(_OnCardRemoved).Select(_ => Count);
+        private readonly Subject<(string playerId, string cardId)> _OnCardRemoved = new();
+        public IObservable<(string playerId, string cardId)> OnCardRemoved => _OnCardRemoved;
 
-        private readonly Subject<(string, string)> _OnCardAdded = new();
-        public IObservable<(string, string)> OnCardAdded => _OnCardAdded;
+        public IObservable<(string playerId, int cardCount)> OnCountChanged =>
+            _OnCardAdded.Merge(_OnCardRemoved).Select(x => (x.playerId, GetCountOf(x.playerId)));
 
-        private readonly Subject<(string, string)> _OnCardRemoved = new();
-        public IObservable<(string, string)> OnCardRemoved => _OnCardRemoved;
+        private readonly Subject<string> _OnReset = new();
+        public IObservable<string> OnReset => _OnReset;
 
-        private readonly Subject<Unit> _OnReset = new();
-        public IObservable<Unit> OnReset => _OnReset;
+        private readonly Subject<string> _OnShuffled = new();
+        public IObservable<string> OnShuffled => _OnShuffled;
 
-        private readonly Subject<Unit> _OnShuffled = new();
-        public IObservable<Unit> OnShuffled => _OnShuffled;
 
+        public IEnumerable<string> GetCardsOf(string playerId)
+        {
+            if (!_playerCardIds.ContainsKey(playerId))
+            {
+                _playerCardIds.Add(playerId, new());
+            }
+
+            var cardIds = _playerCardIds[playerId];
+            return cardIds;
+        }
+
+        public int GetCountOf(string playerId)
+        {
+            if (!_playerCardIds.ContainsKey(playerId))
+            {
+                return 0;
+            }
+
+            return _playerCardIds[playerId].Count;
+        }
 
         public void AddCard(string playerId, string cardId)
         {
@@ -70,16 +87,23 @@ namespace App.Battle.DataStores
             return cardId;
         }
 
-        public void Clear()
+        public void ClearOf(string playerId)
         {
-            _CardIds.Clear();
-            _OnReset.OnNext(Unit.Default);
+            if (!_playerCardIds.ContainsKey(playerId))
+            {
+                return;
+            }
+
+            var cardIds = _playerCardIds[playerId];
+            cardIds.Clear();
+
+            _OnReset.OnNext(playerId);
         }
 
-        public void Shuffle()
+        public void Shuffle(string playerId)
         {
             System.Random random = new();
-            var count = Count;
+            var count = GetCountOf(playerId);
 
             // Fisher-Yates알고리즘
             while (count > 1)
@@ -89,13 +113,14 @@ namespace App.Battle.DataStores
                 // 0과 count사이의 랜덤한 정수를 생성
                 var randomNum = random.Next(count + 1);
 
-                var value = _CardIds[randomNum];
-                _CardIds[randomNum] = _CardIds[count];
-                _CardIds[count] = value;
+                var cardIds = _playerCardIds[playerId];
+                var value = cardIds[randomNum];
+                cardIds[randomNum] = cardIds[count];
+                cardIds[count] = value;
             }
 
             Debug.Log($"Deck shuffled");
-            _OnShuffled.OnNext(Unit.Default);
+            _OnShuffled.OnNext(playerId);
         }
 
         public void Dispose()
@@ -103,7 +128,7 @@ namespace App.Battle.DataStores
             _OnCardAdded.Dispose();
             _OnCardRemoved.Dispose();
             _OnShuffled.Dispose();
-            _CardIds.Clear();
+            _playerCardIds.Clear();
         }
     }
 }

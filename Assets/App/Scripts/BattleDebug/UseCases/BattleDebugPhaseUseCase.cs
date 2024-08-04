@@ -70,7 +70,7 @@ namespace App.BattleDebug.UseCases
         {
             _DebugPhasePresenter.SetStartPreparingButtonInteractable(false);
 
-            await _BattlePreparingUseCase.Execute(new());
+            await _BattlePreparingUseCase.Execute("playerId", new());
             _DebugPhasePresenter.SetStartPreparingButtonInteractable(true);
         }
 
@@ -78,14 +78,14 @@ namespace App.BattleDebug.UseCases
         {
             _DebugPhasePresenter.SetStartActiveButtonInteractable(false);
 
-            await _ActivePhaseUseCase.Execute(new());
+            await _ActivePhaseUseCase.Execute("playerId", new());
             _DebugPhasePresenter.SetStartActiveButtonInteractable(true);
         }
 
         private async UniTask ExecuteDrawPhase()
         {
             _DebugPhasePresenter.SetStartDrawButtonInteractable(false);
-            await _DrawPhaseUseCase.Execute(new());
+            await _DrawPhaseUseCase.Execute("playerId", new());
 
             _DebugPhasePresenter.SetStartDrawButtonInteractable(true);
         }
@@ -93,7 +93,7 @@ namespace App.BattleDebug.UseCases
         private async UniTask ExecuteSupportPhase()
         {
             _DebugPhasePresenter.SetStartSupportButtonInteractable(false);
-            await _SupportPhaseUseCase.Execute(new());
+            await _SupportPhaseUseCase.Execute("playerId", new());
 
             _DebugPhasePresenter.SetStartSupportButtonInteractable(true);
         }
@@ -113,12 +113,12 @@ namespace App.BattleDebug.UseCases
 
             _Cts = new();
             _DebugPhasePresenter.SetStartMainButtonState(false);
-            await _MainPhaseUseCase.Execute(_Cts.Token);
+            await _MainPhaseUseCase.Execute("playerId", _Cts.Token);
         }
 
         private async UniTask ExecuteEndPhase()
         {
-            await _EndPhaseUseCase.Execute(new());
+            await _EndPhaseUseCase.Execute("playerId", new());
             _ChangeTurnPanel.Show("Turn Ended"); // Show turn ended message
         }
 
