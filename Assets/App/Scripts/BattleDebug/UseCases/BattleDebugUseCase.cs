@@ -43,20 +43,22 @@ namespace App.BattleDebug.UseCases
 
         public void Initialize()
         {
+            var playerId = "player1";
+
             _BattleDebugDeckPresenter.OnRequestBuildDeck
-                .Subscribe(_ => _PlayerDeckUseCase.Build())
+                .Subscribe(_ => _PlayerDeckUseCase.Build(playerId))
                 .AddTo(_Disposables);
 
             _BattleDebugDeckPresenter.OnRequestInitialDraw
-                .Subscribe(_ => _PlayerDeckUseCase.InitialDraw())
+                .Subscribe(_ => _PlayerDeckUseCase.InitialDraw(playerId))
                 .AddTo(_Disposables);
 
             _BattleDebugDeckPresenter.OnRequestDrawCard
-                .Subscribe(_ => _PlayerDeckUseCase.DrawCard())
+                .Subscribe(_ => _PlayerDeckUseCase.DrawCard(playerId))
                 .AddTo(_Disposables);
 
             _BattleDebugDeckPresenter.OnRequestMulligan
-                .Subscribe(_ => _PlayerDeckUseCase.Mulligan())
+                .Subscribe(_ => _PlayerDeckUseCase.Mulligan(playerId))
                 .AddTo(_Disposables);
 
             _DebugBattleAreaPresenter.OnRequestShowCookie

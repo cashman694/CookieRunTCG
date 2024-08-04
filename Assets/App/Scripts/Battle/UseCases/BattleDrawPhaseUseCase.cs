@@ -35,7 +35,7 @@ namespace App.Battle.UseCases
 
             for (int i = 0; i < _BattleConfig.DrawCountEveryTurn; i++)
             {
-                var drawSuccess = _PlayerDeckUseCase.DrawCard();
+                var drawSuccess = _PlayerDeckUseCase.DrawCard(playerId);
 
                 if (!drawSuccess)
                 {

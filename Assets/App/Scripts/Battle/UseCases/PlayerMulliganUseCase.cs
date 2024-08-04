@@ -28,7 +28,7 @@ namespace App.Battle.UseCases
             _PlayerMulliganPresenter.Hide();
         }
 
-        public async UniTask Execute(CancellationToken token)
+        public async UniTask Execute(string playerId, CancellationToken token)
         {
             if (_cts != null)
             {
@@ -54,7 +54,7 @@ namespace App.Battle.UseCases
 
             if (result)
             {
-                _PlayerDeckUseCase.Mulligan();
+                _PlayerDeckUseCase.Mulligan(playerId);
             }
 
             UnityEngine.Debug.Log($"Mulligan {(result ? "executed" : "skipped")}");

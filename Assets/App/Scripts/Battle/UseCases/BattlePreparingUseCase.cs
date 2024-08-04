@@ -42,18 +42,18 @@ namespace App.Battle.UseCases
             // 덱 생성
             UnityEngine.Debug.Log("Start BuildDeck");
 
-            _PlayerDeckUseCase.Build();
+            _PlayerDeckUseCase.Build(playerId);
             await UniTask.WaitForSeconds(1f, cancellationToken: token);
 
             // 테스트
             _battlePhasePresenter.NotifyPhaseName("Get Ready");
 
             UnityEngine.Debug.Log("Start InitialDraw");
-            _PlayerDeckUseCase.InitialDraw();
+            _PlayerDeckUseCase.InitialDraw(playerId);
             await UniTask.WaitForSeconds(3f, cancellationToken: token);
 
             UnityEngine.Debug.Log("Start Mulligan");
-            await _PlayerMulliganUseCase.Execute(_Cts.Token);
+            await _PlayerMulliganUseCase.Execute(playerId, _Cts.Token);
             await UniTask.WaitForSeconds(3f, cancellationToken: token);
 
             // 쿠키카드가 생길때까지 초기 드로우를 진행

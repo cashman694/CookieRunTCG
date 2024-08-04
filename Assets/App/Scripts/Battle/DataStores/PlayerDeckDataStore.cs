@@ -9,7 +9,8 @@ namespace App.Battle.DataStores
 {
     public sealed class PlayerDeckDataStore : IPlayerDeckDataStore, IDisposable
     {
-        [SerializeField] private List<string> _CardIds = new();
+        private Dictionary<string, List<string>> _playerCardIds;
+        private List<string> _CardIds = new();
         public IEnumerable<string> CardIds => _CardIds;
 
         public int Count => _CardIds.Count;
@@ -17,11 +18,11 @@ namespace App.Battle.DataStores
 
         public IObservable<int> OnCountChanged => _OnCardAdded.Merge(_OnCardRemoved).Select(_ => Count);
 
-        private readonly Subject<string> _OnCardAdded = new();
-        public IObservable<string> OnCardAdded => _OnCardAdded;
+        private readonly Subject<(string, string)> _OnCardAdded = new();
+        public IObservable<(string, string)> OnCardAdded => _OnCardAdded;
 
-        private readonly Subject<string> _OnCardRemoved = new();
-        public IObservable<string> OnCardRemoved => _OnCardRemoved;
+        private readonly Subject<(string, string)> _OnCardRemoved = new();
+        public IObservable<(string, string)> OnCardRemoved => _OnCardRemoved;
 
         private readonly Subject<Unit> _OnReset = new();
         public IObservable<Unit> OnReset => _OnReset;
@@ -30,27 +31,41 @@ namespace App.Battle.DataStores
         public IObservable<Unit> OnShuffled => _OnShuffled;
 
 
-        public void AddCard(string cardId)
+        public void AddCard(string playerId, string cardId)
         {
-            Assert.IsFalse(_CardIds.Contains(cardId));
+            if (!_playerCardIds.ContainsKey(playerId))
+            {
+                _playerCardIds.Add(playerId, new());
+            }
 
-            _CardIds.Add(cardId);
-            _OnCardAdded.OnNext(cardId);
-            Debug.Log($"{cardId} added to deck");
+            var cardIds = _playerCardIds[playerId];
+
+            Assert.IsFalse(cardIds.Contains(cardId));
+            cardIds.Add(cardId);
+
+            _OnCardAdded.OnNext((playerId, cardId));
+            Debug.Log($"[{playerId}]{cardId} added to deck");
         }
 
-        public string RemoveFirstCard()
+        public string RemoveFirstCardOf(string playerId)
         {
-            if (_CardIds.Count == 0)
+            if (!_playerCardIds.ContainsKey(playerId))
             {
                 return null;
             }
 
-            var cardId = _CardIds[0];
-            _CardIds.RemoveAt(0);
+            var cardIds = _playerCardIds[playerId];
 
-            Debug.Log($"{cardId} removed from deck");
-            _OnCardRemoved.OnNext(cardId);
+            if (cardIds.Count == 0)
+            {
+                return null;
+            }
+
+            var cardId = cardIds[0];
+            cardIds.RemoveAt(0);
+
+            Debug.Log($"[{playerId}]{cardId} removed from deck");
+            _OnCardRemoved.OnNext((playerId, cardId));
 
             return cardId;
         }

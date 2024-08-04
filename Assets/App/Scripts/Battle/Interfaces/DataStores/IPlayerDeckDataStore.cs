@@ -9,14 +9,14 @@ namespace App.Battle.Interfaces.DataStores
         IEnumerable<string> CardIds { get; }
         int Count { get; }
         bool IsEmpty { get; }
-        IObservable<string> OnCardAdded { get; }
-        IObservable<string> OnCardRemoved { get; }
+        IObservable<(string playerId, string cardId)> OnCardAdded { get; }
+        IObservable<(string playerId, string cardId)> OnCardRemoved { get; }
         IObservable<Unit> OnReset { get; }
         IObservable<int> OnCountChanged { get; }
         IObservable<Unit> OnShuffled { get; }
 
-        void AddCard(string cardId);
-        string RemoveFirstCard();
+        void AddCard(string playerId, string cardId);
+        string RemoveFirstCardOf(string playerId);
         void Clear();
         void Shuffle();
     }

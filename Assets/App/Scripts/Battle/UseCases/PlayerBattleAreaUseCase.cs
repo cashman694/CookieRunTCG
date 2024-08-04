@@ -282,7 +282,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            var cardId = _PlayerDeckDataStore.RemoveFirstCard();
+            var cardId = _PlayerDeckDataStore.RemoveFirstCardOf("player1");
             var card = _PlayerCardDataStore.GetCardBy("player1", cardId);
 
             _PlayerBattleAreaDataStore.AddHpCard(areaIndex, card.Id, card.CardMasterData);

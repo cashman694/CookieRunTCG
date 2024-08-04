@@ -52,18 +52,16 @@ namespace App.Battle.UseCases
                 .AddTo(_Disposables);
         }
 
-        public void Build()
+        public void Build(string playerId)
         {
             if (!_PlayerDeckDataStore.IsEmpty)
             {
                 return;
             }
 
-            var playerId = "player1";
-
             foreach (var card in _PlayerCardDataStore.GetCardsOf(playerId))
             {
-                _PlayerDeckDataStore.AddCard(card.Id);
+                _PlayerDeckDataStore.AddCard(playerId, card.Id);
             }
 
             _PlayerDeckDataStore.Shuffle();
@@ -73,7 +71,7 @@ namespace App.Battle.UseCases
         /// 게임시작 직후 최초 드로우
         /// 덱에서 정해진 카드매수(6장)를 손으로 가져간다
         /// </summary>
-        public void InitialDraw()
+        public void InitialDraw(string playerId)
         {
             if (_PlayerDeckDataStore.IsEmpty)
             {
@@ -87,7 +85,7 @@ namespace App.Battle.UseCases
 
             for (var i = 0; i < _BattleConfig.InitialDrawCount; i++)
             {
-                DrawCard();
+                DrawCard(playerId);
             }
         }
 
@@ -96,7 +94,7 @@ namespace App.Battle.UseCases
         /// 덱에 카드가 없거나 드로우가 불가능할 경우 false
         /// </summary>
         /// <returns></returns>
-        public bool DrawCard()
+        public bool DrawCard(string playerId)
         {
             if (_PlayerDeckDataStore.IsEmpty)
             {
@@ -104,7 +102,7 @@ namespace App.Battle.UseCases
             }
 
             // TODO: 드로우페이즈인지 아닌지 체크하기
-            var cardId = _PlayerDeckDataStore.RemoveFirstCard();
+            var cardId = _PlayerDeckDataStore.RemoveFirstCardOf(playerId);
             _PlayerHandDataStore.AddCard(cardId);
             return true;
         }
@@ -113,7 +111,7 @@ namespace App.Battle.UseCases
         /// 카드가 맘에 들지 않거나, 쿠키카드가 없는경우, 
         /// 패에 카드를 덱으로 되돌리고 셔플한다. 최초 드로우를 다시 진행한다
         /// </summary>
-        public void Mulligan()
+        public void Mulligan(string playerId)
         {
             if (_PlayerDeckDataStore.IsEmpty)
             {
@@ -128,11 +126,11 @@ namespace App.Battle.UseCases
                     continue;
                 }
 
-                _PlayerDeckDataStore.AddCard(cardId);
+                _PlayerDeckDataStore.AddCard(playerId, cardId);
             }
 
             _PlayerDeckDataStore.Shuffle();
-            InitialDraw();
+            InitialDraw(playerId);
         }
 
         public void Dispose()
