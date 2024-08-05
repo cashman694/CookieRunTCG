@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2390d1cd98a24d247b2d1adb0107630f
+guid: da76a96428c951f43bd0aa4906b687f1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6102805860222315482
-    second: shock_0
+      213: 3449606324562383105
+    second: Lovepik_com-380270901-yellow-starburst-clip-art-explosion-explosive-tension-explosive_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: shock_0
+      name: Lovepik_com-380270901-yellow-starburst-clip-art-explosion-explosive-tension-explosive_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 49
-        height: 40
+        x: 81
+        y: 130
+        width: 1059
+        height: 920
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 624d648776a7e4ba0800000000000000
-      internalID: -6102805860222315482
+      spriteID: 1015b76eca67fdf20800000000000000
+      internalID: 3449606324562383105
       vertices: []
       indices: 
       edges: []
@@ -133,7 +133,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      shock_0: -6102805860222315482
+      Lovepik_com-380270901-yellow-starburst-clip-art-explosion-explosive-tension-explosive_0: 3449606324562383105
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
