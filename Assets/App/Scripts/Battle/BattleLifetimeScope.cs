@@ -64,7 +64,8 @@ namespace App.Battle
                 },
                 Lifetime.Scoped);
 
-            builder.Register<PlayerBattleAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.Register<PlayerBattleAreaCookieDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.Register<PlayerBattleAreaCookieHpDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerBattleAreaPresenter).As<IPlayerBattleAreaPresenter>();
 
             builder.Register<PlayerBreakAreaDataStore>(Lifetime.Singleton).AsImplementedInterfaces();

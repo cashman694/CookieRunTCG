@@ -61,12 +61,12 @@ namespace App.Battle.UseCases
 
             // 쿠키카드를 한 장을 뒷면으로 내려놓는다
             UnityEngine.Debug.Log("Start PlaceStartingCookie");
-            await _playerStartingCookieUseCase.Execute(token);
+            await _playerStartingCookieUseCase.Execute(playerId, token);
             await UniTask.WaitForSeconds(3f, cancellationToken: token);
 
             // 쿠키카드를 뒤집고 HP카드를 추가
             UnityEngine.Debug.Log("Start FlipCookieCard");
-            _PlayerBattleAreaUseCase.FlipCookieCard();
+            _PlayerBattleAreaUseCase.FlipCookieCard(playerId);
 
             // _GameProgressDataStore.IsBattlePrepared = true;
 

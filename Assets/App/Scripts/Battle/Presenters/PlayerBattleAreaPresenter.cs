@@ -144,9 +144,28 @@ namespace App.Battle.Presenters
             frontCardView.Rest();
         }
 
-        public void AddHpCard(int areaIndex, string cardId)
+        private bool GetAreaIndexOf(string cookieId, out int index)
         {
-            Assert.IsFalse(areaIndex < 0 || areaIndex > 1);
+            index = -1;
+
+            for (var i = 0; i < _CookieCardViews.Length; i++)
+            {
+                if (_CookieCardViews[i]?.CardId == cookieId)
+                {
+                    index = i;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void AddHpCard(string cookieId, string hpCardId)
+        {
+            if (!GetAreaIndexOf(cookieId, out var areaIndex))
+            {
+                return;
+            }
 
             var hpParent = _hpContainer[areaIndex];
             var newCardView = _BackCardViewFactory.Invoke(hpParent);
@@ -158,9 +177,12 @@ namespace App.Battle.Presenters
             ArrangeHpCards(areaIndex).Forget();
         }
 
-        public bool RemoveHpCard(int areaIndex)
+        public bool RemoveHpCard(string cookieId)
         {
-            Assert.IsFalse(areaIndex < 0 || areaIndex > 1);
+            if (!GetAreaIndexOf(cookieId, out var areaIndex))
+            {
+                return false;
+            }
 
             var hpCards = _HpCardViews[areaIndex];
             var hpCard = hpCards.LastOrDefault();
@@ -176,9 +198,14 @@ namespace App.Battle.Presenters
             return true;
         }
 
-        public void FlipHpCard(int areaIndex, string cardId, CardMasterData cardMasterData)
+        public void FlipHpCard(string cookieId, string hpCardId, CardMasterData cardMasterData)
         {
-            if (!RemoveHpCard(areaIndex))
+            if (!GetAreaIndexOf(cookieId, out var areaIndex))
+            {
+                return;
+            }
+
+            if (!RemoveHpCard(cookieId))
             {
                 return;
             }
@@ -187,7 +214,7 @@ namespace App.Battle.Presenters
             var newCardView = _FrontCardViewFactory.Invoke(hpArea);
 
             newCardView.SetPosition(_playerFieldPresenter.HpTransforms[areaIndex].position);
-            newCardView.Setup(cardId, cardMasterData);
+            newCardView.Setup(hpCardId, cardMasterData);
 
             var hpCards = _HpCardViews[areaIndex];
             hpCards.Add(newCardView);

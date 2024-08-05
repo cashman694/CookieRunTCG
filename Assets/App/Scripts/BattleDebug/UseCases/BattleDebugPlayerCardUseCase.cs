@@ -13,7 +13,8 @@ namespace App.BattleDebug.UseCases
         private readonly IPlayerCardDataStore _PlayerCardDataStore;
         private readonly IPlayerDeckDataStore _PlayerDeckDataStore;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
-        private readonly IPlayerBattleAreaDataStore _PlayerBattleAreaDataStore;
+        private readonly IPlayerBattleAreaCookieDataStore _PlayerBattleAreaCookieDataStore;
+        private readonly IPlayerBattleAreaCookieHpDataStore _PlayerBattleAreaCookieHpDataStore;
         private readonly IPlayerBreakAreaDataStore _PlayerBreakAreaDataStore;
         private readonly IPlayerTrashDataStore _PlayerTrashDataStore;
         private readonly CompositeDisposable _Disposables = new();
@@ -23,7 +24,8 @@ namespace App.BattleDebug.UseCases
             IPlayerCardDataStore playerCardDataStore,
             IPlayerDeckDataStore playerDeckDataStore,
             IPlayerHandDataStore playerHandDataStore,
-            IPlayerBattleAreaDataStore playerBattleAreaDataStore,
+            IPlayerBattleAreaCookieDataStore playerBattleAreaCookieDataStore,
+            IPlayerBattleAreaCookieHpDataStore playerBattleAreaCookieHpDataStore,
             IPlayerBreakAreaDataStore playerBreakAreaDataStore,
             IPlayerTrashDataStore playerTrashDataStore,
             BattleCardDebugger battleCardDebugger
@@ -32,7 +34,8 @@ namespace App.BattleDebug.UseCases
             _PlayerCardDataStore = playerCardDataStore;
             _PlayerDeckDataStore = playerDeckDataStore;
             _PlayerHandDataStore = playerHandDataStore;
-            _PlayerBattleAreaDataStore = playerBattleAreaDataStore;
+            _PlayerBattleAreaCookieDataStore = playerBattleAreaCookieDataStore;
+            _PlayerBattleAreaCookieHpDataStore = playerBattleAreaCookieHpDataStore;
             _PlayerBreakAreaDataStore = playerBreakAreaDataStore;
             _PlayerTrashDataStore = playerTrashDataStore;
             _BattleCardDebugger = battleCardDebugger;
@@ -136,23 +139,21 @@ namespace App.BattleDebug.UseCases
                 })
                 .AddTo(_Disposables);
 
-            _PlayerBattleAreaDataStore.OnCookieCardAdded
+            _PlayerBattleAreaCookieDataStore.OnCookieAdded
                 .Subscribe(x =>
                 {
-                    var cardData = _PlayerCardDataStore.GetCardBy("player1", x.cardId);
-
-                    if (cardData == null)
+                    if (!_PlayerBattleAreaCookieDataStore.TryGetCookie(x.cookieId, out var cookie))
                     {
                         return;
                     }
 
                     BattleCardDebugger.CardData debugCardData = new()
                     {
-                        Id = x.cardId,
-                        CardMasterData = cardData.CardMasterData
+                        Id = cookie.Id,
+                        CardMasterData = cookie.CardMasterData
                     };
 
-                    if (x.index == 0)
+                    if (cookie.Index == 0)
                     {
                         _BattleCardDebugger.BattleArea0Card = debugCardData;
                     }
@@ -163,10 +164,15 @@ namespace App.BattleDebug.UseCases
                 })
                 .AddTo(_Disposables);
 
-            _PlayerBattleAreaDataStore.OnCookieCardRemoved
+            _PlayerBattleAreaCookieDataStore.OnCookieRemoved
                 .Subscribe(x =>
                 {
-                    if (x.index == 0)
+                    if (!_PlayerBattleAreaCookieDataStore.TryGetCookie(x.cookieId, out var cookie))
+                    {
+                        return;
+                    }
+
+                    if (cookie.Index == 0)
                     {
                         _BattleCardDebugger.BattleArea0Card = null;
                     }
@@ -177,17 +183,15 @@ namespace App.BattleDebug.UseCases
                 })
                 .AddTo(_Disposables);
 
-            _PlayerBattleAreaDataStore.OnHpCardAdded
+            _PlayerBattleAreaCookieHpDataStore.OnHpCardAdded
                 .Subscribe(x =>
                 {
-                    var cardData = _PlayerCardDataStore.GetCardBy("player1", x.cardId);
-
-                    if (cardData == null)
+                    if (!_PlayerBattleAreaCookieDataStore.TryGetCookie(x.cookieId, out var cookie))
                     {
                         return;
                     }
 
-                    var hpAreaCards = x.index == 0
+                    var hpAreaCards = cookie.Index == 0
                         ? _BattleCardDebugger.HpArea0Cards
                         : _BattleCardDebugger.HpArea1Cards;
 
@@ -195,23 +199,21 @@ namespace App.BattleDebug.UseCases
                         new()
                         {
                             Id = x.cardId,
-                            CardMasterData = cardData.CardMasterData
+                            CardMasterData = cookie.CardMasterData
                         }
                     );
                 })
                 .AddTo(_Disposables);
 
-            _PlayerBattleAreaDataStore.OnHpCardRemoved
+            _PlayerBattleAreaCookieHpDataStore.OnHpCardRemoved
                 .Subscribe(x =>
                 {
-                    var cardData = _PlayerCardDataStore.GetCardBy("player1", x.cardId);
-
-                    if (cardData == null)
+                    if (!_PlayerBattleAreaCookieDataStore.TryGetCookie(x.cookieId, out var cookie))
                     {
                         return;
                     }
 
-                    var hpAreaCards = x.index == 0
+                    var hpAreaCards = cookie.Index == 0
                         ? _BattleCardDebugger.HpArea0Cards
                         : _BattleCardDebugger.HpArea1Cards;
 

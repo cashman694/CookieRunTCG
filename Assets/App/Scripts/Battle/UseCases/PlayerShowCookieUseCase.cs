@@ -13,7 +13,8 @@ namespace App.Battle.UseCases
     public class PlayerShowCookieUseCase : IPlayerShowCookieUseCase, IDisposable
     {
         private readonly IPlayerCardDataStore _playerCardDataStore;
-        private readonly IPlayerBattleAreaDataStore _PlayerBattleAreaDataStore;
+        private readonly IPlayerBattleAreaCookieDataStore _PlayerBattleAreaCookieDataStore;
+        private readonly IPlayerBattleAreaCookieHpDataStore _PlayerBattleAreaCookieHpDataStore;
         private readonly IPlayerBattleAreaPresenter _PlayerBattleAreaPresenter;
         private readonly IPlayerHandPresenter _PlayerHandPresenter;
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
@@ -23,14 +24,16 @@ namespace App.Battle.UseCases
         [Inject]
         public PlayerShowCookieUseCase(
             IPlayerCardDataStore playerCardDataStore,
-            IPlayerBattleAreaDataStore playerBattleAreaDataStore,
+            IPlayerBattleAreaCookieDataStore playerBattleAreaCookieDataStore,
+            IPlayerBattleAreaCookieHpDataStore playerBattleAreaCookieHpDataStore,
             IPlayerBattleAreaPresenter playerBattleAreaPresenter,
             IPlayerHandPresenter playerHandPresenter,
             IPlayerBattleAreaUseCase playerBattleAreaUseCase
         )
         {
             _playerCardDataStore = playerCardDataStore;
-            _PlayerBattleAreaDataStore = playerBattleAreaDataStore;
+            _PlayerBattleAreaCookieDataStore = playerBattleAreaCookieDataStore;
+            _PlayerBattleAreaCookieHpDataStore = playerBattleAreaCookieHpDataStore;
             _PlayerBattleAreaPresenter = playerBattleAreaPresenter;
             _PlayerHandPresenter = playerHandPresenter;
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
@@ -38,7 +41,7 @@ namespace App.Battle.UseCases
 
         // 패에서 카드를 선택하여 배틀에리어에 등장시킨다
         // 실행 중인 태스크를 취소하거나 Dispose로 정지
-        public async UniTask Execute(CancellationToken token)
+        public async UniTask Execute(string playerId, CancellationToken token)
         {
             // 실행 중에 불리면 리턴
             if (_Cts != null)
@@ -56,12 +59,12 @@ namespace App.Battle.UseCases
                 .Subscribe(areaIndex =>
                 {
                     // 이미 쿠키가 등장한 에리어는 불가
-                    if (_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var card))
+                    if (_PlayerBattleAreaCookieDataStore.TryGetCookie(playerId, areaIndex, out var card))
                     {
                         return;
                     }
 
-                    var cardData = _playerCardDataStore.GetCardBy("player1", _SelectedCardId);
+                    var cardData = _playerCardDataStore.GetCardBy(playerId, _SelectedCardId);
 
                     if (cardData == null)
                     {
@@ -74,7 +77,7 @@ namespace App.Battle.UseCases
                     }
 
                     // FIXME: 여기서 "쿠키의 등장"커맨드를 송신하는 식으로..?
-                    _PlayerBattleAreaUseCase.ShowCookieCard(areaIndex, _SelectedCardId);
+                    _PlayerBattleAreaUseCase.ShowCookieCard(playerId, areaIndex, _SelectedCardId);
                 })
                 .AddTo(_Disposables);
 

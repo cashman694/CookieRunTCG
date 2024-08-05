@@ -44,7 +44,7 @@ namespace App.Battle.UseCases
 
             for (int i = 0; i < _BattleConfig.BattleAreaSize; i++)
             {
-                _PlayerBattleAreaUseCase.ActiveCookieCard(i);
+                _PlayerBattleAreaUseCase.ActiveCookieCard(playerId, i);
             }
 
             _PlayerStageAreaUseCase.ActiveStageCard();

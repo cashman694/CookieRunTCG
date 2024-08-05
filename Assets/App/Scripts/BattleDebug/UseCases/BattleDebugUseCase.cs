@@ -62,27 +62,27 @@ namespace App.BattleDebug.UseCases
                 .AddTo(_Disposables);
 
             _DebugBattleAreaPresenter.OnRequestShowCookie
-                .Subscribe(x => _PlayerBattleAreaUseCase.TestShowCookieCard(x))
+                .Subscribe(x => _PlayerBattleAreaUseCase.TestShowCookieCard(playerId, x))
                 .AddTo(_Disposables);
 
             _DebugBattleAreaPresenter.OnRequestSwitchCookieState
-                .Subscribe(x => _PlayerBattleAreaUseCase.TestSwitchBattleAreaState(x))
+                .Subscribe(x => _PlayerBattleAreaUseCase.TestSwitchBattleAreaState(playerId, x))
                 .AddTo(_Disposables);
 
             _DebugBattleAreaPresenter.OnRequestBreakCookie
-                .Subscribe(x => _PlayerBattleAreaUseCase.BreakCookieCard(x))
+                .Subscribe(x => _PlayerBattleAreaUseCase.BreakCookieCard(playerId, x))
                 .AddTo(_Disposables);
 
             _DebugBattleAreaPresenter.OnRequestAddHp
-                .Subscribe(x => _PlayerBattleAreaUseCase.AddHpCard(x))
+                .Subscribe(x => _PlayerBattleAreaUseCase.AddHpCard(playerId, x))
                 .AddTo(_Disposables);
 
             _DebugBattleAreaPresenter.OnRequestFlipHp
-                .Subscribe(x => _PlayerBattleAreaUseCase.FlipHpCard(x))
+                .Subscribe(x => _PlayerBattleAreaUseCase.FlipHpCard(playerId, x))
                 .AddTo(_Disposables);
 
             _DebugBattleAreaPresenter.OnRequestRemoveHp
-                .Subscribe(x => _PlayerBattleAreaUseCase.RemoveHpCard(x))
+                .Subscribe(x => _PlayerBattleAreaUseCase.RemoveHpCard(playerId, x))
                 .AddTo(_Disposables);
 
             _DebugStageAreaPresenter.OnRequestShowStageCard

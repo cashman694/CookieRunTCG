@@ -18,7 +18,8 @@ namespace App.Battle.UseCases
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
         private readonly IPlayerBreakAreaDataStore _PlayerBreakAreaDataStore;
         private readonly IPlayerTrashDataStore _PlayerTrashDataStore;
-        private readonly IPlayerBattleAreaDataStore _PlayerBattleAreaDataStore;
+        private readonly IPlayerBattleAreaCookieDataStore _playerBattleAreaCookieDataStore;
+        private readonly IPlayerBattleAreaCookieHpDataStore _playerBattleAreaCookieHpDataStore;
         private readonly IPlayerBattleAreaPresenter _PlayerBattleAreaPresenter;
         private readonly IPlayerHandPresenter _PlayerHandPresenter;
         private readonly CompositeDisposable _Disposables = new();
@@ -30,7 +31,8 @@ namespace App.Battle.UseCases
             IPlayerHandDataStore playerHandDataStore,
             IPlayerBreakAreaDataStore playerBreakAreaDataStore,
             IPlayerTrashDataStore playerTrashDataStore,
-            IPlayerBattleAreaDataStore playerBattleAreaDataStore,
+            IPlayerBattleAreaCookieDataStore playerBattleAreaCookieDataStore,
+            IPlayerBattleAreaCookieHpDataStore playerBattleAreaCookieHpDataStore,
             IPlayerBattleAreaPresenter playerBattleAreaPresenter,
             IPlayerHandPresenter playerHandPresenter
         )
@@ -40,52 +42,63 @@ namespace App.Battle.UseCases
             _PlayerHandDataStore = playerHandDataStore;
             _PlayerBreakAreaDataStore = playerBreakAreaDataStore;
             _PlayerTrashDataStore = playerTrashDataStore;
-            _PlayerBattleAreaDataStore = playerBattleAreaDataStore;
+            _playerBattleAreaCookieDataStore = playerBattleAreaCookieDataStore;
+            _playerBattleAreaCookieHpDataStore = playerBattleAreaCookieHpDataStore;
             _PlayerBattleAreaPresenter = playerBattleAreaPresenter;
             _PlayerHandPresenter = playerHandPresenter;
         }
 
         public void Initialize()
         {
-            _PlayerBattleAreaDataStore.OnCookieCardAdded
+            _playerBattleAreaCookieDataStore.OnCookieAdded
                 .Subscribe(x =>
                 {
-                    if (!_PlayerBattleAreaDataStore.TryGetCookieCard(x.index, out var cardData))
+                    if (!_playerBattleAreaCookieDataStore.TryGetCookie(x.cookieId, out var cookie))
                     {
                         return;
                     }
 
-                    _PlayerBattleAreaPresenter.AddCookieCard(x.index, x.cardId, cardData.CardMasterData, cardData.CardState);
+                    _PlayerBattleAreaPresenter.AddCookieCard(cookie.Index, cookie.Id, cookie.CardMasterData, cookie.CardState);
                 })
                 .AddTo(_Disposables);
 
-            _PlayerBattleAreaDataStore.OnCookieCardRemoved
+            _playerBattleAreaCookieDataStore.OnCookieRemoved
                 .Subscribe(x =>
                 {
-                    _PlayerBattleAreaPresenter.RemoveCookieCard(x.index);
+                    if (!_playerBattleAreaCookieDataStore.TryGetCookie(x.cookieId, out var cookie))
+                    {
+                        return;
+                    }
+
+                    _PlayerBattleAreaPresenter.RemoveCookieCard(cookie.Index);
                 })
                 .AddTo(_Disposables);
 
-            _PlayerBattleAreaDataStore.OnHpCardAdded
+            _playerBattleAreaCookieHpDataStore.OnHpCardAdded
                 .Subscribe(x =>
                 {
-                    _PlayerBattleAreaPresenter.AddHpCard(x.index, x.cardId);
+                    if (!_playerBattleAreaCookieDataStore.TryGetCookie(x.cookieId, out var cardData))
+                    {
+                        return;
+                    }
+
+                    _PlayerBattleAreaPresenter.AddHpCard(x.cookieId, x.cardId);
                 })
                 .AddTo(_Disposables);
 
-            _PlayerBattleAreaDataStore.OnHpCardRemoved
+            _playerBattleAreaCookieHpDataStore.OnHpCardRemoved
                 .Subscribe(x =>
                 {
-                    _PlayerBattleAreaPresenter.RemoveHpCard(x.index);
+                    _PlayerBattleAreaPresenter.RemoveHpCard(x.cookieId);
                 })
                 .AddTo(_Disposables);
 
-            _PlayerBattleAreaDataStore.OnReset
-                .Subscribe(x =>
-                {
-                    _PlayerBattleAreaPresenter.Clear();
-                })
-                .AddTo(_Disposables);
+            // _playerBattleAreaCookieHpDataStore.OnReset
+            //     .Subscribe(x =>
+            //     {
+            //         _PlayerBattleAreaPresenter.Clear();
+            //     })
+            //     .AddTo(_Disposables);
         }
 
         /// <summary>
@@ -93,15 +106,28 @@ namespace App.Battle.UseCases
         /// 패의 첫번째 카드를 지정한 배틀에리어에 놓는다
         /// </summary>
         /// <param name="areaIndex"></param>
-        public void TestShowCookieCard(int areaIndex)
+        public void TestShowCookieCard(string playerId, int areaIndex)
         {
             if (_PlayerHandDataStore.IsEmpty)
             {
                 return;
             }
 
-            var cardId = _PlayerHandPresenter.GetFirstCardId();
-            ShowCookieCard(areaIndex, cardId);
+            foreach (var cardId in _PlayerHandDataStore.CardIds)
+            {
+                var card = _PlayerCardDataStore.GetCardBy(playerId, cardId);
+
+                if (card == null)
+                {
+                    continue;
+                }
+
+                if (card.CardType == CardType.Cookie)
+                {
+                    ShowCookieCard(playerId, areaIndex, cardId);
+                    return;
+                }
+            }
         }
 
         /// <summary>
@@ -110,20 +136,20 @@ namespace App.Battle.UseCases
         /// 액티브 <=> 레스트
         /// </summary>
         /// <param name="areaIndex"></param>
-        public void TestSwitchBattleAreaState(int areaIndex)
+        public void TestSwitchBattleAreaState(string playerId, int areaIndex)
         {
-            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var cookie))
+            if (!_playerBattleAreaCookieDataStore.TryGetCookie(playerId, areaIndex, out var cookie))
             {
                 return;
             }
 
             if (cookie.CardState == CardState.Active)
             {
-                RestCookieCard(areaIndex);
+                RestCookieCard(playerId, areaIndex);
             }
             else
             {
-                ActiveCookieCard(areaIndex);
+                ActiveCookieCard(playerId, areaIndex);
             }
         }
 
@@ -133,9 +159,9 @@ namespace App.Battle.UseCases
         /// </summary>
         /// <param name="areaIndex"></param>
         /// <param name="cardId"></param>
-        public void SetCookieCard(int areaIndex, string cardId)
+        public void PlaceStartingCookieCard(string playerId, int areaIndex, string cardId)
         {
-            var card = _PlayerCardDataStore.GetCardBy("player1", cardId);
+            var card = _PlayerCardDataStore.GetCardBy(playerId, cardId);
 
             if (card == null)
             {
@@ -147,7 +173,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            if (!_PlayerBattleAreaDataStore.IsEmpty(areaIndex))
+            if (!_playerBattleAreaCookieDataStore.IsEmpty(playerId, areaIndex))
             {
                 return;
             }
@@ -157,18 +183,18 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            _PlayerBattleAreaDataStore.AddCookieCard(areaIndex, card.Id, card.CardMasterData, CardState.FaceDown);
+            _playerBattleAreaCookieDataStore.AddCookie(playerId, areaIndex, card.Id, card.CardMasterData, CardState.FaceDown);
         }
 
         /// <summary>
         /// 배틀에리어에 뒷면으로 놓여진 쿠키카드를 플립힌다
         /// </summary>
         /// <param name="areaIndex"></param>
-        public void FlipCookieCard()
+        public void FlipCookieCard(string playerId)
         {
-            for (var areaIndex = 0; areaIndex < _PlayerBattleAreaDataStore.MaxCount; areaIndex++)
+            for (var areaIndex = 0; areaIndex < _playerBattleAreaCookieDataStore.MaxCount; areaIndex++)
             {
-                if (!_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var cookie))
+                if (!_playerBattleAreaCookieDataStore.TryGetCookie(playerId, areaIndex, out var cookie))
                 {
                     continue;
                 }
@@ -182,7 +208,7 @@ namespace App.Battle.UseCases
 
                 for (var i = 0; i < cookie.CardMasterData.Hp; i++)
                 {
-                    AddHpCard(areaIndex);
+                    AddHpCard(cookie.Id);
                 }
             }
         }
@@ -192,9 +218,9 @@ namespace App.Battle.UseCases
         /// </summary>
         /// <param name="areaIndex"></param>
         /// <param name="cardId"></param>
-        public void ShowCookieCard(int areaIndex, string cardId)
+        public void ShowCookieCard(string playerId, int areaIndex, string cardId)
         {
-            var card = _PlayerCardDataStore.GetCardBy("player1", cardId);
+            var card = _PlayerCardDataStore.GetCardBy(playerId, cardId);
 
             if (card == null)
             {
@@ -206,7 +232,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            if (!_PlayerBattleAreaDataStore.IsEmpty(areaIndex))
+            if (!_playerBattleAreaCookieDataStore.IsEmpty(playerId, areaIndex))
             {
                 return;
             }
@@ -216,11 +242,11 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            _PlayerBattleAreaDataStore.AddCookieCard(areaIndex, card.Id, card.CardMasterData);
+            _playerBattleAreaCookieDataStore.AddCookie(playerId, areaIndex, card.Id, card.CardMasterData);
 
             for (var i = 0; i < card.CardMasterData.Hp; i++)
             {
-                AddHpCard(areaIndex);
+                AddHpCard(cardId);
             }
         }
 
@@ -228,9 +254,9 @@ namespace App.Battle.UseCases
         /// 지정한 배틀에리어의 쿠키카드를 액티브 상태로 변경한다
         /// </summary>
         /// <param name="areaIndex"></param>
-        public void ActiveCookieCard(int areaIndex)
+        public void ActiveCookieCard(string playerId, int areaIndex)
         {
-            _PlayerBattleAreaDataStore.SetCardState(areaIndex, CardState.Active);
+            _playerBattleAreaCookieDataStore.SetCookieState(playerId, areaIndex, CardState.Active);
             _PlayerBattleAreaPresenter.ActiveCookieCard(areaIndex);
         }
 
@@ -238,9 +264,9 @@ namespace App.Battle.UseCases
         /// 지정한 배틀에리어의 쿠키카드를 레스트 상태로 변경한다
         /// </summary>
         /// <param name="areaIndex"></param>
-        public void RestCookieCard(int areaIndex)
+        public void RestCookieCard(string playerId, int areaIndex)
         {
-            _PlayerBattleAreaDataStore.SetCardState(areaIndex, CardState.Rest);
+            _playerBattleAreaCookieDataStore.SetCookieState(playerId, areaIndex, CardState.Rest);
             _PlayerBattleAreaPresenter.RestCookieCard(areaIndex);
         }
 
@@ -249,78 +275,113 @@ namespace App.Battle.UseCases
         /// Hp가 0이 아닌 경우는 리턴
         /// </summary>
         /// <param name="areaIndex"></param>
-        public void BreakCookieCard(int areaIndex)
+        public void BreakCookieCard(string playerId, int areaIndex)
         {
-            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var cookie))
+            if (!_playerBattleAreaCookieDataStore.TryGetCookie(playerId, areaIndex, out var cookie))
             {
                 return;
             }
 
-            if (_PlayerBattleAreaDataStore.GetHpCount(areaIndex) > 0)
+            if (_playerBattleAreaCookieHpDataStore.GetCountOf(cookie.Id) > 0)
             {
                 return;
             }
 
-            _PlayerBattleAreaDataStore.RemoveCookieCard(areaIndex);
+            _playerBattleAreaCookieDataStore.RemoveCookie(playerId, areaIndex);
             _PlayerBreakAreaDataStore.AddCard(cookie.Id);
         }
 
-        /// <summary>
-        /// 덱에서 Hp카드를 뽑아 지정한 배틀에리어의 추가한다
-        /// 쿠키가 없는 경우는 리턴
-        /// </summary>
-        /// <param name="areaIndex"></param>
-        public void AddHpCard(int areaIndex)
+        public void AddHpCard(string playerId, int areaIndex)
         {
-            if (!_PlayerBattleAreaDataStore.TryGetCookieCard(areaIndex, out var cookie))
+            if (!_playerBattleAreaCookieDataStore.TryGetCookie(playerId, areaIndex, out var cookie))
             {
                 return;
             }
 
-            if (_PlayerDeckDataStore.GetCountOf("player1") <= 0)
-            {
-                return;
-            }
-
-            var cardId = _PlayerDeckDataStore.RemoveFirstCardOf("player1");
-            var card = _PlayerCardDataStore.GetCardBy("player1", cardId);
-
-            _PlayerBattleAreaDataStore.AddHpCard(areaIndex, card.Id, card.CardMasterData);
+            AddHpCard(cookie.Id);
         }
 
         /// <summary>
-        /// 지정한 배틀에리어의 마지막 Hp카드를 플립힌다
+        /// 덱에서 Hp카드를 뽑아 지정한 쿠키에게 추가한다
+        /// 쿠키가 없는 경우는 리턴
         /// </summary>
-        /// <param name="areaIndex"></param>
-        public void FlipHpCard(int areaIndex)
+        /// <param name="cookieId"></param>
+        public void AddHpCard(string cookieId)
         {
-            if (!_PlayerBattleAreaDataStore.TryGetLastHpCard(areaIndex, out var hpCardId))
+            if (!_playerBattleAreaCookieDataStore.TryGetCookie(cookieId, out var cookie))
             {
                 return;
             }
 
-            var card = _PlayerCardDataStore.GetCardBy("player1", hpCardId);
+            if (_PlayerDeckDataStore.GetCountOf(cookie.PlayerId) <= 0)
+            {
+                return;
+            }
+
+            var cardId = _PlayerDeckDataStore.RemoveFirstCardOf(cookie.PlayerId);
+            var card = _PlayerCardDataStore.GetCardBy(cookie.PlayerId, cardId);
+
+            _playerBattleAreaCookieHpDataStore.AddHpCard(cookie.Id, card.Id, card.CardMasterData);
+        }
+
+        public void FlipHpCard(string playerId, int areaIndex)
+        {
+            if (!_playerBattleAreaCookieDataStore.TryGetCookie(playerId, areaIndex, out var cookie))
+            {
+                return;
+            }
+
+            FlipHpCard(cookie.Id);
+        }
+
+        /// <summary>
+        /// 지정한 쿠키의 마지막 Hp카드를 플립힌다
+        /// </summary>
+        /// <param name="cookieId"></param>
+        public void FlipHpCard(string cookieId)
+        {
+            if (!_playerBattleAreaCookieDataStore.TryGetCookie(cookieId, out var cookie))
+            {
+                return;
+            }
+
+            if (!_playerBattleAreaCookieHpDataStore.TryGetLastHpCard(cookieId, out var hpCardId))
+            {
+                return;
+            }
+
+            var card = _PlayerCardDataStore.GetCardBy(cookie.PlayerId, hpCardId);
 
             if (card == null)
             {
                 return;
             }
 
-            _PlayerBattleAreaPresenter.FlipHpCard(areaIndex, card.Id, card.CardMasterData);
+            _PlayerBattleAreaPresenter.FlipHpCard(cookieId, card.Id, card.CardMasterData);
         }
 
-        /// <summary>
-        /// 지정한 배틀에리어의 마지막 Hp카드를 삭제한다
-        /// </summary>
-        /// <param name="areaIndex"></param>
-        public void RemoveHpCard(int areaIndex)
+        public void RemoveHpCard(string playerId, int areaIndex)
         {
-            if (!_PlayerBattleAreaDataStore.TryGetLastHpCard(areaIndex, out var hpCardId))
+            if (!_playerBattleAreaCookieDataStore.TryGetCookie(playerId, areaIndex, out var cookie))
             {
                 return;
             }
 
-            _PlayerBattleAreaDataStore.RemoveHpCard(areaIndex, hpCardId);
+            RemoveHpCard(cookie.Id);
+        }
+
+        /// <summary>
+        /// 지정한 쿠키의 마지막 Hp카드를 삭제한다
+        /// </summary>
+        /// <param name="cookieId"></param>
+        public void RemoveHpCard(string cookieId)
+        {
+            if (!_playerBattleAreaCookieHpDataStore.TryGetLastHpCard(cookieId, out var hpCardId))
+            {
+                return;
+            }
+
+            _playerBattleAreaCookieHpDataStore.RemoveHpCard(cookieId, hpCardId);
             _PlayerTrashDataStore.AddCard(hpCardId);
         }
 

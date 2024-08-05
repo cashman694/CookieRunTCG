@@ -30,7 +30,7 @@ namespace App.Battle.UseCases
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
         }
 
-        public async UniTask Execute(CancellationToken token)
+        public async UniTask Execute(string playerId, CancellationToken token)
         {
             var _Cts = CancellationTokenSource.CreateLinkedTokenSource(token);
 
@@ -49,7 +49,7 @@ namespace App.Battle.UseCases
             _PlayerBattleAreaPresenter.OnCookieAreaSelected
                 .Subscribe(areaIndex =>
                 {
-                    var cardData = _playerCardDataStore.GetCardBy("player1", _SelectedCardId);
+                    var cardData = _playerCardDataStore.GetCardBy(playerId, _SelectedCardId);
 
                     if (cardData == null)
                     {
@@ -61,7 +61,7 @@ namespace App.Battle.UseCases
                         return;
                     }
 
-                    _PlayerBattleAreaUseCase.SetCookieCard(areaIndex, _SelectedCardId);
+                    _PlayerBattleAreaUseCase.PlaceStartingCookieCard(playerId, areaIndex, _SelectedCardId);
                     UnityEngine.Debug.Log($"Cookie[{_SelectedCardId}] set");
 
                     _Cts.Cancel();

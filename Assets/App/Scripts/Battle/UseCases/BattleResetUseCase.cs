@@ -10,7 +10,8 @@ namespace App.Battle.UseCases
         private readonly IPlayerTrashDataStore _playerTrashAreaDataStore;
         private readonly IPlayerBreakAreaDataStore _playerBreakAreaDataStore;
         private readonly IPlayerSupportAreaDataStore _playerSupportAreaDataStore;
-        private readonly IPlayerBattleAreaDataStore _playerBattleAreaDataStore;
+        private readonly IPlayerBattleAreaCookieDataStore _playerBattleAreaCookieDataStore;
+        private readonly IPlayerBattleAreaCookieHpDataStore _playerBattleAreaCookieHpDataStore;
         private readonly IPlayerDeckDataStore _playerDeckDataStore;
 
         public BattleResetUseCase(
@@ -19,7 +20,8 @@ namespace App.Battle.UseCases
             IPlayerTrashDataStore playerTrashDataStore,
             IPlayerBreakAreaDataStore playerBreakAreaDataStore,
             IPlayerSupportAreaDataStore playerSupportAreaDataStore,
-            IPlayerBattleAreaDataStore playerBattleAreaDataStore,
+            IPlayerBattleAreaCookieDataStore playerBattleAreaCookieDataStore,
+            IPlayerBattleAreaCookieHpDataStore playerBattleAreaCookieHpDataStore,
             IPlayerDeckDataStore playerDeckDataStore
         )
         {
@@ -28,7 +30,8 @@ namespace App.Battle.UseCases
             _playerTrashAreaDataStore = playerTrashDataStore;
             _playerBreakAreaDataStore = playerBreakAreaDataStore;
             _playerSupportAreaDataStore = playerSupportAreaDataStore;
-            _playerBattleAreaDataStore = playerBattleAreaDataStore;
+            _playerBattleAreaCookieDataStore = playerBattleAreaCookieDataStore;
+            _playerBattleAreaCookieHpDataStore = playerBattleAreaCookieHpDataStore;
             _playerDeckDataStore = playerDeckDataStore;
         }
 
@@ -39,7 +42,8 @@ namespace App.Battle.UseCases
             _playerTrashAreaDataStore.Clear();
             _playerBreakAreaDataStore.Clear();
             _playerSupportAreaDataStore.Clear();
-            _playerBattleAreaDataStore.Clear();
+            _playerBattleAreaCookieDataStore.Clear();
+            _playerBattleAreaCookieHpDataStore.Clear();
             _playerDeckDataStore.ClearOf("player1");
         }
     }

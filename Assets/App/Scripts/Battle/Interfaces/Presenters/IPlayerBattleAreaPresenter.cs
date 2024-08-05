@@ -13,9 +13,9 @@ namespace App.Battle.Interfaces.Presenters
         void ActiveCookieCard(int areaIndex);
         void RestCookieCard(int areaIndex);
 
-        void AddHpCard(int areaIndex, string cardId);
-        bool RemoveHpCard(int areaIndex);
-        void FlipHpCard(int areaIndex, string cardId, CardMasterData cardMasterData);
+        void AddHpCard(string cookieId, string hpCardId);
+        bool RemoveHpCard(string cookieId);
+        void FlipHpCard(string cookieId, string hpCardId, CardMasterData cardMasterData);
 
         void Clear();
     }
