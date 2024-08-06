@@ -73,9 +73,11 @@ namespace App.Battle.UseCases
         /// </summary>
         public void TestShowStageCard()
         {
-            foreach (var cardId in _PlayerHandDataStore.CardIds)
+            var playerId = "player1";
+
+            foreach (var cardId in _PlayerHandDataStore.GetCardsOf(playerId))
             {
-                var card = _playerCardDataStore.GetCardBy("player1", cardId);
+                var card = _playerCardDataStore.GetCardBy(playerId, cardId);
 
                 if (card == null || card.CardType != CardType.Stage)
                 {
@@ -94,7 +96,9 @@ namespace App.Battle.UseCases
         /// <param name="cardId"></param>
         public void ShowStageCard(string cardId)
         {
-            if (_PlayerHandDataStore.IsEmpty)
+            var playerId = "player1";
+
+            if (_PlayerHandDataStore.GetCountOf(playerId) <= 0)
             {
                 return;
             }
@@ -104,7 +108,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            var cardData = _playerCardDataStore.GetCardBy("player1", cardId);
+            var cardData = _playerCardDataStore.GetCardBy(playerId, cardId);
 
             if (cardData == null)
             {
@@ -116,7 +120,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            _PlayerHandDataStore.RemoveCard(cardId);
+            _PlayerHandDataStore.RemoveCard(playerId, cardId);
             _PlayerStageAreaDataStore.AddCard(cardId);
         }
 

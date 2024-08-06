@@ -9,7 +9,7 @@ namespace App.Battle.Interfaces.Presenters
         IObservable<int> OnCookieAreaSelected { get; }
         void AddCookieCard(int areaIndex, string cardId, CardMasterData cardMasterData, CardState cardState);
         void FlipCookieCard(int areaIndex, string cardId, CardMasterData cardMasterData);
-        bool RemoveCookieCard(int areaIndex);
+        bool RemoveCookieCard(string cookieId);
         void ActiveCookieCard(int areaIndex);
         void RestCookieCard(int areaIndex);
 

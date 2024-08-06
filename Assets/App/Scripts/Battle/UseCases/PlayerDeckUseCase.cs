@@ -75,7 +75,7 @@ namespace App.Battle.UseCases
         public void InitialDraw(string playerId)
         {
             Assert.IsTrue(_PlayerDeckDataStore.GetCountOf(playerId) > _BattleConfig.InitialDrawCount);
-            Assert.IsTrue(_PlayerHandDataStore.Count == 0);
+            Assert.IsTrue(_PlayerHandDataStore.GetCountOf(playerId) == 0);
 
             for (var i = 0; i < _BattleConfig.InitialDrawCount; i++)
             {
@@ -95,9 +95,9 @@ namespace App.Battle.UseCases
                 return false;
             }
 
-            // TODO: 드로우페이즈인지 아닌지 체크하기
             var cardId = _PlayerDeckDataStore.RemoveFirstCardOf(playerId);
-            _PlayerHandDataStore.AddCard(cardId);
+            _PlayerHandDataStore.AddCard(playerId, cardId);
+
             return true;
         }
 
@@ -112,10 +112,10 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            var handCardIds = _PlayerHandDataStore.CardIds.ToArray();
+            var handCardIds = _PlayerHandDataStore.GetCardsOf(playerId).ToArray();
             foreach (var cardId in handCardIds)
             {
-                if (!_PlayerHandDataStore.RemoveCard(cardId))
+                if (!_PlayerHandDataStore.RemoveCard(playerId, cardId))
                 {
                     continue;
                 }

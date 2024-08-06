@@ -6,16 +6,14 @@ namespace App.Battle.Interfaces.DataStores
 {
     public interface IPlayerHandDataStore
     {
-        IEnumerable<string> CardIds { get; }
-        int Count { get; }
-        bool IsEmpty { get; }
-
-        IObservable<string> OnCardAdded { get; }
-        IObservable<string> OnCardRemoved { get; }
+        IObservable<(string playerId, string cardId)> OnCardAdded { get; }
+        IObservable<(string playerId, string cardId)> OnCardRemoved { get; }
         IObservable<Unit> OnReset { get; }
 
-        void AddCard(string cardId);
-        bool RemoveCard(string cardId);
+        IEnumerable<string> GetCardsOf(string playerId);
+        int GetCountOf(string playerId);
+        void AddCard(string playerId, string cardId);
+        bool RemoveCard(string playerId, string cardId);
         void Clear();
     }
 }

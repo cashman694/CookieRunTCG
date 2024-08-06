@@ -65,12 +65,7 @@ namespace App.Battle.UseCases
             _playerBattleAreaCookieDataStore.OnCookieRemoved
                 .Subscribe(x =>
                 {
-                    if (!_playerBattleAreaCookieDataStore.TryGetCookie(x.cookieId, out var cookie))
-                    {
-                        return;
-                    }
-
-                    _PlayerBattleAreaPresenter.RemoveCookieCard(cookie.Index);
+                    _PlayerBattleAreaPresenter.RemoveCookieCard(x.cookieId);
                 })
                 .AddTo(_Disposables);
 
@@ -108,12 +103,12 @@ namespace App.Battle.UseCases
         /// <param name="areaIndex"></param>
         public void TestShowCookieCard(string playerId, int areaIndex)
         {
-            if (_PlayerHandDataStore.IsEmpty)
+            if (_PlayerHandDataStore.GetCountOf(playerId) <= 0)
             {
                 return;
             }
 
-            foreach (var cardId in _PlayerHandDataStore.CardIds)
+            foreach (var cardId in _PlayerHandDataStore.GetCardsOf(playerId))
             {
                 var card = _PlayerCardDataStore.GetCardBy(playerId, cardId);
 
@@ -168,7 +163,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            if (_PlayerHandDataStore.IsEmpty)
+            if (_PlayerHandDataStore.GetCountOf(playerId) <= 0)
             {
                 return;
             }
@@ -178,7 +173,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            if (!_PlayerHandDataStore.RemoveCard(cardId))
+            if (!_PlayerHandDataStore.RemoveCard(playerId, cardId))
             {
                 return;
             }
@@ -227,7 +222,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            if (_PlayerHandDataStore.IsEmpty)
+            if (_PlayerHandDataStore.GetCountOf(playerId) <= 0)
             {
                 return;
             }
@@ -237,7 +232,7 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            if (!_PlayerHandDataStore.RemoveCard(cardId))
+            if (!_PlayerHandDataStore.RemoveCard(playerId, cardId))
             {
                 return;
             }

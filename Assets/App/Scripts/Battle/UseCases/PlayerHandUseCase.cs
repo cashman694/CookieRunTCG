@@ -33,20 +33,20 @@ namespace App.Battle.UseCases
             _PlayerHandDataStore.OnCardAdded
                 .Subscribe(x =>
                 {
-                    var cardData = _PlayerCardDataStore.GetCardBy("player1", x);
+                    var cardData = _PlayerCardDataStore.GetCardBy(x.playerId, x.cardId);
                     if (cardData == null)
                     {
                         return;
                     }
 
-                    _PlayerHandPresenter.AddCard(x, cardData.CardMasterData);
+                    _PlayerHandPresenter.AddCard(x.cardId, cardData.CardMasterData);
                 })
                 .AddTo(_Disposables);
 
             _PlayerHandDataStore.OnCardRemoved
                 .Subscribe(x =>
                 {
-                    _PlayerHandPresenter.RemoveCard(x);
+                    _PlayerHandPresenter.RemoveCard(x.cardId);
                 })
                 .AddTo(_Disposables);
 

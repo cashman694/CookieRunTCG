@@ -29,12 +29,14 @@ namespace App.Battle.UseCases
 
         public void SetCard(string cardId)
         {
-            if (_PlayerHandDataStore.IsEmpty)
+            var playerId = "player1";
+
+            if (_PlayerHandDataStore.GetCountOf(playerId) <= 0)
             {
                 return;
             }
 
-            _PlayerHandDataStore.RemoveCard(cardId);
+            _PlayerHandDataStore.RemoveCard(playerId, cardId);
             _PlayerSupportAreaDataStore.AddCard(cardId);
         }
     }

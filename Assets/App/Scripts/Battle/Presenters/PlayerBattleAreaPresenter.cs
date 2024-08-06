@@ -95,7 +95,17 @@ namespace App.Battle.Presenters
             newCardView.SetPosition(_playerFieldPresenter.CookieTransforms[areaIndex].position);
         }
 
-        public bool RemoveCookieCard(int areaIndex)
+        public bool RemoveCookieCard(string cookieId)
+        {
+            if (!TryGetAreaIndexOf(cookieId, out var index))
+            {
+                return false;
+            }
+
+            return RemoveCookieCard(index);
+        }
+
+        private bool RemoveCookieCard(int areaIndex)
         {
             var cardView = _CookieCardViews[areaIndex];
 
@@ -144,7 +154,7 @@ namespace App.Battle.Presenters
             frontCardView.Rest();
         }
 
-        private bool GetAreaIndexOf(string cookieId, out int index)
+        private bool TryGetAreaIndexOf(string cookieId, out int index)
         {
             index = -1;
 
@@ -162,7 +172,7 @@ namespace App.Battle.Presenters
 
         public void AddHpCard(string cookieId, string hpCardId)
         {
-            if (!GetAreaIndexOf(cookieId, out var areaIndex))
+            if (!TryGetAreaIndexOf(cookieId, out var areaIndex))
             {
                 return;
             }
@@ -179,7 +189,7 @@ namespace App.Battle.Presenters
 
         public bool RemoveHpCard(string cookieId)
         {
-            if (!GetAreaIndexOf(cookieId, out var areaIndex))
+            if (!TryGetAreaIndexOf(cookieId, out var areaIndex))
             {
                 return false;
             }
@@ -200,7 +210,7 @@ namespace App.Battle.Presenters
 
         public void FlipHpCard(string cookieId, string hpCardId, CardMasterData cardMasterData)
         {
-            if (!GetAreaIndexOf(cookieId, out var areaIndex))
+            if (!TryGetAreaIndexOf(cookieId, out var areaIndex))
             {
                 return;
             }
