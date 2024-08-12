@@ -134,7 +134,7 @@ namespace App.Battle.UseCases
             }
 
             _PlayerStageAreaDataStore.RemoveCard(playerId);
-            _PlayerTrashDataStore.AddCard(cardId);
+            _PlayerTrashDataStore.AddCard(playerId, cardId);
         }
 
         public void ActiveStageCard(string playerId)

@@ -258,7 +258,7 @@ namespace App.BattleDebug.UseCases
             _PlayerTrashDataStore.OnCardAdded
                 .Subscribe(x =>
                 {
-                    var cardData = _PlayerCardDataStore.GetCardBy("player1", x);
+                    var cardData = _PlayerCardDataStore.GetCardBy(x.playerId, x.cardId);
 
                     if (cardData == null)
                     {
@@ -268,7 +268,7 @@ namespace App.BattleDebug.UseCases
                     _BattleCardDebugger.TrashCards.Add(
                         new()
                         {
-                            Id = x,
+                            Id = x.cardId,
                             CardMasterData = cardData.CardMasterData
                         }
                     );
@@ -278,14 +278,14 @@ namespace App.BattleDebug.UseCases
             _PlayerTrashDataStore.OnCardRemoved
                 .Subscribe(x =>
                 {
-                    var cardData = _PlayerCardDataStore.GetCardBy("player1", x);
+                    var cardData = _PlayerCardDataStore.GetCardBy(x.playerId, x.cardId);
 
                     if (cardData == null)
                     {
                         return;
                     }
 
-                    _BattleCardDebugger.TrashCards.RemoveAll(t => t.Id == x);
+                    _BattleCardDebugger.TrashCards.RemoveAll(t => t.Id == x.cardId);
                 })
                 .AddTo(_Disposables);
         }

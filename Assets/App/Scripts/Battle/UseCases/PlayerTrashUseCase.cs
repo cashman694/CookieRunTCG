@@ -32,20 +32,20 @@ namespace App.Battle.UseCases
             _PlayerTrashDataStore.OnCardAdded
                 .Subscribe(x =>
                 {
-                    var cardData = _PlayerCardDataStore.GetCardBy("player1", x);
+                    var cardData = _PlayerCardDataStore.GetCardBy(x.playerId, x.cardId);
                     if (cardData == null)
                     {
                         return;
                     }
 
-                    _PlayerTrashPresenter.AddCard(x, cardData.CardMasterData);
+                    _PlayerTrashPresenter.AddCard(x.playerId, x.cardId, cardData.CardMasterData);
                 })
                 .AddTo(_Disposables);
 
             _PlayerTrashDataStore.OnCardRemoved
                 .Subscribe(x =>
                 {
-                    _PlayerTrashPresenter.RemoveCard(x);
+                    _PlayerTrashPresenter.RemoveCard(x.playerId, x.cardId);
                 })
                 .AddTo(_Disposables);
 

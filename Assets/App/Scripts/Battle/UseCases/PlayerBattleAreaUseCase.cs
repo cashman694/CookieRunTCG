@@ -355,6 +355,10 @@ namespace App.Battle.UseCases
             _PlayerBattleAreaPresenter.FlipHpCard(cookieId, card.Id, card.CardMasterData);
         }
 
+        /// <summary>
+        /// 지정한 쿠키의 마지막 Hp카드를 삭제한다
+        /// </summary>
+        /// <param name="cookieId"></param>
         public void RemoveHpCard(string playerId, int areaIndex)
         {
             if (!_playerBattleAreaCookieDataStore.TryGetCookie(playerId, areaIndex, out var cookie))
@@ -362,22 +366,13 @@ namespace App.Battle.UseCases
                 return;
             }
 
-            RemoveHpCard(cookie.Id);
-        }
-
-        /// <summary>
-        /// 지정한 쿠키의 마지막 Hp카드를 삭제한다
-        /// </summary>
-        /// <param name="cookieId"></param>
-        public void RemoveHpCard(string cookieId)
-        {
-            if (!_playerBattleAreaCookieHpDataStore.TryGetLastHpCard(cookieId, out var hpCardId))
+            if (!_playerBattleAreaCookieHpDataStore.TryGetLastHpCard(cookie.Id, out var hpCardId))
             {
                 return;
             }
 
-            _playerBattleAreaCookieHpDataStore.RemoveHpCard(cookieId, hpCardId);
-            _PlayerTrashDataStore.AddCard(hpCardId);
+            _playerBattleAreaCookieHpDataStore.RemoveHpCard(cookie.Id, hpCardId);
+            _PlayerTrashDataStore.AddCard(playerId, hpCardId);
         }
 
         public void Dispose()

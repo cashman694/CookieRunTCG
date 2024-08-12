@@ -18,6 +18,5 @@ namespace App.Battle.Interfaces.UseCases
         void FlipHpCard(string playerId, int areaIndex);
         void FlipHpCard(string cookieId);
         void RemoveHpCard(string playerId, int areaIndex);
-        void RemoveHpCard(string cookieId);
     }
 }

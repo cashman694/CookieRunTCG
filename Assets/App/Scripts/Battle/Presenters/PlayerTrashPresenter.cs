@@ -45,7 +45,7 @@ namespace App.Battle.Presenters
                 .AddTo(_Disposables);
         }
 
-        public void AddCard(string cardId, CardMasterData cardMasterData)
+        public void AddCard(string playerId, string cardId, CardMasterData cardMasterData)
         {
             var newCardView = _CardViewFactory.Invoke(transform);
             _CardViews.Add(cardId, newCardView);
@@ -56,7 +56,7 @@ namespace App.Battle.Presenters
             ArrangeCards().Forget();
         }
 
-        public void RemoveCard(string cardId)
+        public void RemoveCard(string playerId, string cardId)
         {
             if (!_CardViews.ContainsKey(cardId))
             {
