@@ -38,7 +38,7 @@ namespace App.Battle.UseCases
         public void Execute()
         {
             _playerHandDataStore.Clear();
-            _playerStageAreaDataStore.RemoveCard();
+            _playerStageAreaDataStore.RemoveCard("player1");
             _playerTrashAreaDataStore.Clear();
             _playerBreakAreaDataStore.Clear();
             _playerSupportAreaDataStore.Clear();

@@ -15,7 +15,6 @@ namespace App.Battle.UseCases
         private readonly IPlayerStageAreaDataStore _PlayerStageAreaDataStore;
         private readonly IPlayerStageAreaPresenter _PlayerStageAreaPresenter;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
-        private readonly IPlayerHandPresenter _PlayerHandPresenter;
         private readonly IPlayerTrashDataStore _PlayerTrashDataStore;
         private readonly CompositeDisposable _Disposables = new();
 
@@ -26,7 +25,6 @@ namespace App.Battle.UseCases
             IPlayerStageAreaDataStore playerStageAreaDataStore,
             IPlayerStageAreaPresenter playerStageAreaPresenter,
             IPlayerHandDataStore playerHandDataStore,
-            IPlayerHandPresenter playerHandPresenter,
             IPlayerTrashDataStore playerTrashDataStore
         )
         {
@@ -34,7 +32,6 @@ namespace App.Battle.UseCases
             _PlayerStageAreaDataStore = playerStageAreaDataStore;
             _PlayerStageAreaPresenter = playerStageAreaPresenter;
             _PlayerHandDataStore = playerHandDataStore;
-            _PlayerHandPresenter = playerHandPresenter;
             _PlayerTrashDataStore = playerTrashDataStore;
         }
 
@@ -43,26 +40,26 @@ namespace App.Battle.UseCases
             _PlayerStageAreaDataStore.OnCardAdded
                 .Subscribe(x =>
                 {
-                    var cardData = _playerCardDataStore.GetCardBy("player1", x);
+                    var cardData = _playerCardDataStore.GetCardBy(x.playerId, x.cardId);
                     if (cardData == null)
                     {
                         return;
                     }
-                    _PlayerStageAreaPresenter.AddCard(x, cardData.CardMasterData);
+                    _PlayerStageAreaPresenter.AddCard(x.playerId, x.cardId, cardData.CardMasterData);
                 })
                 .AddTo(_Disposables);
 
             _PlayerStageAreaDataStore.OnCardRemoved
                 .Subscribe(x =>
                 {
-                    _PlayerStageAreaPresenter.RemoveCard();
+                    _PlayerStageAreaPresenter.RemoveCard(x.playerId);
                 })
                 .AddTo(_Disposables);
 
             _PlayerStageAreaPresenter.OnCardSelected
                 .Subscribe(x =>
                 {
-                    _PlayerStageAreaPresenter.SelectCard();
+                    _PlayerStageAreaPresenter.SelectCard("player1");
                 })
                 .AddTo(_Disposables);
         }
@@ -84,7 +81,7 @@ namespace App.Battle.UseCases
                     continue;
                 }
 
-                ShowStageCard(cardId);
+                ShowStageCard(playerId, cardId);
                 return;
             }
         }
@@ -94,16 +91,16 @@ namespace App.Battle.UseCases
         /// 이미 놓여져 있는 경우에는 리턴
         /// </summary>
         /// <param name="cardId"></param>
-        public void ShowStageCard(string cardId)
+        public void ShowStageCard(string playerId, string cardId)
         {
-            var playerId = "player1";
-
             if (_PlayerHandDataStore.GetCountOf(playerId) <= 0)
             {
                 return;
             }
 
-            if (!string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
+            var stageCardId = _PlayerStageAreaDataStore.GetCardOf(playerId);
+
+            if (!string.IsNullOrEmpty(stageCardId))
             {
                 return;
             }
@@ -121,45 +118,49 @@ namespace App.Battle.UseCases
             }
 
             _PlayerHandDataStore.RemoveCard(playerId, cardId);
-            _PlayerStageAreaDataStore.AddCard(cardId);
+            _PlayerStageAreaDataStore.AddCard(playerId, cardId);
         }
 
         /// <summary>
         /// 스테이지에리어의 카드를 트래쉬로 보낸다
         /// </summary>
-        public void SendToTrash()
+        public void SendToTrash(string playerId)
         {
-            if (string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
+            var cardId = _PlayerStageAreaDataStore.GetCardOf(playerId);
+
+            if (string.IsNullOrEmpty(cardId))
             {
                 return;
             }
 
-            var cardId = _PlayerStageAreaDataStore.CardId;
-
-            _PlayerStageAreaDataStore.RemoveCard();
+            _PlayerStageAreaDataStore.RemoveCard(playerId);
             _PlayerTrashDataStore.AddCard(cardId);
         }
 
-        public void ActiveStageCard()
+        public void ActiveStageCard(string playerId)
         {
-            if (string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
+            var cardId = _PlayerStageAreaDataStore.GetCardOf(playerId);
+
+            if (string.IsNullOrEmpty(cardId))
             {
                 return;
             }
 
-            _PlayerStageAreaDataStore.SetCardState(CardState.Active);
-            _PlayerStageAreaPresenter.ActiveCard();
+            _PlayerStageAreaDataStore.SetCardState(playerId, CardState.Active);
+            _PlayerStageAreaPresenter.ActiveCard(playerId);
         }
 
-        public void RestStageCard()
+        public void RestStageCard(string playerId)
         {
-            if (string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
+            var cardId = _PlayerStageAreaDataStore.GetCardOf(playerId);
+
+            if (string.IsNullOrEmpty(cardId))
             {
                 return;
             }
 
-            _PlayerStageAreaDataStore.SetCardState(CardState.Rest);
-            _PlayerStageAreaPresenter.RestCard();
+            _PlayerStageAreaDataStore.SetCardState(playerId, CardState.Rest);
+            _PlayerStageAreaPresenter.RestCard(playerId);
         }
 
         public void Dispose()

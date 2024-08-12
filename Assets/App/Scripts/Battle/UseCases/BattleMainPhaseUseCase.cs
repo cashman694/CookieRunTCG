@@ -48,7 +48,7 @@ namespace App.Battle.UseCases
             _Cts = CancellationTokenSource.CreateLinkedTokenSource(token);
 
             _PlayerShowCookieUseCase.Execute(playerId, _Cts.Token).Forget();
-            _PlayerUseStageUseCase.Execute(_Cts.Token).Forget();
+            _PlayerUseStageUseCase.Execute(playerId, _Cts.Token).Forget();
 
             await UniTask.WaitUntil(() => _Cts.IsCancellationRequested);
 

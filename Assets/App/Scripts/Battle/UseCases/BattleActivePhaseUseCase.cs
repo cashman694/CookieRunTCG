@@ -47,7 +47,7 @@ namespace App.Battle.UseCases
                 _PlayerBattleAreaUseCase.ActiveCookieCard(playerId, i);
             }
 
-            _PlayerStageAreaUseCase.ActiveStageCard();
+            _PlayerStageAreaUseCase.ActiveStageCard(playerId);
 
             // _PlayerSupportAreaUseCase.ActiveAll();
 

@@ -51,7 +51,7 @@ namespace App.Battle.Presenters
                 .AddTo(_Disposables);
         }
 
-        public void AddCard(string cardId, CardMasterData cardMasterData)
+        public void AddCard(string playerId, string cardId, CardMasterData cardMasterData)
         {
             _CardView = _CardViewFactory.Invoke(transform);
             _CardView.SetPosition(_playerFieldPresenter.StageAreaTransform.position);
@@ -70,7 +70,7 @@ namespace App.Battle.Presenters
                 .AddTo(cardViewComponent);
         }
 
-        public void RemoveCard()
+        public void RemoveCard(string playerId)
         {
             if (_CardView == null)
             {
@@ -81,7 +81,7 @@ namespace App.Battle.Presenters
             _CardView = null;
         }
 
-        public void ActiveCard()
+        public void ActiveCard(string playerId)
         {
             if (_CardView == null)
             {
@@ -91,7 +91,7 @@ namespace App.Battle.Presenters
             _CardView.Active();
         }
 
-        public void RestCard()
+        public void RestCard(string playerId)
         {
             if (_CardView == null)
             {
@@ -101,7 +101,7 @@ namespace App.Battle.Presenters
             _CardView.Rest();
         }
 
-        public void SelectCard()
+        public void SelectCard(string playerId)
         {
             if (_CardView == null)
             {

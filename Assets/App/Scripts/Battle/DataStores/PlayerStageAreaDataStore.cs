@@ -1,6 +1,7 @@
 using App.Battle.Data;
 using App.Battle.Interfaces.DataStores;
 using System;
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
@@ -8,40 +9,64 @@ namespace App.Battle.DataStores
 {
     public class PlayerStageAreaDataStore : IPlayerStageAreaDataStore, IDisposable
     {
-        private ReactiveProperty<string> _CardId = new();
+        private Dictionary<string, string> _playerCardId = new();
 
-        public IObservable<string> OnCardAdded => _CardId.Where(x => x != null);
-        public IObservable<string> OnCardRemoved => _CardId.Where(x => x == null);
+        private readonly Subject<(string playerId, string cardId)> _onCardAdded = new();
+        public IObservable<(string playerId, string cardId)> OnCardAdded => _onCardAdded;
 
-        public string CardId => _CardId.Value;
+        private readonly Subject<(string playerId, string cardId)> _onCardRemoved = new();
+        public IObservable<(string playerId, string cardId)> OnCardRemoved => _onCardRemoved;
 
-        public void AddCard(string cardId)
+        public string GetCardOf(string playerId)
         {
-            _CardId.Value = cardId;
-            Debug.Log($"{cardId} added to stage area");
+            if (!_playerCardId.ContainsKey(playerId))
+            {
+                return null;
+            }
+
+            return _playerCardId[playerId];
         }
 
-        public void RemoveCard()
+        public void AddCard(string playerId, string cardId)
         {
-            if (_CardId.Value == null)
+            if (_playerCardId.ContainsKey(playerId))
             {
                 return;
             }
 
-            var cardId = _CardId.Value;
+            _playerCardId.Add(playerId, cardId);
+            _onCardAdded.OnNext((playerId, cardId));
 
-            _CardId.Value = null;
-            Debug.Log($"{cardId} removed from stage area");
+            Debug.Log($"[{playerId}]{cardId} added to stage area");
         }
 
-        public void SetCardState(CardState cardState)
+        public void RemoveCard(string playerId)
         {
-            // TODO: 
+            if (!_playerCardId.ContainsKey(playerId))
+            {
+                return;
+            }
+
+            var cardId = _playerCardId[playerId];
+            _playerCardId.Remove(playerId);
+            _onCardRemoved.OnNext((playerId, cardId));
+
+            Debug.Log($"[{playerId}]{cardId} removed from stage area");
+        }
+
+        public void SetCardState(string playerId, CardState cardState)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Clear()
+        {
+            _playerCardId.Clear();
         }
 
         public void Dispose()
         {
-            _CardId.Dispose();
+            Clear();
         }
     }
 }

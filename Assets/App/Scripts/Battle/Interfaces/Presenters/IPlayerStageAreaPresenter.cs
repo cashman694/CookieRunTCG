@@ -11,10 +11,10 @@ namespace App.Battle.Interfaces.Presenters
         IObservable<Unit> OnRequestSendToTrash { get; }
         IObservable<string> OnRequestUseStage { get; }
 
-        void AddCard(string cardId, CardMasterData cardMasterData);
-        void RemoveCard();
-        void ActiveCard();
-        void RestCard();
-        void SelectCard();
+        void AddCard(string playerId, string cardId, CardMasterData cardMasterData);
+        void RemoveCard(string playerId);
+        void ActiveCard(string playerId);
+        void RestCard(string playerId);
+        void SelectCard(string playerId);
     }
 }

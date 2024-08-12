@@ -34,7 +34,7 @@ namespace App.Battle.UseCases
             _PlayerStageAreaUseCase = playerStageAreaUseCase;
         }
 
-        public async UniTask Execute(CancellationToken token)
+        public async UniTask Execute(string playerId, CancellationToken token)
         {
             // 실행 중에 불리면 리턴
             if (_Cts != null)
@@ -51,13 +51,15 @@ namespace App.Battle.UseCases
             _PlayerStageAreaPresenter.OnAreaSelected
                 .Subscribe(_ =>
                 {
+                    var stageCardId = _PlayerStageAreaDataStore.GetCardOf(playerId);
+
                     // 스테이지가 존재하면 내려놓을 수 없다
-                    if (!string.IsNullOrEmpty(_PlayerStageAreaDataStore.CardId))
+                    if (!string.IsNullOrEmpty(stageCardId))
                     {
                         return;
                     }
 
-                    _PlayerStageAreaUseCase.ShowStageCard(_SelectedCardId);
+                    _PlayerStageAreaUseCase.ShowStageCard(playerId, _SelectedCardId);
                 })
                 .AddTo(_Disposables);
 

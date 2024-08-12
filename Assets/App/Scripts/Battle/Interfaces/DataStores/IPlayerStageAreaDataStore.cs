@@ -5,13 +5,13 @@ namespace App.Battle.Interfaces.DataStores
 {
     public interface IPlayerStageAreaDataStore
     {
-        string CardId { get; }
+        IObservable<(string playerId, string cardId)> OnCardAdded { get; }
+        IObservable<(string playerId, string cardId)> OnCardRemoved { get; }
 
-        IObservable<string> OnCardAdded { get; }
-        IObservable<string> OnCardRemoved { get; }
-
-        void AddCard(string cardId);
-        void RemoveCard();
-        void SetCardState(CardState cardState);
+        string GetCardOf(string playerId);
+        void AddCard(string playerId, string cardId);
+        void RemoveCard(string playerId);
+        void SetCardState(string playerId, CardState cardState);
+        void Clear();
     }
 }

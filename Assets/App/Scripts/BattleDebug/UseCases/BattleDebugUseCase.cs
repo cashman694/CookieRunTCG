@@ -90,7 +90,7 @@ namespace App.BattleDebug.UseCases
                .AddTo(_Disposables);
 
             _DebugStageAreaPresenter.OnRequestSendToTrash
-               .Subscribe(x => _PlayerStageAreaUseCase.SendToTrash())
+               .Subscribe(x => _PlayerStageAreaUseCase.SendToTrash(playerId))
                .AddTo(_Disposables);
 
             _DebugSupportAreaPresenter.OnRequestPlaceCard
