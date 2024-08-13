@@ -1299,7 +1299,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1076997377392227590, guid: ab226259154ac4a3ea7d964bd6eee43f, type: 3}
       propertyPath: m_Name
-      value: SupportBG
+      value: StageBG
       objectReference: {fileID: 0}
     - target: {fileID: 1874047604464220518, guid: ab226259154ac4a3ea7d964bd6eee43f, type: 3}
       propertyPath: m_LocalScale.x
