@@ -8,11 +8,12 @@ namespace App.Field
     public sealed class FieldLifetimeScope : LifetimeScope
     {
         [SerializeField] private PlayerFieldPresenter playerFieldPresenter;
-        // [SerializeField] private OpponentFieldPresenter _opponentFieldPresenter;
+        [SerializeField] private OpponentFieldPresenter opponentFieldPresenter;
 
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(playerFieldPresenter).AsImplementedInterfaces();
+            builder.RegisterComponent(opponentFieldPresenter).AsImplementedInterfaces();
         }
     }
 }
