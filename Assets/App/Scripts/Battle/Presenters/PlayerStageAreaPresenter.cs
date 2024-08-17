@@ -1,6 +1,7 @@
 using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
 using App.Common.Data.MasterData;
+using App.Field.Interfaces.Presenters;
 using App.Field.Presenters;
 using Cysharp.Threading.Tasks;
 using System;
@@ -14,7 +15,7 @@ namespace App.Battle.Presenters
 {
     public class PlayerStageAreaPresenter : MonoBehaviour, IPlayerStageAreaPresenter
     {
-        private PlayerFieldPresenter _playerFieldPresenter;
+        private IPlayerFieldPresenter _playerFieldPresenter;
         private Func<Transform, IStageCardView> _CardViewFactory;
         private IStageCardView _CardView;
 
@@ -34,7 +35,7 @@ namespace App.Battle.Presenters
 
         [Inject]
         private void Construct(
-            PlayerFieldPresenter playerFieldPresenter,
+            IPlayerFieldPresenter playerFieldPresenter,
             Func<Transform, IStageCardView> cardViewFactory
         )
         {

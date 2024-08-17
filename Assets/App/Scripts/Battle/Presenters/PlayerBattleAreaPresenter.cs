@@ -12,6 +12,7 @@ using App.Battle.Views;
 using UniRx;
 using App.Battle.Data;
 using App.Field.Presenters;
+using App.Field.Interfaces.Presenters;
 
 namespace App.Battle.Presenters
 {
@@ -23,7 +24,7 @@ namespace App.Battle.Presenters
         [Header("Hp")]
         [SerializeField] private Transform[] _hpContainer = new Transform[2];
 
-        private PlayerFieldPresenter _playerFieldPresenter;
+        private IPlayerFieldPresenter _playerFieldPresenter;
         private Func<Transform, IFrontCardView> _FrontCardViewFactory;
         private ICardView[] _CookieCardViews = new ICardView[2];
 
@@ -38,7 +39,7 @@ namespace App.Battle.Presenters
 
         [Inject]
         private void Construct(
-            PlayerFieldPresenter playerFieldPresenter,
+            IPlayerFieldPresenter playerFieldPresenter,
             Func<Transform, IFrontCardView> frontCardViewFactory,
             Func<Transform, IBackCardView> backCardViewFactory
         )

@@ -100,7 +100,7 @@ namespace App.Battle.DataStores
             _OnReset.OnNext(playerId);
         }
 
-        public void Shuffle(string playerId)
+        public void ShuffleOf(string playerId)
         {
             System.Random random = new();
             var count = GetCountOf(playerId);
@@ -128,6 +128,7 @@ namespace App.Battle.DataStores
             _OnCardAdded.Dispose();
             _OnCardRemoved.Dispose();
             _OnShuffled.Dispose();
+            _OnReset.Dispose();
             _playerCardIds.Clear();
         }
     }

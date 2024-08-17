@@ -17,6 +17,6 @@ namespace App.Battle.Interfaces.DataStores
         void AddCard(string playerId, string cardId);
         string RemoveFirstCardOf(string playerId);
         void ClearOf(string playerId);
-        void Shuffle(string playerId);
+        void ShuffleOf(string playerId);
     }
 }

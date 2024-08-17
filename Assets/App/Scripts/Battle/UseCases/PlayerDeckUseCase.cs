@@ -3,6 +3,7 @@ using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.UseCases;
 using App.Common.Data;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using UniRx;
 using UnityEngine.Assertions;
@@ -17,7 +18,8 @@ namespace App.Battle.UseCases
         private readonly IPlayerCardDataStore _PlayerCardDataStore;
         private readonly IPlayerDeckDataStore _PlayerDeckDataStore;
         private readonly IPlayerHandDataStore _PlayerHandDataStore;
-        private readonly IPlayerDeckPresenter _PlayerDeckPresenter;
+        private readonly IPlayerDeckPresenter _playerDeckPresenter;
+        private readonly IOpponentDeckPresenter _opponentDeckPresenter;
         private readonly CompositeDisposable _Disposables = new();
 
         [Inject]
@@ -26,14 +28,16 @@ namespace App.Battle.UseCases
             IPlayerCardDataStore playerCardDataStore,
             IPlayerDeckDataStore playerDeckDataStore,
             IPlayerHandDataStore playerHandDataStore,
-            IPlayerDeckPresenter playerDeckPresenter
+            IPlayerDeckPresenter playerDeckPresenter,
+            IOpponentDeckPresenter opponentDeckPresenter
         )
         {
             _BattleConfig = battleConfig;
             _PlayerCardDataStore = playerCardDataStore;
             _PlayerDeckDataStore = playerDeckDataStore;
             _PlayerHandDataStore = playerHandDataStore;
-            _PlayerDeckPresenter = playerDeckPresenter;
+            _playerDeckPresenter = playerDeckPresenter;
+            _opponentDeckPresenter = opponentDeckPresenter;
         }
 
         public void Initialize()
@@ -41,20 +45,36 @@ namespace App.Battle.UseCases
             _PlayerDeckDataStore.OnCountChanged
                 .Subscribe(x =>
                 {
-                    _PlayerDeckPresenter.UpdateCards(x.cardCount);
+                    if (x.playerId == "player1")
+                    {
+                        _playerDeckPresenter.UpdateCards(x.cardCount);
+                    }
+                    else
+                    {
+                        _opponentDeckPresenter.UpdateCards(x.cardCount);
+                    }
                 })
                 .AddTo(_Disposables);
 
             _PlayerDeckDataStore.OnReset
                 .Subscribe(x =>
                 {
-                    _PlayerDeckPresenter.UpdateCards(0);
+                    if (x == "player1")
+                    {
+                        _playerDeckPresenter.UpdateCards(0);
+                    }
+                    else
+                    {
+                        _opponentDeckPresenter.UpdateCards(0);
+                    }
+
                 })
                 .AddTo(_Disposables);
         }
 
         public void Build(string playerId)
         {
+            UnityEngine.Debug.Log($"build: {playerId}");
             if (_PlayerDeckDataStore.GetCountOf(playerId) > 0)
             {
                 return;
@@ -65,7 +85,7 @@ namespace App.Battle.UseCases
                 _PlayerDeckDataStore.AddCard(playerId, card.Id);
             }
 
-            _PlayerDeckDataStore.Shuffle(playerId);
+            _PlayerDeckDataStore.ShuffleOf(playerId);
         }
 
         /// <summary>
@@ -123,7 +143,7 @@ namespace App.Battle.UseCases
                 _PlayerDeckDataStore.AddCard(playerId, cardId);
             }
 
-            _PlayerDeckDataStore.Shuffle(playerId);
+            _PlayerDeckDataStore.ShuffleOf(playerId);
             InitialDraw(playerId);
         }
 

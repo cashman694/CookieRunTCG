@@ -1,3 +1,4 @@
+using App.Field.Interfaces.Presenters;
 using App.Field.Presenters;
 using UnityEngine;
 using VContainer;
@@ -12,8 +13,8 @@ namespace App.Field
 
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.RegisterComponent(playerFieldPresenter).AsImplementedInterfaces();
-            builder.RegisterComponent(opponentFieldPresenter).AsImplementedInterfaces();
+            builder.RegisterComponent(playerFieldPresenter).As<IPlayerFieldPresenter>();
+            builder.RegisterComponent(opponentFieldPresenter).As<IOpponentFieldPresenter>();
         }
     }
 }

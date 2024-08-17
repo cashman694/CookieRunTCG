@@ -2,6 +2,7 @@ using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
 using App.Battle.Views;
 using App.Common.Data.MasterData;
+using App.Field.Interfaces.Presenters;
 using App.Field.Presenters;
 using Cysharp.Threading.Tasks;
 using System;
@@ -14,13 +15,13 @@ namespace App.Battle.Presenters
 {
     public class PlayerBreakAreaPresenter : MonoBehaviour, IPlayerBreakAreaPresenter
     {
-        private PlayerFieldPresenter _playerFieldPresenter;
+        private IPlayerFieldPresenter _playerFieldPresenter;
         private Func<Transform, IFrontCardView> _CardViewFactory;
         private readonly Dictionary<string, IFrontCardView> _CardViews = new();
 
         [Inject]
         private void Construct(
-            PlayerFieldPresenter playerFieldPresenter,
+            IPlayerFieldPresenter playerFieldPresenter,
             Func<Transform, IFrontCardView> cardViewFactory
         )
         {

@@ -28,8 +28,8 @@ namespace App.Battle.UseCases
 
         public void Initialize()
         {
-            var playerId = "player1";
-            GenerateCardsOf(playerId);
+            GenerateCardsOf("player1");
+            GenerateCardsOf("player2");
         }
 
         public void GenerateCardsOf(string playerId)

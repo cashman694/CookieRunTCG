@@ -2,6 +2,7 @@ using App.Battle.Interfaces.Presenters;
 using App.Battle.Interfaces.Views;
 using App.Battle.Views;
 using App.Common.Data.MasterData;
+using App.Field.Interfaces.Presenters;
 using App.Field.Presenters;
 using Cysharp.Threading.Tasks;
 using System;
@@ -17,7 +18,7 @@ namespace App.Battle.Presenters
     {
         public static PlayerHandPresenter Inst { get; private set; }
 
-        private PlayerFieldPresenter _playerFieldPresenter;
+        private IPlayerFieldPresenter _playerFieldPresenter;
         private Func<Transform, IFrontCardView> _CardViewFactory;
         private readonly Dictionary<string, IFrontCardView> _CardViews = new();
 
@@ -31,7 +32,7 @@ namespace App.Battle.Presenters
 
         [Inject]
         private void Construct(
-            PlayerFieldPresenter playerFieldPresenter,
+            IPlayerFieldPresenter playerFieldPresenter,
             Func<Transform, IFrontCardView> cardViewFactory
         )
         {

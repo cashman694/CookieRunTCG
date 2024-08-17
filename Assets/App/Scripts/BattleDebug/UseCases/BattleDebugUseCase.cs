@@ -13,6 +13,7 @@ namespace App.BattleDebug.UseCases
         private readonly IBattleDebugBattleAreaPresenter _DebugBattleAreaPresenter;
         private readonly IBattleDebugStageAreaPresenter _DebugStageAreaPresenter;
         private readonly IBattleDebugSupportAreaPresenter _DebugSupportAreaPresenter;
+        private readonly IBattleDebugPlayerPresenter _battleDebugPlayerPresenter;
         private readonly IPlayerDeckUseCase _PlayerDeckUseCase;
         private readonly IPlayerBattleAreaUseCase _PlayerBattleAreaUseCase;
         private readonly IPlayerStageAreaUseCase _PlayerStageAreaUseCase;
@@ -25,6 +26,7 @@ namespace App.BattleDebug.UseCases
             IBattleDebugBattleAreaPresenter debugBattleAreaPresenter,
             IBattleDebugStageAreaPresenter debugStageAreaPresenter,
             IBattleDebugSupportAreaPresenter debugSupportAreaPresenter,
+            IBattleDebugPlayerPresenter battleDebugPlayerPresenter,
             IPlayerDeckUseCase playerDeckUseCase,
             IPlayerBattleAreaUseCase playerBattleAreaUseCase,
             IPlayerStageAreaUseCase playerStageAreaUseCase,
@@ -35,6 +37,7 @@ namespace App.BattleDebug.UseCases
             _DebugBattleAreaPresenter = debugBattleAreaPresenter;
             _DebugStageAreaPresenter = debugStageAreaPresenter;
             _DebugSupportAreaPresenter = debugSupportAreaPresenter;
+            _battleDebugPlayerPresenter = battleDebugPlayerPresenter;
             _PlayerDeckUseCase = playerDeckUseCase;
             _PlayerBattleAreaUseCase = playerBattleAreaUseCase;
             _PlayerStageAreaUseCase = playerStageAreaUseCase;
@@ -43,46 +46,44 @@ namespace App.BattleDebug.UseCases
 
         public void Initialize()
         {
-            var playerId = "player1";
-
             _BattleDebugDeckPresenter.OnRequestBuildDeck
-                .Subscribe(_ => _PlayerDeckUseCase.Build(playerId))
+                .Subscribe(_ => _PlayerDeckUseCase.Build(GetPlayerId()))
                 .AddTo(_Disposables);
 
             _BattleDebugDeckPresenter.OnRequestInitialDraw
-                .Subscribe(_ => _PlayerDeckUseCase.InitialDraw(playerId))
+                .Subscribe(_ => _PlayerDeckUseCase.InitialDraw(GetPlayerId()))
                 .AddTo(_Disposables);
 
             _BattleDebugDeckPresenter.OnRequestDrawCard
-                .Subscribe(_ => _PlayerDeckUseCase.DrawCard(playerId))
+                .Subscribe(_ => _PlayerDeckUseCase.DrawCard(GetPlayerId()))
                 .AddTo(_Disposables);
 
             _BattleDebugDeckPresenter.OnRequestMulligan
-                .Subscribe(_ => _PlayerDeckUseCase.Mulligan(playerId))
+                .Subscribe(_ => _PlayerDeckUseCase.Mulligan(GetPlayerId()))
                 .AddTo(_Disposables);
 
             _DebugBattleAreaPresenter.OnRequestShowCookie
-                .Subscribe(x => _PlayerBattleAreaUseCase.TestShowCookieCard(playerId, x))
+                .Subscribe(x => _PlayerBattleAreaUseCase.TestShowCookieCard(GetPlayerId(), x))
                 .AddTo(_Disposables);
 
             _DebugBattleAreaPresenter.OnRequestSwitchCookieState
-                .Subscribe(x => _PlayerBattleAreaUseCase.TestSwitchBattleAreaState(playerId, x))
+                .Subscribe(x => _PlayerBattleAreaUseCase.TestSwitchBattleAreaState(GetPlayerId(), x))
                 .AddTo(_Disposables);
 
             _DebugBattleAreaPresenter.OnRequestBreakCookie
-                .Subscribe(x => _PlayerBattleAreaUseCase.BreakCookieCard(playerId, x))
+                .Subscribe(x => _PlayerBattleAreaUseCase.BreakCookieCard(GetPlayerId(), x))
                 .AddTo(_Disposables);
 
             _DebugBattleAreaPresenter.OnRequestAddHp
-                .Subscribe(x => _PlayerBattleAreaUseCase.AddHpCard(playerId, x))
+                .Subscribe(x => _PlayerBattleAreaUseCase.AddHpCard(GetPlayerId(), x))
                 .AddTo(_Disposables);
 
             _DebugBattleAreaPresenter.OnRequestFlipHp
-                .Subscribe(x => _PlayerBattleAreaUseCase.FlipHpCard(playerId, x))
+                .Subscribe(x => _PlayerBattleAreaUseCase.FlipHpCard(GetPlayerId(), x))
                 .AddTo(_Disposables);
 
             _DebugBattleAreaPresenter.OnRequestRemoveHp
-                .Subscribe(x => _PlayerBattleAreaUseCase.RemoveHpCard(playerId, x))
+                .Subscribe(x => _PlayerBattleAreaUseCase.RemoveHpCard(GetPlayerId(), x))
                 .AddTo(_Disposables);
 
             _DebugStageAreaPresenter.OnRequestShowStageCard
@@ -90,7 +91,7 @@ namespace App.BattleDebug.UseCases
                .AddTo(_Disposables);
 
             _DebugStageAreaPresenter.OnRequestSendToTrash
-               .Subscribe(x => _PlayerStageAreaUseCase.SendToTrash(playerId))
+               .Subscribe(x => _PlayerStageAreaUseCase.SendToTrash(GetPlayerId()))
                .AddTo(_Disposables);
 
             _DebugSupportAreaPresenter.OnRequestPlaceCard
@@ -115,6 +116,13 @@ namespace App.BattleDebug.UseCases
                     // _PlayerSupportAreaUseCase.TestSwitchCardState()
                 })
                 .AddTo(_Disposables);
+        }
+
+        private string GetPlayerId()
+        {
+            return _battleDebugPlayerPresenter.Turn == Battle.Data.Turn.Player
+                ? "player1"
+                : "player2";
         }
 
         public void Dispose()

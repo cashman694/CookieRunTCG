@@ -1359,6 +1359,7 @@ MonoBehaviour:
   _PlayerHandPresenter: {fileID: 1761343338}
   _CardViewPrefab: {fileID: 7606624276356573912, guid: 5c944adf037e840f19143c209e9cee5d, type: 3}
   _PlayerDeckPresenter: {fileID: 1628169842}
+  _opponentDeckPresenter: {fileID: 1628169843}
   _DeckCardViewPrefab: {fileID: 3366952828782475128, guid: 52597c215ab364fa9b5e7191d81cff47, type: 3}
   _PlayerBattleAreaPresenter: {fileID: 642027813}
   _PlayerBreakAreaPresenter: {fileID: 1852424510}
@@ -1951,8 +1952,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1628169841}
   - component: {fileID: 1628169842}
+  - component: {fileID: 1628169843}
   m_Layer: 0
-  m_Name: PlayerDeckPresenter
+  m_Name: DeckPresenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1983,6 +1985,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7396fd7f9b3b4149b88560aefffac58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1628169843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1628169840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c0f6cc4515bd4b85890e3d6bd146465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1711169416

@@ -21,6 +21,7 @@ namespace App.Battle
 
         [Header("Player Deck")]
         [SerializeField] private PlayerDeckPresenter _PlayerDeckPresenter;
+        [SerializeField] private OpponentDeckPresenter _opponentDeckPresenter;
         [SerializeField] private DeckCardView _DeckCardViewPrefab;
 
         [Header("Player Battle Area")]
@@ -58,6 +59,7 @@ namespace App.Battle
 
             builder.Register<PlayerDeckDataStore>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterComponent(_PlayerDeckPresenter).As<IPlayerDeckPresenter>();
+            builder.RegisterComponent(_opponentDeckPresenter).As<IOpponentDeckPresenter>();
             builder.RegisterFactory<Transform, IBackCardView>(resolver =>
                 {
                     return transform => resolver.Instantiate(_DeckCardViewPrefab, transform);
